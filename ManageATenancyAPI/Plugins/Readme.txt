@@ -1,0 +1,1 @@
+﻿Place binaries for plugins in this folder as part of their post build routine.

@@ -1888,5 +1888,37 @@ namespace ManageATenancyAPI.Tests.Integration
             Assert.Equal(HttpStatusCode.Conflict, result.StatusCode);
         }
         #endregion
+
+        #region GetTRAsForPatch
+
+        [Fact]
+        public async Task return_a_404_get_tra_for_patch_result()
+        {
+            var result = _client.GetAsync("v1/TRA/GetTRAForPatchs").Result;
+            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+        }
+        [Fact]
+        public async Task return_a_400_get_tra_for_patch_result_when_input_is_invalid()
+        {
+            var result = _client.GetAsync("v1/TRA/GetTRAForPatch?patchId=123").Result;
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task return_empty_object_when_no_matches()
+        {
+            var result = _client.GetAsync("v1/TRA/GetTRAForPatch?patchId=b111b111-1111-b111-1111-11111bbbb1b1").Result;
+            List<TRA> fakeListOfTRA = new List<TRA>();
+            var expectedObject = new
+            {
+                results = fakeListOfTRA
+            };
+            JObject response =
+                JsonConvert.DeserializeObject<JObject>(result.Content.ReadAsStringAsync().Result);
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(JsonConvert.SerializeObject(expectedObject), JsonConvert.SerializeObject(response));
+        }
+
+        #endregion 
     }
 }

@@ -50,10 +50,9 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         {
             try
             {
-
                 if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
                 {                  
-                       var accountActions = new LoginActions(_loggerActionAdapter, _hackneyHousingAPICall, _hackneyHousingAPICallBuilder, _hackneyContractSecurity,_getCRM365AccessToken);
+                    var accountActions = new LoginActions(_loggerActionAdapter, _hackneyHousingAPICall, _hackneyHousingAPICallBuilder, _hackneyContractSecurity,_getCRM365AccessToken);
 
                     var loginResult = await accountActions.GetAuthenticatedUser(username, password);
 

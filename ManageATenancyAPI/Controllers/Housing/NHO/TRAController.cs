@@ -47,11 +47,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
                 {
                     var actions = new TRAActions(_actionsLogger, _traRepository);
                     var results = actions.GetTRAForPatch(patchId.ToString()).Result;
-
-                    var json = Json(results);
-                    json.StatusCode = 200;
-                    json.ContentType = "application/json";
-                    return json;
+                    return Json(results);
                 }
                 else
                 {

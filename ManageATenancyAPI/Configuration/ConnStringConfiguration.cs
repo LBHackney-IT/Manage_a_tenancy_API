@@ -9,6 +9,7 @@ namespace ManageATenancyAPI.Configuration
     {
         public string CIUploads { get; set; }
         public string CIDatabase { get; set; }
+        public string ManageATenancyDatabase { get; set; }
         public string UHWReportingWarehouse { get; set; }
 
     }

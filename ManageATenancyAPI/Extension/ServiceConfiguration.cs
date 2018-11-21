@@ -31,6 +31,7 @@ namespace ManageATenancyAPI.Extension
 
             services.AddTransient(typeof(IDBAccessRepository), typeof(DBAccessRepository));
             services.AddTransient(typeof(ICitizenIndexRepository), typeof(CitizenIndexRepository));
+            services.AddTransient(typeof(ITRARepository), typeof(TRARepository));
             services.AddTransient(typeof(IUHWWarehouseRepository), typeof(UHWWarehouseRepository));
         }
     }

@@ -178,13 +178,16 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 }
                 // Process Type :- 0 Interaction , 1 TM Process , 2 Post Visit Action
                 tmiJObject.Add("hackney_processtype", !string.IsNullOrEmpty(interaction.processType) ? interaction.processType : "0");
-                
+
+                if (interaction.processType != "0")
+                {
+                    tmiJObject.Add("hackney_process_stage",0);
+                }
                 // householdId This is require for TM process or TM post Visit Action
                 if (!string.IsNullOrEmpty(interaction.householdId))
                 {
                     tmiJObject.Add("hackney_household_Interactionid@odata.bind", " /hackney_households(" + interaction.householdId + ")");
                 }
-
                 try
                 {
                     _logger.LogInformation($"Create Tenancy Management Interaction");
@@ -200,9 +203,6 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                             _logger.LogError($" Tenancy Management Interaction could not be created  {interaction} ");
                             throw new TenancyInteractionServiceException();
                         }
-
-
-
                         var interactionUri = createResponseInteraction.Headers.GetValues("OData-EntityId")
                             .FirstOrDefault();
                         Guid tmInteractionId = Guid.Empty;
@@ -367,7 +367,10 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
                     tenancyInteraction.Add("statuscode", Constants.StatusCodeInActive);
                     tenancyInteraction.Add("statecode", Constants.StateCodeInactive);
-                    tenancyInteraction.Add("hackney_process_stage", interaction.processStage);
+                    if (interaction.processType != "0")
+                    {
+                        tenancyInteraction.Add("hackney_process_stage", interaction.processStage);
+                    }
 
                     tenancyInteraction["hackney_estateofficer_updatedbyid@odata.bind"] = "/hackney_estateofficers(" + interaction.estateOfficerId + ")";
                     tenancyInteraction.Add("modifiedon", DateTime.Now);

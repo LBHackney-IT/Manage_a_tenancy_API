@@ -478,7 +478,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         /// <returns>Returns the updated information</returns>
         [Route("UpdateNextOfKin")]
         [HttpPatch]
-        public async Task<JsonResult> UpdateNextOfKin(NextOfKin nextOfKinDetails)
+        public async Task<JsonResult> UpdateNextOfKin([FromBody] NextOfKin nextOfKinDetails)
         {
             try
             {

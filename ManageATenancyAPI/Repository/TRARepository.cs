@@ -44,7 +44,7 @@ namespace ManageATenancyAPI.Repository
                 throw ex;
             }
         }
-
+        
         public List<TRA> BuildListOfTRAs(IDataReader dataReader)
         {
             var results = new List<TRA>();

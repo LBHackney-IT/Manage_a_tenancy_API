@@ -6,8 +6,8 @@ using ManageATenancyAPI.Models.Housing.NHO;
 
 namespace ManageATenancyAPI.Repository
 {
-    public interface IEstateBlockRepository
+    public interface IEstateRepository
     {
-        Task<IEnumerable<EstateBlock>> GetBlocksByEstateId(int estateId);
+        Task<List<Estate>> GetEstates(IList<string> estateId);
     }
 }

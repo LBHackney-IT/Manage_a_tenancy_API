@@ -12,9 +12,9 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
     [Route("v1/[controller]")]
     public class BlockController : Controller
     {
-        private IEstateBlockRepository _estateBlockRepository;
+        private IBlockRepository _estateBlockRepository;
 
-        public BlockController(IEstateBlockRepository estateBlockRepository)
+        public BlockController(IBlockRepository estateBlockRepository)
         {
             _estateBlockRepository = estateBlockRepository;
 
@@ -22,10 +22,10 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
 
         [Route("block/estate/{estateId}")]
         [HttpGet]
-        public async Task<HackneyResult<IEnumerable<EstateBlock>>> GetBlocksbyEstate(int estateId)
+        public async Task<HackneyResult<IEnumerable<Block>>> GetBlocksByEstate(string estateId)
         {
             var estateBlocks = await _estateBlockRepository.GetBlocksByEstateId(estateId);
-            return HackneyResult<IEnumerable<EstateBlock>>.Create(estateBlocks);
+            return HackneyResult<IEnumerable<Block>>.Create(estateBlocks);
         }
     }
 }

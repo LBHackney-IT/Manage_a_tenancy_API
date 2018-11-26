@@ -11,5 +11,7 @@ namespace ManageATenancyAPI.Repository
         IList<TraEstate> GetEstatesByTraId(int traId);
 
         IList<string> GetAllUsedEstateRefs();
+        bool AreUnusedEstates(List<string> traEsatateRefs);
+        void AddEstateToTra(int traId, string estateId,string estateName);
     }
 }

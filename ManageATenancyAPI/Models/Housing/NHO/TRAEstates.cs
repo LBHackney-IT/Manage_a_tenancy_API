@@ -10,8 +10,10 @@ namespace ManageATenancyAPI.Models.Housing.NHO
     [Table("TraEstates")]
     public class TraEstate
     {
-        public int Id { get; set; }
+        [Key]
         public int TraId { get; set; }
+
+        [Key]
         public string EstateUHRef { get; set; }
 
         public string EstateName { get; set; }

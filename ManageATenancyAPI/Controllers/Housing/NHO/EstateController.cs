@@ -43,7 +43,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             return HackneyResult<List<Estate>>.Create(estates);
         }
 
-        [Route("/estate/unassigned")]
+        [Route("/estate/patch/{patchId}/unassigned")]
         [HttpGet]
         public async Task<HackneyResult<List<Estate>>> GetUnassigned()
         {

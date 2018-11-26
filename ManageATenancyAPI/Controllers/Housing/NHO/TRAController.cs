@@ -11,6 +11,8 @@ using ManageATenancyAPI.Helpers.Housing;
 using ManageATenancyAPI.Interfaces;
 using ManageATenancyAPI.Interfaces.Housing;
 using ManageATenancyAPI.Models;
+using ManageATenancyAPI.Models.Housing.NHO;
+using ManageATenancyAPI.Repository;
 using ManageATenancyAPI.Services;
 using ManageATenancyAPI.Services.Housing;
 using ManageATenancyAPI.Validators;
@@ -29,12 +31,16 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
 
         private readonly ILoggerAdapter<TRAController> _logger;
         private ITRARepository _traRepository;
+        private ITraEstatesRepository _traEstatesRepository;
+        private IEstateRepository _estatesRepository;
         private readonly ILoggerAdapter<TRAActions> _actionsLogger;
-        public TRAController(ILoggerAdapter<TRAActions> actionsLogger ,ILoggerAdapter<TRAController> loggerAdapter, IOptions<URLConfiguration> config, ITRARepository traRepository)
+        public TRAController(ILoggerAdapter<TRAActions> actionsLogger, ILoggerAdapter<TRAController> loggerAdapter, IOptions<URLConfiguration> config, ITRARepository traRepository, ITraEstatesRepository traEstatesRepository, IEstateRepository estatesRepository)
         {
             _logger = loggerAdapter;
             _actionsLogger = actionsLogger;
             _traRepository = traRepository;
+            _traEstatesRepository = traEstatesRepository;
+            _estatesRepository = estatesRepository;
         }
 
         [Route("GetTRAForPatch")]
@@ -83,6 +89,46 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
                 json.ContentType = "application/json";
                 return json;
             }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTra([FromBody] TraRequest tra)
+        {
+            if (_traRepository.Exists(tra.Name))
+            {
+                if (_traEstatesRepository.AreUnusedEstates(tra.EsatateRefs))
+                {
+                    var persistedTra = _traRepository.Create(tra.Name, tra.Email, tra.AreaId, tra.PatchId);
+
+                    var estates = await _estatesRepository.GetEstates(tra.EsatateRefs);
+                    foreach (var estate in estates)
+                    {
+                        _traEstatesRepository.AddEstateToTra(persistedTra.TRAId, estate.EstateId, estate.EstateName);
+                    }
+                }
+                else
+                {
+                    return BadRequest("Request contains Estate Ids that are already used.");
+
+                }
+
+            }
+            else
+            {
+
+                return BadRequest("This Tra already exists.");
+            }
+
+            //Task<HackneyResult<TraResponse>> 
+
+
+
+
+
+
+
+
         }
     }
 }

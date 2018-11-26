@@ -32,14 +32,23 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
 
             if (traEstates.Count == 0)
             {
-               return HackneyResult<List<Estate>>.Create(new List<Estate>());
+                return HackneyResult<List<Estate>>.Create(new List<Estate>());
             }
 
-            var estates = await _estateRepository.GetEstates(traEstates.Select(x=>x.EstateUHRef).ToList());
+            var estates = await _estateRepository.GetEstates(traEstates.Select(x => x.EstateUHRef).ToList());
             foreach (var estate in estates)
             {
                 estate.Blocks = await _blockRepository.GetBlocksByEstateId(estate.EstateId);
             }
+            return HackneyResult<List<Estate>>.Create(estates);
+        }
+
+        [Route("/estate/unassigned")]
+        [HttpGet]
+        public async Task<HackneyResult<List<Estate>>> GetUnassigned()
+        {
+            var usedEstates = _traEstatesRepository.GetAllUsedEstateRefs();
+            var estates = await _estateRepository.GetEstatesNotInList(usedEstates);
             return HackneyResult<List<Estate>>.Create(estates);
         }
     }

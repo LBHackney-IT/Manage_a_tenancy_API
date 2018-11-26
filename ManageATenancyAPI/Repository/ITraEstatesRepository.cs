@@ -9,5 +9,7 @@ namespace ManageATenancyAPI.Repository
     public interface ITraEstatesRepository
     {
         IList<TraEstate> GetEstatesByTraId(int traId);
+
+        IList<string> GetAllUsedEstateRefs();
     }
 }

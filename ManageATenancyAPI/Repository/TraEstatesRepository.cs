@@ -27,5 +27,14 @@ namespace ManageATenancyAPI.Repository
                 return fullResults.ToList();
             }
         }
+
+        public IList<string> GetAllUsedEstateRefs()
+        {
+            using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
+            {
+                var fullResults = connection.Query<string>("SELECT EstateUHRef FROM TRAEstates");
+                return fullResults.ToList();
+            }
+        }
     }
 }

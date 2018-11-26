@@ -20,7 +20,7 @@ namespace ManageATenancyAPI.Repository
             using (var connection = GetOpenConnection(_connectionStringConfig.UHWReportingWarehouse))
             {
                 var fullResults = connection.Query<UhProperty>(
-                    "SELECT * FROM property WHERE prop_ref in(@estateIds) and level_code=2", new { EstateIds = estateIds });
+                    "SELECT * FROM property WHERE prop_ref in @estateIds and level_code=2", new { EstateIds = estateIds });
 
                 var results = new List<Estate>();
                 foreach (var uhProperty in fullResults)
@@ -28,6 +28,22 @@ namespace ManageATenancyAPI.Repository
                     results.Add(Estate.FromModel(uhProperty));
                 }
                 return Task.FromResult<List<Estate>>(results);
+            }
+        }
+
+        public Task<List<Estate>> GetEstatesNotInList(IList<string> usedEstates)
+        {
+            using (var connection = GetOpenConnection(_connectionStringConfig.UHWReportingWarehouse))
+            {
+                var fullResults = connection.Query<UhProperty>(
+                    "SELECT * FROM property WHERE prop_ref NOT IN @estateIds and level_code=2", new { EstateIds = usedEstates });
+
+                var results = new List<Estate>();
+                foreach (var uhProperty in fullResults)
+                {
+                    results.Add(Estate.FromModel(uhProperty));
+                }
+                return Task.FromResult(results);
             }
         }
     }

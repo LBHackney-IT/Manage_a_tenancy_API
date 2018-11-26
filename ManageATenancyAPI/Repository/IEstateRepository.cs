@@ -9,5 +9,6 @@ namespace ManageATenancyAPI.Repository
     public interface IEstateRepository
     {
         Task<List<Estate>> GetEstates(IList<string> estateId);
+        Task<List<Estate>> GetEstatesNotInList(IList<string> usedEstates);
     }
 }

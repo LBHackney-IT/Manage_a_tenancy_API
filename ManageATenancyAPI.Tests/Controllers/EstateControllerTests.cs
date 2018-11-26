@@ -16,6 +16,46 @@ namespace ManageATenancyAPI.Tests.Controllers
     public class EstateControllerTests
     {
         [Fact]
+        public async Task GetUnassigned_PopulatedCorrectly()
+        {
+            var config = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { ManageATenancyDatabase = "", UHWReportingWarehouse = "" });
+
+            var mockEstateRepo = new Mock<IEstateRepository>();
+            var mockBlockRepo = new Mock<IBlockRepository>();
+            var mockTraEstatesRepo = new Mock<ITraEstatesRepository>();
+            var estateController = new EstateController(mockEstateRepo.Object, mockBlockRepo.Object, mockTraEstatesRepo.Object);
+
+
+            var returnedBlock = new List<Block>()
+            {
+                new Block()
+                {
+                    BlockId = "TestBlockId",
+                    BlockName = "TestBlockName",
+                    EstateId = "TestEstateId",
+                    EstateName = "TestEstateName"
+                }
+            };
+
+            mockBlockRepo.Setup(x => x.GetBlocksByEstateId(It.IsAny<string>()))
+                .Returns(Task.FromResult(returnedBlock.AsEnumerable()));
+
+            mockTraEstatesRepo.Setup(x => x.GetAllUsedEstateRefs())
+                .Returns(new List<string>(){"00001","00002" });
+
+            mockEstateRepo.Setup(x => x.GetEstatesNotInList(new List<string>() { "00001", "00002" }))
+                .Returns(Task.FromResult(new List<Estate>()
+                {
+                    new Estate() {EstateId = "00001", EstateName = "EstateName1"},
+                    new Estate() {EstateId = "00002", EstateName = "EstateName2"}
+                }));
+
+
+            var result = await estateController.GetUnassigned();
+            Assert.Equal(result.Result.Count, 2);
+        }
+
+        [Fact]
         public async Task GetEstatesByTra_PopulatedCorrectly()
         {
             var config = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration(){ManageATenancyDatabase = "",UHWReportingWarehouse = ""});
@@ -78,8 +118,8 @@ namespace ManageATenancyAPI.Tests.Controllers
                 }
             };
 
-            //mockBlockRepo.Setup(x => x.GetBlocksByEstateId(It.IsAny<string>()))
-            //    .Returns(Task.FromResult(returnedBlock.AsEnumerable()));
+            mockBlockRepo.Setup(x => x.GetBlocksByEstateId(It.IsAny<string>()))
+                .Returns(Task.FromResult(returnedBlock.AsEnumerable()));
 
             mockTraEstatesRepo.Setup(x => x.GetEstatesByTraId(5))
                 .Returns(new List<TraEstate>());
@@ -89,8 +129,7 @@ namespace ManageATenancyAPI.Tests.Controllers
 
 
             var result = await estateController.GetEstatesByTra(5);
-            Assert.Equal(result.Result.Count, 2);
-            Assert.Equal(result.Result.First().Blocks.Count(), 1);
+            Assert.Equal(0,result.Result.Count);
         }
 
     }

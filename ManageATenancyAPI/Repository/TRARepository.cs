@@ -59,10 +59,10 @@ namespace ManageATenancyAPI.Repository
             }
         }
 
-        public TRA Create(string name, string email, int areaId, Guid patchId)
+        public TRA Create(string name, string notes,string email, int areaId, Guid patchId)
         {
 
-            var tra = new TRA() { Name = name, AreaId = areaId,PatchId= patchId, Email = email };
+            var tra = new TRA() { Name = name,Notes=notes, AreaId = areaId,PatchId= patchId, Email = email };
             using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
             {
                 var traId = connection.Insert(tra);

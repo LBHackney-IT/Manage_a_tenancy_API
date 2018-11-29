@@ -11,7 +11,7 @@ namespace ManageATenancyAPI.Models.Housing.NHO
     public class TraEstate
     {
         [Key]
-        public int TraId { get; set; }
+        public int TRAId { get; set; }
 
         [Key]
         public string EstateUHRef { get; set; }

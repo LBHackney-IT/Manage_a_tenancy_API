@@ -91,7 +91,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             }
         }
 
-
+        
         [HttpPost]
         public async Task<IActionResult> CreateTra([FromBody] TraRequest tra)
         {
@@ -99,7 +99,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             {
                 if (_traEstatesRepository.AreUnusedEstates(tra.EsatateRefs))
                 {
-                    var persistedTra = _traRepository.Create(tra.Name, tra.Email, tra.AreaId, tra.PatchId);
+                    var persistedTra = _traRepository.Create(tra.Name, tra.Notes, tra.Email, tra.AreaId, tra.PatchId);
 
                     var estates = await _estatesRepository.GetEstates(tra.EsatateRefs);
                     foreach (var estate in estates)
@@ -110,25 +110,13 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
                 else
                 {
                     return BadRequest("Request contains Estate Ids that are already used.");
-
                 }
-
             }
             else
             {
-
                 return BadRequest("This Tra already exists.");
             }
-
-            //Task<HackneyResult<TraResponse>> 
-
-
-
-
-
-
-
-
+            return Ok();
         }
     }
 }

@@ -10,6 +10,6 @@ namespace ManageATenancyAPI.Interfaces
     {
         List<TRA> FindTRAsForPatch(string patchId);
         bool Exists(string traName);
-        TRA Create(string name, string email, int areaId, Guid patchId);
+        TRA Create(string name,string notes, string email, int areaId, Guid patchId);
     }
 }

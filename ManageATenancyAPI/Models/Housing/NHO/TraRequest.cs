@@ -8,6 +8,7 @@ namespace ManageATenancyAPI.Models.Housing.NHO
     public class TraRequest
     {
         public string Name { get; set; }
+        public string Notes { get; set; }
         public string Email { get; set; }
         public int AreaId { get; set; }
         public Guid PatchId { get; set; }

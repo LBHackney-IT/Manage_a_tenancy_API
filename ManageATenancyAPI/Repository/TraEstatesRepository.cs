@@ -45,10 +45,10 @@ namespace ManageATenancyAPI.Repository
 
         public void AddEstateToTra(int traId, string estateId, string estateName)
         {
-            var traEstate = new TraEstate() { EstateName = estateName, EstateUHRef = estateId, TraId = traId };
+            var traEstate = new TraEstate() { EstateName = estateName, EstateUHRef = estateId, TRAId = traId };
             using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
             {
-                var fullResults = connection.Insert(traEstate);
+                var fullResults = connection.Execute("INSERT INTO TraEstates (TraId,EstateUHRef,EstateName) VALUES (@TraId,@EstateUHRef,@EstateName)", traEstate);
             }
         }
 
@@ -57,7 +57,7 @@ namespace ManageATenancyAPI.Repository
             using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
             {
                 var candidateToDelete = connection.QuerySingleOrDefault<TraEstate>(
-                      "select * from TraEstate WHERE traid=@TraId and EstateUHRef=@EstateUHRef",
+                      "select * from TraEstates WHERE traid=@TraId and EstateUHRef=@EstateUHRef",
                       new { TraId = traId, EstateUHRef = estateId });
 
                 if (candidateToDelete != null)

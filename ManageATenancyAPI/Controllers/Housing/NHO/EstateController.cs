@@ -51,5 +51,20 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             var estates = await _estateRepository.GetEstatesNotInList(usedEstates);
             return HackneyResult<List<Estate>>.Create(estates);
         }
+
+        [Route("/tra/{traId}")]
+        [HttpPost]
+        public async Task<IActionResult> AddEstateToTra([FromBody]AddEstateToTraRequest request)
+        {
+            var estateName = string.Empty;
+            var estates = await _estateRepository.GetEstates(new List<string>() { request.EstateId });
+            if (estates.Count == 1)
+            {
+                estateName = estates.First().EstateName;
+            }
+            _traEstatesRepository.AddEstateToTra(request.TraId, request.EstateId, estateName);
+            return Ok();
+        }
+
     }
 }

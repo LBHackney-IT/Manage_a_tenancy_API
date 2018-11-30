@@ -16,15 +16,25 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
         [Fact]
         public async Task Exists_ReturnsTrue()
         {
-
             var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
             ILoggerAdapter<TRARepository> logger = new Mock<ILoggerAdapter<TRARepository>>().Object;
             IDBAccessRepository genericRepository = new Mock<IDBAccessRepository>().Object;
-            IOptions<AppConfiguration> config = new Mock<IOptions<AppConfiguration>> ().Object;
-            var traRepository = new TRARepository(logger, genericRepository,options, config);
+            IOptions<AppConfiguration> config = new Mock<IOptions<AppConfiguration>>().Object;
+            var traRepository = new TRARepository(logger, genericRepository, options, config);
 
             var result = traRepository.Exists("Blackstone Estate TRA");
             Assert.True(result);
+        }
+
+        [Fact]
+        public async Task Update_Success()
+        {
+            var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
+            ILoggerAdapter<TRARepository> logger = new Mock<ILoggerAdapter<TRARepository>>().Object;
+            IDBAccessRepository genericRepository = new Mock<IDBAccessRepository>().Object;
+            IOptions<AppConfiguration> config = new Mock<IOptions<AppConfiguration>>().Object;
+        
+            throw new NotImplementedException();
         }
 
         [Fact]

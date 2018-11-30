@@ -91,7 +91,31 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             }
         }
 
-        
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateTra(string name, [FromBody] TraUpdate traUpdate)
+        {
+            var tra = _traRepository.Find(name);
+
+            if (tra == null)
+            {
+                return NotFound();
+            }
+
+
+            if (string.IsNullOrEmpty(traUpdate.Notes))
+            {
+                tra.Notes = traUpdate.Notes;
+            }
+
+            if (string.IsNullOrEmpty(traUpdate.Email))
+            {
+                tra.Email = traUpdate.Email;
+            }
+
+            _traEstatesRepository.UpdateTra(tra);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateTra([FromBody] TraRequest tra)
         {

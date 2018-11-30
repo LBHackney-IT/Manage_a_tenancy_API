@@ -95,6 +95,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         [HttpPost]
         public async Task<IActionResult> CreateTra([FromBody] TraRequest tra)
         {
+
             if (_traRepository.Exists(tra.Name))
             {
                 if (_traEstatesRepository.AreUnusedEstates(tra.EsatateRefs))

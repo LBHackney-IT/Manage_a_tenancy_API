@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ManageATenancyAPI.Controllers.Housing.NHO;
 using ManageATenancyAPI.Models;
@@ -10,9 +8,9 @@ using ManageATenancyAPI.Repository;
 using Moq;
 using Xunit;
 
-namespace ManageATenancyAPI.Tests.Controllers
+namespace ManageATenancyAPI.Tests.Unit.Controllers
 {
-    public class BlockControllerTests
+    public class BlockControllerTests: BaseTest
     {
         [Fact]
         public async Task ReturnEmptyArrayIfNoResults()

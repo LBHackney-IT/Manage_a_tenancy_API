@@ -10,15 +10,14 @@ using Xunit;
 
 namespace ManageATenancyAPI.Tests.Integration.Repositories
 {
-    public class BlockRepositoryTests
+    public class BlockRepositoryTests: BaseTest
     {
-
-
         [Fact]
         public async Task GetBlocksByEstateId()
         {
+            
             var estateId = "00078614";
-            var options = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { UHWReportingWarehouse = "Server=10.80.65.49;Database=StagedDB;User Id=reports; Password=reports" });
+            var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
             var blockRepository = new BlockRepository(options);
             var result = await blockRepository.GetBlocksByEstateId(estateId);
             Assert.Equal(10, result.Count());

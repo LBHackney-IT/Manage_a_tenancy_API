@@ -18,7 +18,7 @@ namespace ManageATenancyAPI.Tests.Controllers
         [Fact]
         public async Task GetUnassigned_PopulatedCorrectly()
         {
-            var config = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { ManageATenancyDatabase = "", UHWReportingWarehouse = "" });
+            var config = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { });
 
             var mockEstateRepo = new Mock<IEstateRepository>();
             var mockBlockRepo = new Mock<IBlockRepository>();
@@ -58,7 +58,7 @@ namespace ManageATenancyAPI.Tests.Controllers
         [Fact]
         public async Task GetEstatesByTra_PopulatedCorrectly()
         {
-            var config = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { ManageATenancyDatabase = "", UHWReportingWarehouse = "" });
+            var config = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration());
 
             var mockEstateRepo = new Mock<IEstateRepository>();
             var mockBlockRepo = new Mock<IBlockRepository>();
@@ -99,7 +99,7 @@ namespace ManageATenancyAPI.Tests.Controllers
         [Fact]
         public async Task GetEstatesByTra_NoResults_ReturnsEmpty()
         {
-            var config = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { ManageATenancyDatabase = "", UHWReportingWarehouse = "" });
+            var config = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration());
 
             var mockEstateRepo = new Mock<IEstateRepository>();
             var mockBlockRepo = new Mock<IBlockRepository>();

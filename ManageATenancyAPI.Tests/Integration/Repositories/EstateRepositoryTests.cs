@@ -11,14 +11,14 @@ using Xunit;
 
 namespace ManageATenancyAPI.Tests.Integration.Repositories
 {
-    public class EstateRepositoryTests
+    public class EstateRepositoryTests: BaseTest
     {
 
         [Fact]
         public async  Task GetEstates_OneResult_Populated()
         {
             var estateId = "00078614";
-            var options = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { UHWReportingWarehouse = "Server=10.80.65.49;Database=StagedDB;User Id=reports; Password=reports" });
+            var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
             var estateRepository = new EstateRepository(options);
             var result = await estateRepository.GetEstates(new List<string>() { estateId });
             Assert.Equal("00078614", result.First().EstateId);
@@ -30,7 +30,7 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
         public async Task GetEstates_NoResult_EmptyList()
         {
             var estateId = "Nothing";
-            var options = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { UHWReportingWarehouse = "Server=10.80.65.49;Database=StagedDB;User Id=reports; Password=reports" });
+            var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
             var estateRepository = new EstateRepository(options);
             var result = await estateRepository.GetEstates(new List<string>() { estateId });
             Assert.Equal(0, result.Count);
@@ -40,7 +40,8 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
         public async Task GetEstatesNotInList()
         {
             var estateId = "00078614";
-            var options = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { UHWReportingWarehouse = "Server=10.80.65.49;Database=StagedDB;User Id=reports; Password=reports" });
+
+            var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
             var estateRepository = new EstateRepository(options);
             var result = await estateRepository.GetEstatesNotInList(new List<string>() { estateId });
             Assert.DoesNotContain(result, x =>x.EstateId== "00078614");

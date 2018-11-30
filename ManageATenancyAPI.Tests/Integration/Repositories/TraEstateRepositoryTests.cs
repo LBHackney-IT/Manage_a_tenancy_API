@@ -10,12 +10,12 @@ using Xunit;
 
 namespace ManageATenancyAPI.Tests.Integration.Repositories
 {
-    public class TraEstateRepositoryTests
+    public class TraEstateRepositoryTests: BaseTest
     {
         [Fact]
         public async Task GetEstatesByTraId_ListEstates()
         {
-            var options = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { ManageATenancyDatabase = "Server=lbhsqld01.ad.hackney.gov.uk;Database=ManageATenancy_DEV;User Id=tmprocess; Password=Hackney123;" });
+            var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
             var traEstateRepository = new TraEstatesRepository(options);
             var result = traEstateRepository.GetEstatesByTraId(1);
 
@@ -24,10 +24,12 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
             Assert.Contains(estateList, x => x == "00078569");
         }
 
+       
+
         [Fact]
         public async Task GetAllUsedEstateRefsTest_ReturnsList_OnlyUsed()
         {
-            var options = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { ManageATenancyDatabase = "Server=lbhsqld01.ad.hackney.gov.uk;Database=ManageATenancy_DEV;User Id=tmprocess; Password=Hackney123;" });
+            var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
             var traEstateRepository = new TraEstatesRepository(options);
             var estatesWithTra = traEstateRepository.GetAllUsedEstateRefs();
             var traEstates = traEstateRepository.GetEstatesByTraId(1);
@@ -38,7 +40,7 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
         [Fact]
         public async Task AreUnusedEstates_EstateUsed_ReturnsFalse()
         {
-            var options = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { ManageATenancyDatabase = "Server=lbhsqld01.ad.hackney.gov.uk;Database=ManageATenancy_DEV;User Id=tmprocess; Password=Hackney123;" });
+            var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
             var traEstateRepository = new TraEstatesRepository(options);
             var traEstates = traEstateRepository.GetEstatesByTraId(1);
             var estatesWithTra = traEstateRepository.AreUnusedEstates(new List<string>() { { traEstates.First().EstateName } });
@@ -48,7 +50,7 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
         [Fact]
         public async Task AddEstateToTraThenRemove_EstateAddedEstateRemoved()
         {
-            var options = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { ManageATenancyDatabase = "Server=lbhsqld01.ad.hackney.gov.uk;Database=ManageATenancy_DEV;User Id=tmprocess; Password=Hackney123;", UHWReportingWarehouse = "Server=10.80.65.49;Database=StagedDB;User Id=reports; Password=reports" });
+            var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
             var traEstateRepository = new TraEstatesRepository(options);
             var estateRepository = new EstateRepository(options);
 

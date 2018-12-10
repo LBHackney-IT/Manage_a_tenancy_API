@@ -11,6 +11,7 @@ using Xunit;
 
 namespace ManageATenancyAPI.Tests.Integration.Repositories
 {
+    [Collection("Database collection")]
     public class TraRepositoryTests:BaseTest
     {
         [Fact]

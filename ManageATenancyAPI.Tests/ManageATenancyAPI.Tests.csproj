@@ -8,6 +8,41 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="Scripts\Createdatabase.ps1" />
+    <None Remove="Scripts\manage-a-tenancy-data.sql" />
+    <None Remove="Scripts\manage-a-tenancy-schema.sql" />
+    <None Remove="Scripts\uh-warehouse-data.sql" />
+    <None Remove="Scripts\uh-warehouse-schema.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Scripts\manage-a-tenancy-schema.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Scripts\uh-warehouse-data.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Scripts\uh-warehouse-schema.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Scripts\Createdatabase.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Scripts\manage-a-tenancy-data.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -18,9 +53,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.1.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.9.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="Microsoft.PowerShell.SDK" Version="6.1.1" />
     <PackageReference Include="Moq" Version="4.10.0" />
+    <PackageReference Include="System.Management.Automation" Version="6.1.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>

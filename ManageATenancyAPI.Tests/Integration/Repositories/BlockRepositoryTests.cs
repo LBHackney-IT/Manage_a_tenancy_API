@@ -10,6 +10,8 @@ using Xunit;
 
 namespace ManageATenancyAPI.Tests.Integration.Repositories
 {
+
+    [Collection("Database collection")]
     public class BlockRepositoryTests: BaseTest
     {
         [Fact]
@@ -21,7 +23,7 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
             var blockRepository = new BlockRepository(options);
             var result = await blockRepository.GetBlocksByEstateId(estateId);
             Assert.Equal(10, result.Count());
-            Assert.True(result.ToList().All(x => x.EstateId == estateId));
+            Assert.True(result.ToList().All(x => x.major_ref == estateId));
         }
     }
 }

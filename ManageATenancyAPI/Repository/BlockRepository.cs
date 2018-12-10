@@ -19,20 +19,14 @@ namespace ManageATenancyAPI.Repository
         }
 
         
-        public async Task<IEnumerable<Block>> GetBlocksByEstateId(string estateId)
+        public async Task<IEnumerable<UhProperty>> GetBlocksByEstateId(string estateId)
         {
             using (var connection = GetOpenConnection(_connectionStringConfig.UHWReportingWarehouse))
             {
                 var fullResults = connection.Query<UhProperty>(
                     "SELECT * FROM property WHERE major_ref=@EstateId and level_code=3", new { EstateId = estateId });
-
-
-                var results = new List<Block>();
-                foreach (var uhProperty in fullResults)
-                {
-                    results.Add(Block.FromModel(uhProperty));
-                }
-                return results;
+                
+                return fullResults.ToList();
             }
         }
     }

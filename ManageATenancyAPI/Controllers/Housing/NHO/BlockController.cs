@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Models;
 using ManageATenancyAPI.Models.Housing.NHO;
 using ManageATenancyAPI.Repository;
@@ -12,11 +13,11 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
     [Route("v1/[controller]")]
     public class BlockController : Controller
     {
-        private IBlockRepository _estateBlockRepository;
+        private IBlockAction _blockAction;
 
-        public BlockController(IBlockRepository estateBlockRepository)
+        public BlockController(IBlockAction blockAction)
         {
-            _estateBlockRepository = estateBlockRepository;
+            _blockAction = blockAction;
 
         }
 
@@ -24,7 +25,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         [HttpGet]
         public async Task<HackneyResult<IEnumerable<Block>>> GetBlocksByEstate(string estateId)
         {
-            var estateBlocks = await _estateBlockRepository.GetBlocksByEstateId(estateId);
+            var estateBlocks = await _blockAction.GetBlocksByEstateId(estateId);
             return HackneyResult<IEnumerable<Block>>.Create(estateBlocks);
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Controllers.Housing.NHO;
 using ManageATenancyAPI.Models;
 using ManageATenancyAPI.Models.Housing.NHO;
@@ -15,11 +16,11 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         [Fact]
         public async Task ReturnEmptyArrayIfNoResults()
         {
-            var mockBlockRepo = new Mock<IBlockRepository>();
-            var blockController = new BlockController(mockBlockRepo.Object);
+            var mockBlockAction = new Mock<IBlockAction>();
+            var blockController = new BlockController(mockBlockAction.Object);
 
             var returned = new List<Block>();
-            mockBlockRepo.Setup(x => x.GetBlocksByEstateId(It.IsAny<string>()))
+            mockBlockAction.Setup(x => x.GetBlocksByEstateId(It.IsAny<string>()))
                 .Returns(Task.FromResult(returned.AsEnumerable()));
 
             var result = await blockController.GetBlocksByEstate("Test123");
@@ -29,8 +30,8 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         [Fact]
         public async Task ReturnCorrectResults()
         {
-            var mockBlockRepo = new Mock<IBlockRepository>();
-            var blockController = new BlockController(mockBlockRepo.Object);
+            var mockBlockAction = new Mock<IBlockAction>();
+            var blockController = new BlockController(mockBlockAction.Object);
 
             var returned = new List<Block>()
             {
@@ -42,7 +43,7 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
                     EstateName = "TestEstateName"
                 }
             };
-            mockBlockRepo.Setup(x => x.GetBlocksByEstateId(It.IsAny<string>()))
+            mockBlockAction.Setup(x => x.GetBlocksByEstateId(It.IsAny<string>()))
                 .Returns(Task.FromResult(returned.AsEnumerable()));
 
             var result = await blockController.GetBlocksByEstate("Test123");

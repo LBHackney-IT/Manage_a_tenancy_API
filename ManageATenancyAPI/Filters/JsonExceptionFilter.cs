@@ -20,6 +20,8 @@ namespace ManageATenancyAPI.Filters
             }));
             result.StatusCode = 500;
             context.Result = result;
+
+
         }
     }
 }

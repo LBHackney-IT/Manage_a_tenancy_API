@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.Controllers.Housing.NHO;
 using ManageATenancyAPI.Models.Housing.NHO;
@@ -21,7 +22,7 @@ namespace ManageATenancyAPI.Tests.Controllers
             var config = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { });
 
             var mockEstateRepo = new Mock<IEstateRepository>();
-            var mockBlockRepo = new Mock<IBlockRepository>();
+            var mockBlockRepo = new Mock<IBlockAction>();
             var mockTraEstatesRepo = new Mock<ITraEstatesRepository>();
             var estateController = new EstateController(mockEstateRepo.Object, mockBlockRepo.Object, mockTraEstatesRepo.Object);
 
@@ -61,7 +62,7 @@ namespace ManageATenancyAPI.Tests.Controllers
             var config = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration());
 
             var mockEstateRepo = new Mock<IEstateRepository>();
-            var mockBlockRepo = new Mock<IBlockRepository>();
+            var mockBlockRepo = new Mock<IBlockAction>();
             var mockTraEstatesRepo = new Mock<ITraEstatesRepository>();
             var estateController = new EstateController(mockEstateRepo.Object, mockBlockRepo.Object, mockTraEstatesRepo.Object);
 
@@ -102,7 +103,7 @@ namespace ManageATenancyAPI.Tests.Controllers
             var config = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration());
 
             var mockEstateRepo = new Mock<IEstateRepository>();
-            var mockBlockRepo = new Mock<IBlockRepository>();
+            var mockBlockRepo = new Mock<IBlockAction>();
             var mockTraEstatesRepo = new Mock<ITraEstatesRepository>();
             var estateController = new EstateController(mockEstateRepo.Object, mockBlockRepo.Object, mockTraEstatesRepo.Object);
 

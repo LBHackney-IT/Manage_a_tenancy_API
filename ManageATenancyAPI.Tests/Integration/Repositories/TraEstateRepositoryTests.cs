@@ -10,6 +10,7 @@ using Xunit;
 
 namespace ManageATenancyAPI.Tests.Integration.Repositories
 {
+    [Collection("Database collection")]
     public class TraEstateRepositoryTests: BaseTest
     {
         [Fact]

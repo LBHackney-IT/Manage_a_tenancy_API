@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Interfaces;
 using ManageATenancyAPI.Models;
 using ManageATenancyAPI.Models.Housing.NHO;
@@ -15,13 +16,13 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
     public class EstateController : Controller
     {
         private IEstateRepository _estateRepository;
-        private IBlockRepository _blockRepository;
+        private IBlockAction _blockAction;
         private ITraEstatesRepository _traEstatesRepository;
-        public EstateController(IEstateRepository estateRepository, IBlockRepository blockRepository, ITraEstatesRepository traEstatesRepository)
+        public EstateController(IEstateRepository estateRepository, IBlockAction blockAction, ITraEstatesRepository traEstatesRepository)
         {
             _estateRepository = estateRepository;
             _traEstatesRepository = traEstatesRepository;
-            _blockRepository = blockRepository;
+            _blockAction = blockAction;
         }
 
         [Route("/estate/tra/{traId}")]
@@ -38,7 +39,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             var estates = await _estateRepository.GetEstates(traEstates.Select(x => x.EstateUHRef).ToList());
             foreach (var estate in estates)
             {
-                estate.Blocks = await _blockRepository.GetBlocksByEstateId(estate.EstateId);
+                estate.Blocks = await _blockAction.GetBlocksByEstateId(estate.EstateId);
             }
             return HackneyResult<List<Estate>>.Create(estates);
         }

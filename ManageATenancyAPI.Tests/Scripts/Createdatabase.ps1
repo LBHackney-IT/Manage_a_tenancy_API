@@ -1,4 +1,5 @@
-﻿[reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.Smo")
+﻿Start-Transcript -Path  $PSScriptRoot"\createdatabase.log"
+[reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.Smo")
 
 #############
 #Params
@@ -7,8 +8,9 @@ $databasename="ManageATenancyIntegrationTestDatabase"
 
 $ManageAtenancySchemaPath ="manage-a-tenancy-schema.sql"
 $UhWarehouseSchemaPath="uh-warehouse-schema.sql"
+
 $ManageAtenancyDataPath ="manage-a-tenancy-data.sql"
-$UhWarehouseSchemaDataPath="uh-warehouse-data.sql"
+$UhWarehouseDataPath="uh-warehouse-data.sql"
 
 #############
 
@@ -43,14 +45,18 @@ if ($dbExists -eq $TRUE) {
 
   Write-Host "Install Schema and test data"
 
-  Write-Host "Run :"$ManageAtenancySchemaPath
-  invoke-sqlcmd -inputfile $PSScriptRoot"\"$ManageAtenancySchemaPath -serverinstance $sqlinstance -database $databasename 
+Write-Host "Run :" + $ManageAtenancySchemaPath + "."
+& cmd.exe /c sqlcmd -S $sqlinstance -d $databasename  -i $PSScriptRoot"\"$ManageAtenancySchemaPath 
   
-  Write-Host "Run :"$UhWarehouseSchemaPath
-  invoke-sqlcmd -inputfile $PSScriptRoot"\"$UhWarehouseSchemaPath -serverinstance $sqlinstance -database $databasename 
+Write-Host "Run :" + $UhWarehouseSchemaPath + "."
+& cmd.exe /c sqlcmd -S $sqlinstance -d $databasename  -i $PSScriptRoot"\"$UhWarehouseSchemaPath 
   
-  Write-Host "Run :"$ManageAtenancyDataPath
-  invoke-sqlcmd -inputfile $PSScriptRoot"\"$ManageAtenancyDataPath -serverinstance $sqlinstance -database $databasename 
+Write-Host "Run :" + $UhWarehouseDataPath + "."
+& cmd.exe /c sqlcmd -S $sqlinstance -d $databasename  -i $PSScriptRoot"\"$UhWarehouseDataPath
   
-  Write-Host "Run :"$UhWarehouseSchemaDataPath
-  invoke-sqlcmd -inputfile $PSScriptRoot"\"$UhWarehouseSchemaDataPath -serverinstance $sqlinstance -database $databasename 
+Write-Host "Run :" + $ManageAtenancyDataPath + "."
+& cmd.exe /c sqlcmd -S $sqlinstance -d $databasename -i $PSScriptRoot"\"$ManageAtenancyDataPath
+  
+
+
+  Stop-Transcript

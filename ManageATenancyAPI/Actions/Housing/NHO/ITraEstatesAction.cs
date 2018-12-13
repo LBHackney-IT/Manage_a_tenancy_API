@@ -4,13 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using ManageATenancyAPI.Models.Housing.NHO;
 
-namespace ManageATenancyAPI.Repository
+namespace ManageATenancyAPI.Actions.Housing.NHO
 {
-    public interface ITraEstatesRepository
+    public interface ITraEstatesAction
     {
+
         IList<TraEstate> GetEstatesByTraId(int traId);
 
         IList<string> GetAllUsedEstateRefs();
-        void AddEstateToTra(int traId, string estateId,string estateName);
+        bool AreUnusedEstates(List<string> traEsatateRefs);
+        void AddEstateToTra(int traId, string estateId, string estateName);
+
     }
 }

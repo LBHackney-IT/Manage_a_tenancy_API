@@ -24,7 +24,7 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
             IOptions<AppConfiguration> config = new Mock<IOptions<AppConfiguration>> ().Object;
             var traRepository = new TRARepository(logger, genericRepository,options, config);
 
-            var result = traRepository.Exists("Blackstone Estate TRA");
+            var result = traRepository.Exists("TestTRA3");
             Assert.True(result);
         }
 

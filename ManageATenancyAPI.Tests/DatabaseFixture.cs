@@ -19,32 +19,15 @@ namespace ManageATenancyAPI.Tests
         {
         }
 
-    
-        //Build database
-
         public void Execute()
         {
-
             using (PowerShell PowerShellInstance = PowerShell.Create())
             {
-                PowerShellInstance.AddScript(".\\Createdatabase.ps1");
-                IAsyncResult result = PowerShellInstance.BeginInvoke();
-                while (result.IsCompleted == false)
-                {
-                    Console.WriteLine("Waiting for pipeline to finish...");
-                    Thread.Sleep(1000);
-                }
-                Console.WriteLine("Finished!");
-                Console.ReadKey();
+                PowerShellInstance.AddScript("powershell .\\Scripts\\Createdatabase.ps1");
+                var result = PowerShellInstance.Invoke();
+              
+                //break point here to see errors
             }
-            //using (var ps = PowerShell.Create())
-            //{
-            //    var results = ps.AddScript("Createdatabase.ps1").Invoke();
-            //    foreach (var result in results)
-            //    {
-            //        Debug.Write(result.ToString());
-            //    }
-            //}
         }
     }
 

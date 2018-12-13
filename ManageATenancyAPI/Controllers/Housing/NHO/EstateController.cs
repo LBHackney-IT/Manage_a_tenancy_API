@@ -15,13 +15,13 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
     [Route("v1/[controller]")]
     public class EstateController : Controller
     {
-        private IEstateRepository _estateRepository;
+        private IEstateAction _estateAction;
         private IBlockAction _blockAction;
-        private ITraEstatesRepository _traEstatesRepository;
-        public EstateController(IEstateRepository estateRepository, IBlockAction blockAction, ITraEstatesRepository traEstatesRepository)
+        private ITraEstatesAction _traEstatesAction;
+        public EstateController(IEstateAction estateAction, IBlockAction blockAction, ITraEstatesAction traEstatesAction)
         {
-            _estateRepository = estateRepository;
-            _traEstatesRepository = traEstatesRepository;
+            _estateAction = estateAction;
+            _traEstatesAction = traEstatesAction;
             _blockAction = blockAction;
         }
 
@@ -29,14 +29,14 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         [HttpGet]
         public async Task<HackneyResult<List<Estate>>> GetEstatesByTra(int traId)
         {
-            IList<TraEstate> traEstates = _traEstatesRepository.GetEstatesByTraId(traId);
+            IList<TraEstate> traEstates = _traEstatesAction.GetEstatesByTraId(traId);
 
             if (traEstates.Count == 0)
             {
                 return HackneyResult<List<Estate>>.Create(new List<Estate>());
             }
 
-            var estates = await _estateRepository.GetEstates(traEstates.Select(x => x.EstateUHRef).ToList());
+            var estates = await _estateAction.GetEstates(traEstates.Select(x => x.EstateUHRef).ToList());
             foreach (var estate in estates)
             {
                 estate.Blocks = await _blockAction.GetBlocksByEstateId(estate.EstateId);
@@ -48,8 +48,8 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         [HttpGet]
         public async Task<HackneyResult<List<Estate>>> GetUnassigned()
         {
-            var usedEstates = _traEstatesRepository.GetAllUsedEstateRefs();
-            var estates = await _estateRepository.GetEstatesNotInList(usedEstates);
+            var usedEstates = _traEstatesAction.GetAllUsedEstateRefs();
+            var estates = await _estateAction.GetEstatesNotInList(usedEstates);
             return HackneyResult<List<Estate>>.Create(estates);
         }
 
@@ -58,12 +58,12 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         public async Task<IActionResult> AddEstateToTra([FromBody]AddEstateToTraRequest request)
         {
             var estateName = string.Empty;
-            var estates = await _estateRepository.GetEstates(new List<string>() { request.EstateId });
+            var estates = await _estateAction.GetEstates(new List<string>() { request.EstateId });
             if (estates.Count == 1)
             {
                 estateName = estates.First().EstateName;
             }
-            _traEstatesRepository.AddEstateToTra(request.TraId, request.EstateId, estateName);
+            _traEstatesAction.AddEstateToTra(request.TraId, request.EstateId, estateName);
             return Ok();
         }
 

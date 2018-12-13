@@ -31,16 +31,16 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
 
         private readonly ILoggerAdapter<TRAController> _logger;
         private ITRARepository _traRepository;
-        private ITraEstatesRepository _traEstatesRepository;
-        private IEstateRepository _estatesRepository;
+        private ITraEstatesAction _traEstateAction;
+        private IEstateAction _estateAction;
         private readonly ILoggerAdapter<TRAActions> _actionsLogger;
-        public TRAController(ILoggerAdapter<TRAActions> actionsLogger, ILoggerAdapter<TRAController> loggerAdapter, IOptions<URLConfiguration> config, ITRARepository traRepository, ITraEstatesRepository traEstatesRepository, IEstateRepository estatesRepository)
+        public TRAController(ILoggerAdapter<TRAActions> actionsLogger, ILoggerAdapter<TRAController> loggerAdapter, IOptions<URLConfiguration> config, ITRARepository traRepository, ITraEstatesAction traEstateAction, IEstateAction estateAction)
         {
             _logger = loggerAdapter;
             _actionsLogger = actionsLogger;
             _traRepository = traRepository;
-            _traEstatesRepository = traEstatesRepository;
-            _estatesRepository = estatesRepository;
+            _traEstateAction = traEstateAction;
+            _estateAction = estateAction;
         }
 
         [Route("GetTRAForPatch")]
@@ -91,21 +91,21 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             }
         }
 
-        
+
         [HttpPost]
         public async Task<IActionResult> CreateTra([FromBody] TraRequest tra)
         {
 
             if (_traRepository.Exists(tra.Name))
             {
-                if (_traEstatesRepository.AreUnusedEstates(tra.EsatateRefs))
+                if (_traEstateAction.AreUnusedEstates(tra.EsatateRefs))
                 {
                     var persistedTra = _traRepository.Create(tra.Name, tra.Notes, tra.Email, tra.AreaId, tra.PatchId);
 
-                    var estates = await _estatesRepository.GetEstates(tra.EsatateRefs);
+                    var estates = await _estateAction.GetEstates(tra.EsatateRefs);
                     foreach (var estate in estates)
                     {
-                        _traEstatesRepository.AddEstateToTra(persistedTra.TRAId, estate.EstateId, estate.EstateName);
+                        _traEstateAction.AddEstateToTra(persistedTra.TRAId, estate.EstateId, estate.EstateName);
                     }
                 }
                 else

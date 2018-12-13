@@ -21,10 +21,10 @@ namespace ManageATenancyAPI.Tests.Controllers
         {
             var config = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration() { });
 
-            var mockEstateRepo = new Mock<IEstateRepository>();
-            var mockBlockRepo = new Mock<IBlockAction>();
-            var mockTraEstatesRepo = new Mock<ITraEstatesRepository>();
-            var estateController = new EstateController(mockEstateRepo.Object, mockBlockRepo.Object, mockTraEstatesRepo.Object);
+            var mockEstateAction = new Mock<IEstateAction>();
+            var mockBlockAction = new Mock<IBlockAction>();
+            var mockTraEstatesAction = new Mock<ITraEstatesAction>();
+            var estateController = new EstateController(mockEstateAction.Object, mockBlockAction.Object, mockTraEstatesAction.Object);
 
 
             var returnedBlock = new List<Block>()
@@ -38,13 +38,13 @@ namespace ManageATenancyAPI.Tests.Controllers
                 }
             };
 
-            mockBlockRepo.Setup(x => x.GetBlocksByEstateId(It.IsAny<string>()))
+            mockBlockAction.Setup(x => x.GetBlocksByEstateId(It.IsAny<string>()))
                 .Returns(Task.FromResult(returnedBlock.AsEnumerable()));
 
-            mockTraEstatesRepo.Setup(x => x.GetAllUsedEstateRefs())
+            mockTraEstatesAction.Setup(x => x.GetAllUsedEstateRefs())
                 .Returns(new List<string>() { "00001", "00002" });
 
-            mockEstateRepo.Setup(x => x.GetEstatesNotInList(new List<string>() { "00001", "00002" }))
+            mockEstateAction.Setup(x => x.GetEstatesNotInList(new List<string>() { "00001", "00002" }))
                 .Returns(Task.FromResult(new List<Estate>()
                 {
                     new Estate() {EstateId = "00001", EstateName = "EstateName1"},
@@ -61,10 +61,10 @@ namespace ManageATenancyAPI.Tests.Controllers
         {
             var config = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration());
 
-            var mockEstateRepo = new Mock<IEstateRepository>();
-            var mockBlockRepo = new Mock<IBlockAction>();
-            var mockTraEstatesRepo = new Mock<ITraEstatesRepository>();
-            var estateController = new EstateController(mockEstateRepo.Object, mockBlockRepo.Object, mockTraEstatesRepo.Object);
+            var mockEstateAction = new Mock<IEstateAction>();
+            var mockBlockAction = new Mock<IBlockAction>();
+            var mockTraEstatesAction = new Mock<ITraEstatesAction>();
+            var estateController = new EstateController(mockEstateAction.Object, mockBlockAction.Object, mockTraEstatesAction.Object);
 
 
             var returnedBlock = new List<Block>()
@@ -78,13 +78,13 @@ namespace ManageATenancyAPI.Tests.Controllers
                 }
             };
 
-            mockBlockRepo.Setup(x => x.GetBlocksByEstateId(It.IsAny<string>()))
+            mockBlockAction.Setup(x => x.GetBlocksByEstateId(It.IsAny<string>()))
                 .Returns(Task.FromResult(returnedBlock.AsEnumerable()));
 
-            mockTraEstatesRepo.Setup(x => x.GetEstatesByTraId(5))
+            mockTraEstatesAction.Setup(x => x.GetEstatesByTraId(5))
                 .Returns(new List<TraEstate>() { new TraEstate() { EstateName = "EstateName1", EstateUHRef = "00001", TRAId = 5 }, new TraEstate() { EstateName = "EstateName2", EstateUHRef = "00002", TRAId = 5 } });
 
-            mockEstateRepo.Setup(x => x.GetEstates(new List<string>() { "00001", "00002" }))
+            mockEstateAction.Setup(x => x.GetEstates(new List<string>() { "00001", "00002" }))
                 .Returns(Task.FromResult(new List<Estate>()
                 {
                     new Estate() {EstateId = "00001", EstateName = "EstateName1"},
@@ -102,10 +102,10 @@ namespace ManageATenancyAPI.Tests.Controllers
         {
             var config = new OptionsWrapper<ConnStringConfiguration>(new ConnStringConfiguration());
 
-            var mockEstateRepo = new Mock<IEstateRepository>();
-            var mockBlockRepo = new Mock<IBlockAction>();
-            var mockTraEstatesRepo = new Mock<ITraEstatesRepository>();
-            var estateController = new EstateController(mockEstateRepo.Object, mockBlockRepo.Object, mockTraEstatesRepo.Object);
+            var mockEstateAction = new Mock<IEstateAction>();
+            var mockBlockAction = new Mock<IBlockAction>();
+            var mockTraEstatesAction = new Mock<ITraEstatesAction>();
+            var estateController = new EstateController(mockEstateAction.Object, mockBlockAction.Object, mockTraEstatesAction.Object);
 
 
             var returnedBlock = new List<Block>()
@@ -119,13 +119,13 @@ namespace ManageATenancyAPI.Tests.Controllers
                 }
             };
 
-            mockBlockRepo.Setup(x => x.GetBlocksByEstateId(It.IsAny<string>()))
+            mockBlockAction.Setup(x => x.GetBlocksByEstateId(It.IsAny<string>()))
                 .Returns(Task.FromResult(returnedBlock.AsEnumerable()));
 
-            mockTraEstatesRepo.Setup(x => x.GetEstatesByTraId(5))
+            mockTraEstatesAction.Setup(x => x.GetEstatesByTraId(5))
                 .Returns(new List<TraEstate>());
 
-            mockEstateRepo.Setup(x => x.GetEstates(new List<string>() { "00001", "00002" }))
+            mockEstateAction.Setup(x => x.GetEstates(new List<string>() { "00001", "00002" }))
                 .Returns(Task.FromResult(new List<Estate>()));
 
 

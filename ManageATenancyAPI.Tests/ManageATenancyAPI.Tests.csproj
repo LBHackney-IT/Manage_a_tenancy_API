@@ -56,6 +56,8 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.9.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="Microsoft.PowerShell.Commands.Diagnostics" Version="6.1.1" />
+    <PackageReference Include="Microsoft.PowerShell.Native" Version="6.1.0" />
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="6.1.1" />
     <PackageReference Include="Moq" Version="4.10.0" />
     <PackageReference Include="System.Management.Automation" Version="6.1.1" />

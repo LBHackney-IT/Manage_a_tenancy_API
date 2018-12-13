@@ -38,11 +38,6 @@ namespace ManageATenancyAPI.Repository
             }
         }
 
-        public bool AreUnusedEstates(List<string> traEsatateRefs)
-        {
-            return (traEsatateRefs.Intersect(GetAllUsedEstateRefs()).Any());
-        }
-
         public void AddEstateToTra(int traId, string estateId, string estateName)
         {
             var traEstate = new TraEstate() { EstateName = estateName, EstateUHRef = estateId, TRAId = traId };

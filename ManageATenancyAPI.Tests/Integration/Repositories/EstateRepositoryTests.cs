@@ -18,12 +18,12 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
         [Fact]
         public async  Task GetEstates_OneResult_Populated()
         {
-            var estateId = "00078614";
+            var estateId = "ESTATEID0011";
             var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
             var estateRepository = new EstateRepository(options);
             var result = await estateRepository.GetEstates(new List<string>() { estateId });
-            Assert.Equal("00078614", result.First().EstateId);
-            Assert.Equal("De Beauvoir Road  De Beauvoir Estate", result.First().EstateName);
+            Assert.Equal("ESTATEID0011", result.First().prop_ref);
+            Assert.Equal("EstateName001", result.First().short_address.Trim());
          
         }
 
@@ -40,12 +40,12 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
         [Fact]
         public async Task GetEstatesNotInList()
         {
-            var estateId = "00078614";
+            var estateId = "NOTINLIST";
 
             var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
             var estateRepository = new EstateRepository(options);
             var result = await estateRepository.GetEstatesNotInList(new List<string>() { estateId });
-            Assert.DoesNotContain(result, x =>x.EstateId== "00078614");
+            Assert.DoesNotContain(result, x =>x.major_ref== "NOTINLIST");
         }
     }
 }

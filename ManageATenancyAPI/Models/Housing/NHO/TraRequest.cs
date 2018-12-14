@@ -2,21 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper.Contrib.Extensions;
 
-namespace ManageATenancyAPI.Models
+namespace ManageATenancyAPI.Models.Housing.NHO
 {
-
-    [Table("TRA")]
-    public class TRA
+    public class TraRequest
     {
-
-        [Key]
-        public int TRAId { get; set; }
         public string Name { get; set; }
         public string Notes { get; set; }
         public string Email { get; set; }
         public int AreaId { get; set; }
         public Guid PatchId { get; set; }
+        public List<string> EsatateRefs { get; set; }
+
     }
 }

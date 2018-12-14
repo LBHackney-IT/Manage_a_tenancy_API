@@ -4,11 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using ManageATenancyAPI.Models;
 
-namespace ManageATenancyAPI.Interfaces
+namespace ManageATenancyAPI.Actions.Housing.NHO
 {
-    public interface ITRARepository
+    public interface ITraAction
     {
-        List<TRA> FindTRAsForPatch(string patchId);
         Task<bool> Exists(string traName);
         Task<TRA> Create(string name, string notes, string email, int areaId, Guid patchId);
 

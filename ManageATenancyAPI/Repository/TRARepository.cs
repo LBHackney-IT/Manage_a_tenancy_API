@@ -5,15 +5,18 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
+using Dapper.Contrib.Extensions;
 using LBH.Utils;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.Interfaces;
 using ManageATenancyAPI.Models;
+using ManageATenancyAPI.Models.UniversalHousing;
 using Microsoft.Extensions.Options;
 
 namespace ManageATenancyAPI.Repository
 {
-    public class TRARepository : ITRARepository
+    public class TRARepository : BaseRepository, ITRARepository
     {
         private readonly IDBAccessRepository _genericRepository;
         private readonly ConnStringConfiguration _configuration;
@@ -21,7 +24,7 @@ namespace ManageATenancyAPI.Repository
         private ILoggerAdapter<TRARepository> _logger;
         private readonly string _strCrmConnString;
 
-        public TRARepository(ILoggerAdapter<TRARepository> logger,IDBAccessRepository genericRepository, IOptions<ConnStringConfiguration> config, IOptions<AppConfiguration> appConfig)
+        public TRARepository(ILoggerAdapter<TRARepository> logger, IDBAccessRepository genericRepository, IOptions<ConnStringConfiguration> config, IOptions<AppConfiguration> appConfig) : base(config)
         {
             _genericRepository = genericRepository;
             _configuration = config?.Value;
@@ -45,16 +48,58 @@ namespace ManageATenancyAPI.Repository
             }
         }
 
+        public Task<bool> Exists(string traName)
+        {
+            using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
+            {
+                var result = connection.ExecuteScalar<int>(
+                    "SELECT COUNT(*) FROM TRA WHERE NAME=@Name",
+                    new { Name = traName });
+                return Task.FromResult(result > 0);
+            }
+        }
+
+        public void UpdateNotes(int traId, string notes)
+        {
+            using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
+            {
+                connection.ExecuteScalar<int>(
+                    "Update TRA SET Notes=@Notes WHERE TraId=@traId", new { Notes = notes, TraId = traId });
+
+            }
+        }
+        public void UpdateEmail(int traId, string email)
+        {
+            using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
+            {
+                connection.ExecuteScalar<int>(
+                    "Update TRA SET Email=@Email WHERE TraId=@traId", new { Email = email, TraId = traId });
+
+            }
+        }
+
+
+        public Task<TRA> Create(string name, string notes,string email, int areaId, Guid patchId)
+        {
+
+            var tra = new TRA() { Name = name,Notes=notes, AreaId = areaId,PatchId= patchId, Email = email };
+            using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
+            {
+                var traId = connection.Insert(tra);
+                return Task.FromResult(connection.Get<TRA>(traId));
+            }
+        }
+
         public List<TRA> BuildListOfTRAs(IDataReader dataReader)
         {
             var results = new List<TRA>();
             while (dataReader.Read())
-            { 
+            {
                 var item = new TRA
                 {
-                    TRAId =  (int) dataReader["TRAId"],
+                    TRAId = (int)dataReader["TRAId"],
                     Name = Utils.NullToString(dataReader["Name"]),
-                    AreaId = (int) dataReader["AreaId"]
+                    AreaId = (int)dataReader["AreaId"]
                 };
                 results.Add(item);
             }

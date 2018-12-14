@@ -7,7 +7,7 @@ using Dapper.Contrib.Extensions;
 namespace ManageATenancyAPI.Models.Housing.NHO
 {
 
-    [Table("TraEstates")]
+    [Table("TraEstate")]
     public class TraEstate
     {
         [Key]

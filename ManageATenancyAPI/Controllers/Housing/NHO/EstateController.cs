@@ -17,15 +17,15 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
     {
         private IEstateAction _estateAction;
         private IBlockAction _blockAction;
-        private ITraEstatesAction _traEstatesAction;
-        public EstateController(IEstateAction estateAction, IBlockAction blockAction, ITraEstatesAction traEstatesAction)
+        private ITraEstateAction _traEstatesAction;
+        public EstateController(IEstateAction estateAction, IBlockAction blockAction, ITraEstateAction traEstatesAction)
         {
             _estateAction = estateAction;
             _traEstatesAction = traEstatesAction;
             _blockAction = blockAction;
         }
 
-        [Route("/estate/tra/{traId}")]
+        [Route("estate/tra/{traId}")]
         [HttpGet]
         public async Task<HackneyResult<List<Estate>>> GetEstatesByTra(int traId)
         {
@@ -44,7 +44,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             return HackneyResult<List<Estate>>.Create(estates);
         }
 
-        [Route("/estate/patch/{patchId}/unassigned")]
+        [Route("estate/patch/{patchId}/unassigned")]
         [HttpGet]
         public async Task<HackneyResult<List<Estate>>> GetUnassigned()
         {
@@ -53,7 +53,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             return HackneyResult<List<Estate>>.Create(estates);
         }
 
-        [Route("/tra/{traId}")]
+        [Route("tra/{traId}/estate")]
         [HttpPost]
         public async Task<IActionResult> AddEstateToTra([FromBody]AddEstateToTraRequest request)
         {

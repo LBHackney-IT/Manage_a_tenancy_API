@@ -8,33 +8,33 @@ using ManageATenancyAPI.Repository;
 
 namespace ManageATenancyAPI.Actions.Housing.NHO
 {
-    public class TraEstatesesAction : ITraEstatesAction
+    public class TraEstateAction : ITraEstateAction
     {
-        private ITraEstatesRepository _traEstatesRepository;
-        public TraEstatesesAction(ITraEstatesRepository traEstatesRepository)
+        private ITraEstateRepository _traEstateRepository;
+        public TraEstateAction(ITraEstateRepository traEstateRepository)
         {
-            _traEstatesRepository = traEstatesRepository;
+            _traEstateRepository = traEstateRepository;
         }
 
         public IList<TraEstate> GetEstatesByTraId(int traId)
         {
-            return _traEstatesRepository.GetEstatesByTraId(traId);
+            return _traEstateRepository.GetEstatesByTraId(traId);
         }
 
         public IList<string> GetAllUsedEstateRefs()
         {
-            return _traEstatesRepository.GetAllUsedEstateRefs();
+            return _traEstateRepository.GetAllUsedEstateRefs();
         }
 
         public void AddEstateToTra(int traId, string estateId, string estateName)
         {
-             _traEstatesRepository.AddEstateToTra(traId, estateId, estateName);
+             _traEstateRepository.AddEstateToTra(traId, estateId, estateName);
         }
 
 
         public bool AreUnusedEstates(List<string> traEsatateRefs)
         {
-            return (traEsatateRefs.Intersect(_traEstatesRepository.GetAllUsedEstateRefs()).Any());
+            return (traEsatateRefs.Intersect(_traEstateRepository.GetAllUsedEstateRefs()).Any());
         }
 
     }

@@ -23,8 +23,8 @@ namespace ManageATenancyAPI.Tests.Controllers
 
             var mockEstateAction = new Mock<IEstateAction>();
             var mockBlockAction = new Mock<IBlockAction>();
-            var mockTraEstatesAction = new Mock<ITraEstatesAction>();
-            var estateController = new EstateController(mockEstateAction.Object, mockBlockAction.Object, mockTraEstatesAction.Object);
+            var mockTraEstateAction = new Mock<ITraEstateAction>();
+            var estateController = new EstateController(mockEstateAction.Object, mockBlockAction.Object, mockTraEstateAction.Object);
 
 
             var returnedBlock = new List<Block>()
@@ -41,7 +41,7 @@ namespace ManageATenancyAPI.Tests.Controllers
             mockBlockAction.Setup(x => x.GetBlocksByEstateId(It.IsAny<string>()))
                 .Returns(Task.FromResult(returnedBlock.AsEnumerable()));
 
-            mockTraEstatesAction.Setup(x => x.GetAllUsedEstateRefs())
+            mockTraEstateAction.Setup(x => x.GetAllUsedEstateRefs())
                 .Returns(new List<string>() { "00001", "00002" });
 
             mockEstateAction.Setup(x => x.GetEstatesNotInList(new List<string>() { "00001", "00002" }))
@@ -63,7 +63,7 @@ namespace ManageATenancyAPI.Tests.Controllers
 
             var mockEstateAction = new Mock<IEstateAction>();
             var mockBlockAction = new Mock<IBlockAction>();
-            var mockTraEstatesAction = new Mock<ITraEstatesAction>();
+            var mockTraEstatesAction = new Mock<ITraEstateAction>();
             var estateController = new EstateController(mockEstateAction.Object, mockBlockAction.Object, mockTraEstatesAction.Object);
 
 
@@ -104,7 +104,7 @@ namespace ManageATenancyAPI.Tests.Controllers
 
             var mockEstateAction = new Mock<IEstateAction>();
             var mockBlockAction = new Mock<IBlockAction>();
-            var mockTraEstatesAction = new Mock<ITraEstatesAction>();
+            var mockTraEstatesAction = new Mock<ITraEstateAction>();
             var estateController = new EstateController(mockEstateAction.Object, mockBlockAction.Object, mockTraEstatesAction.Object);
 
 

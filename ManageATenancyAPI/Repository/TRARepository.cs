@@ -48,25 +48,45 @@ namespace ManageATenancyAPI.Repository
             }
         }
 
-        public bool Exists(string traName)
+        public Task<bool> Exists(string traName)
         {
             using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
             {
                 var result = connection.ExecuteScalar<int>(
                     "SELECT COUNT(*) FROM TRA WHERE NAME=@Name",
                     new { Name = traName });
-                return (result > 0);
+                return Task.FromResult(result > 0);
             }
         }
 
-        public TRA Create(string name, string notes,string email, int areaId, Guid patchId)
+        public void UpdateNotes(int traId, string notes)
+        {
+            using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
+            {
+                connection.ExecuteScalar<int>(
+                    "Update TRA SET Notes=@Notes WHERE TraId=@traId", new { Notes = notes, TraId = traId });
+
+            }
+        }
+        public void UpdateEmail(int traId, string email)
+        {
+            using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
+            {
+                connection.ExecuteScalar<int>(
+                    "Update TRA SET Email=@Email WHERE TraId=@traId", new { Email = email, TraId = traId });
+
+            }
+        }
+
+
+        public Task<TRA> Create(string name, string notes,string email, int areaId, Guid patchId)
         {
 
             var tra = new TRA() { Name = name,Notes=notes, AreaId = areaId,PatchId= patchId, Email = email };
             using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
             {
                 var traId = connection.Insert(tra);
-                return connection.Get<TRA>(traId);
+                return Task.FromResult(connection.Get<TRA>(traId));
             }
         }
 

@@ -11,9 +11,9 @@ using Microsoft.Extensions.Options;
 
 namespace ManageATenancyAPI.Repository
 {
-    public class TraEstatesRepository : BaseRepository, ITraEstatesRepository
+    public class TraEstateRepository : BaseRepository, ITraEstateRepository
     {
-        public TraEstatesRepository(IOptions<ConnStringConfiguration> connectionStringConfig) : base(connectionStringConfig)
+        public TraEstateRepository(IOptions<ConnStringConfiguration> connectionStringConfig) : base(connectionStringConfig)
         {
         }
 
@@ -23,7 +23,7 @@ namespace ManageATenancyAPI.Repository
             using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
             {
                 var fullResults = connection.Query<TraEstate>(
-                    "SELECT * FROM TRAEstates WHERE TraId=@TraId", new { TraId = traId });
+                    "SELECT * FROM TRAEstate WHERE TraId=@TraId", new { TraId = traId });
 
                 return fullResults.ToList();
             }
@@ -33,7 +33,7 @@ namespace ManageATenancyAPI.Repository
         {
             using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
             {
-                var fullResults = connection.Query<string>("SELECT EstateUHRef FROM TRAEstates");
+                var fullResults = connection.Query<string>("SELECT EstateUHRef FROM TRAEstate");
                 return fullResults.ToList();
             }
         }
@@ -43,7 +43,7 @@ namespace ManageATenancyAPI.Repository
             var traEstate = new TraEstate() { EstateName = estateName, EstateUHRef = estateId, TRAId = traId };
             using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
             {
-                var fullResults = connection.Execute("INSERT INTO TraEstates (TraId,EstateUHRef,EstateName) VALUES (@TraId,@EstateUHRef,@EstateName)", traEstate);
+                var fullResults = connection.Execute("INSERT INTO TraEstate (TraId,EstateUHRef,EstateName) VALUES (@TraId,@EstateUHRef,@EstateName)", traEstate);
             }
         }
 
@@ -52,7 +52,7 @@ namespace ManageATenancyAPI.Repository
             using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
             {
                 var candidateToDelete = connection.QuerySingleOrDefault<TraEstate>(
-                      "select * from TraEstates WHERE traid=@TraId and EstateUHRef=@EstateUHRef",
+                      "select * from TraEstate WHERE traid=@TraId and EstateUHRef=@EstateUHRef",
                       new { TraId = traId, EstateUHRef = estateId });
 
                 if (candidateToDelete != null)

@@ -1,4 +1,4 @@
-﻿/****** Object:  Table [dbo].[HousingArea]    Script Date: 09/12/2018 22:32:48 ******/
+﻿/****** Object:  Table [dbo].[HousingArea]    Script Date: 13/12/2018 09:06:56 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12,7 +12,7 @@ CREATE TABLE [dbo].[HousingArea](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TRA]    Script Date: 09/12/2018 22:32:48 ******/
+/****** Object:  Table [dbo].[TRA]    Script Date: 13/12/2018 09:06:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -30,12 +30,12 @@ CREATE TABLE [dbo].[TRA](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TRAEstates]    Script Date: 09/12/2018 22:32:48 ******/
+/****** Object:  Table [dbo].[TRAEstate]    Script Date: 13/12/2018 09:06:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[TRAEstates](
+CREATE TABLE [dbo].[TRAEstate](
 	[TRAId] [int] NOT NULL,
 	[EstateUHRef] [varchar](50) NOT NULL,
 	[EstateName] [varchar](100) NULL,
@@ -46,7 +46,7 @@ CREATE TABLE [dbo].[TRAEstates](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TRAPatchAssociation]    Script Date: 09/12/2018 22:32:48 ******/
+/****** Object:  Table [dbo].[TRAPatchAssociation]    Script Date: 13/12/2018 09:06:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -61,34 +61,33 @@ CREATE TABLE [dbo].[TRAPatchAssociation](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TRARoleAssignments]    Script Date: 09/12/2018 22:32:48 ******/
+/****** Object:  Table [dbo].[TRARole]    Script Date: 13/12/2018 09:06:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[TRARoleAssignments](
+CREATE TABLE [dbo].[TRARole](
+	[Role] [varchar](150) NOT NULL,
+	[Name] [varchar](150) NOT NULL,
+ CONSTRAINT [PK_TRARoles] PRIMARY KEY CLUSTERED 
+(
+	[Role] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TRARoleAssignment]    Script Date: 13/12/2018 09:06:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TRARoleAssignment](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[TRAId] [int] NOT NULL,
-	[ContactId] [varchar](150) NULL,
-	[RoleId] [int] NOT NULL,
+	[Role] [varchar](150) NOT NULL,
 	[PersonName] [varchar](100) NULL,
  CONSTRAINT [PK_TRARoleAssignments] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[TRARoles]    Script Date: 09/12/2018 22:32:49 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[TRARoles](
-	[RoleId] [int] IDENTITY(1,1) NOT NULL,
-	[RoleName] [varchar](150) NOT NULL,
- CONSTRAINT [PK_TRARoles] PRIMARY KEY CLUSTERED 
-(
-	[RoleId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
@@ -97,23 +96,62 @@ REFERENCES [dbo].[HousingArea] ([AreaId])
 GO
 ALTER TABLE [dbo].[TRA] CHECK CONSTRAINT [FK_TRA_Area]
 GO
-ALTER TABLE [dbo].[TRAEstates]  WITH CHECK ADD  CONSTRAINT [FK_TRAEstates_TRA] FOREIGN KEY([TRAId])
+ALTER TABLE [dbo].[TRAEstate]  WITH CHECK ADD  CONSTRAINT [FK_TRAEstates_TRA] FOREIGN KEY([TRAId])
 REFERENCES [dbo].[TRA] ([TRAId])
 GO
-ALTER TABLE [dbo].[TRAEstates] CHECK CONSTRAINT [FK_TRAEstates_TRA]
+ALTER TABLE [dbo].[TRAEstate] CHECK CONSTRAINT [FK_TRAEstates_TRA]
 GO
 ALTER TABLE [dbo].[TRAPatchAssociation]  WITH CHECK ADD  CONSTRAINT [FK_TRAPatchAssosiation_TRA] FOREIGN KEY([TRAId])
 REFERENCES [dbo].[TRA] ([TRAId])
 GO
 ALTER TABLE [dbo].[TRAPatchAssociation] CHECK CONSTRAINT [FK_TRAPatchAssosiation_TRA]
 GO
-ALTER TABLE [dbo].[TRARoleAssignments]  WITH CHECK ADD  CONSTRAINT [FK_TRARoleAssignments_Roles] FOREIGN KEY([RoleId])
-REFERENCES [dbo].[TRARoles] ([RoleId])
+ALTER TABLE [dbo].[TRARoleAssignment]  WITH CHECK ADD  CONSTRAINT [FK_TRARoleAssignments_Roles] FOREIGN KEY([Role])
+REFERENCES [dbo].[TRARole] ([Role])
 GO
-ALTER TABLE [dbo].[TRARoleAssignments] CHECK CONSTRAINT [FK_TRARoleAssignments_Roles]
+ALTER TABLE [dbo].[TRARoleAssignment] CHECK CONSTRAINT [FK_TRARoleAssignments_Roles]
 GO
-ALTER TABLE [dbo].[TRARoleAssignments]  WITH CHECK ADD  CONSTRAINT [FK_TRARoleAssignments_TRA] FOREIGN KEY([TRAId])
+ALTER TABLE [dbo].[TRARoleAssignment]  WITH CHECK ADD  CONSTRAINT [FK_TRARoleAssignments_TRA] FOREIGN KEY([TRAId])
 REFERENCES [dbo].[TRA] ([TRAId])
 GO
-ALTER TABLE [dbo].[TRARoleAssignments] CHECK CONSTRAINT [FK_TRARoleAssignments_TRA]
+ALTER TABLE [dbo].[TRARoleAssignment] CHECK CONSTRAINT [FK_TRARoleAssignments_TRA]
+GO
+/****** Object:  StoredProcedure [dbo].[get_tra_for_patch]    Script Date: 13/12/2018 09:06:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Description:	Returns a list of TRAs for a patch ID
+-- =============================================
+CREATE PROCEDURE [dbo].[get_tra_for_patch]
+	@PatchCRMId varchar(100)
+AS
+BEGIN
+   	SELECT * from TRA where TRAId in (select TRAId from TRAPatchAssosiation where PatchCRMId=@PatchCRMId)
+END
+GO
+/****** Object:  StoredProcedure [dbo].[get_tra_information]    Script Date: 13/12/2018 09:06:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Description:	Returns TRA information based on TRA ID
+-- =============================================
+CREATE PROCEDURE [dbo].[get_tra_information]
+	-- Add the parameters for the stored procedure here
+@TRAId int
+AS
+BEGIN
+
+select * from TRA 
+FULL OUTER JOIN TRARoleAssignments ON (TRARoleAssignments.TRAId = TRA.TRAId)
+FULL OUTER JOIN TRAPatchAssociation ON (TRAPatchAssociation.TRAId = TRA.TRAId)
+FULL OUTER JOIN TRAEstates ON (TRAEstates.TRAId = TRA.TRAId)	
+FULL OUTER JOIN TRARoles ON (TRARoles.RoleId=TRARoleAssignments.RoleId)
+where TRA.TRAId=@TRAId
+
+
+END
 GO

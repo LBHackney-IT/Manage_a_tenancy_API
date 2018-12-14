@@ -6,7 +6,7 @@ using ManageATenancyAPI.Models.Housing.NHO;
 
 namespace ManageATenancyAPI.Repository
 {
-    public interface ITraEstatesRepository
+    public interface ITraEstateRepository
     {
         IList<TraEstate> GetEstatesByTraId(int traId);
 

@@ -17,7 +17,7 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
         public async Task GetEstatesByTraId_ListEstates()
         {
             var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
-            var traEstateRepository = new TraEstatesRepository(options);
+            var traEstateRepository = new TraEstateRepository(options);
             var result = traEstateRepository.GetEstatesByTraId(3);
 
 
@@ -31,7 +31,7 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
         public async Task GetAllUsedEstateRefsTest_ReturnsList_OnlyUsed()
         {
             var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
-            var traEstateRepository = new TraEstatesRepository(options);
+            var traEstateRepository = new TraEstateRepository(options);
             var estatesWithTra = traEstateRepository.GetAllUsedEstateRefs();
             var traEstates = traEstateRepository.GetEstatesByTraId(2);
 
@@ -42,7 +42,7 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
         //public async Task AreUnusedEstates_EstateUsed_ReturnsFalse()
         //{
         //    var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
-        //    var traEstateRepository = new TraEstatesRepository(options);
+        //    var traEstateRepository = new TraEstateRepository(options);
         //    var traEstates = traEstateRepository.GetEstatesByTraId(1);
         //    var estatesWithTra = traEstateRepository.AreUnusedEstates(new List<string>() { { traEstates.First().EstateName } });
         //    Assert.False(estatesWithTra);
@@ -52,7 +52,7 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
         public async Task AddEstateToTraThenRemove_EstateAddedEstateRemoved()
         {
             var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
-            var traEstateRepository = new TraEstatesRepository(options);
+            var traEstateRepository = new TraEstateRepository(options);
             var estateRepository = new EstateRepository(options);
 
             var traEstates = traEstateRepository.GetEstatesByTraId(1);

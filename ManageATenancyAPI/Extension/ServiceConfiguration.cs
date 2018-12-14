@@ -45,6 +45,7 @@ namespace ManageATenancyAPI.Extension
             services.AddScoped<ITraEstateAction, TraEstateAction>();
             services.AddScoped<ITraRoleAssignmentAction, TraRoleAssignmentAction>();
             services.AddScoped<ITraRoleAction, TraRoleAction>();
+            services.AddScoped<ITraAction, TraAction>();
 
 
 

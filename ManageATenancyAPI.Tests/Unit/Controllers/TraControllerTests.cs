@@ -19,7 +19,7 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         {
 
             var traRoleAssignmentAction = new Mock<ITraRoleAssignmentAction>();
-            var traController = new TRAController(null, null, null, null, null, null, traRoleAssignmentAction.Object);
+            var traController = new TRAController(null, null, null, null, null, null, traRoleAssignmentAction.Object,null);
             traRoleAssignmentAction.Setup(x => x.AddRepresentative(3, "Test User", "client"));
             traController.AddRepresentative(3, "Test User", "client");
         }
@@ -28,7 +28,7 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         public void RemoveRepresentative()
         {
             var traRoleAssignmentAction = new Mock<ITraRoleAssignmentAction>();
-            var traController = new TRAController(null, null, null, null, null, null, traRoleAssignmentAction.Object);
+            var traController = new TRAController(null, null, null, null, null, null, traRoleAssignmentAction.Object,null);
             traRoleAssignmentAction.Setup(x => x.RemoveRepresentative(3, "Test User"));
             traController.RemoveRepresentative(3, "Test User");
         }
@@ -37,7 +37,7 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         public async void ListRepresentative()
         {
             var traRoleAssignmentAction = new Mock<ITraRoleAssignmentAction>();
-            var traController = new TRAController(null, null, null, null, null, null, traRoleAssignmentAction.Object);
+            var traController = new TRAController(null, null, null, null, null, null, traRoleAssignmentAction.Object, null);
             traRoleAssignmentAction.Setup(x => x.GetRepresentatives(3));
             traController.ListRepresentatives(3);
         }

@@ -39,10 +39,10 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
 
             var roleList = await traRoleRepository.List();
             await traRoleAssignmentRepository.AddRoleAssignment(2, roleList.First().Role, "Test User 3");
-            var traRoles = await traRoleAssignmentRepository.GetRoleAssignmentForTra(3);
+          
 
             await traRoleAssignmentRepository.RemoveRoleAssignment(3, "Test User 3");
-            await traRoleAssignmentRepository.GetRoleAssignmentForTra(3);
+            var traRoles = await traRoleAssignmentRepository.GetRoleAssignmentForTra(3);
             Assert.True(traRoles.Count==0);
 
 

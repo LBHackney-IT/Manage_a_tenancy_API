@@ -84,5 +84,53 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
                 return json;
             }
         }
+
+        [Route("GetTRAInformation")]
+        [HttpGet]
+        public async Task<JsonResult> GetTRAInformation(int TRAId)
+        {
+            try
+            {
+                if (TRAId != 0)
+                {
+                    var actions = new TRAActions(_actionsLogger, _traRepository);
+                    var results = actions.GetTRAInformation(TRAId).Result;
+                    return Json(results);
+                }
+                else
+                {
+                    var errors = new List<ApiErrorMessage>
+                    {
+                        new ApiErrorMessage
+                        {
+                            developerMessage = "Bad Request",
+                            userMessage = "Please provide a valid TRA ID"
+                        }
+                    };
+
+                    var jsonResponse = Json(errors);
+                    jsonResponse.StatusCode = 400;
+                    jsonResponse.ContentType = "application/json";
+                    return jsonResponse;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var errors = new List<ApiErrorMessage>
+                {
+                    new ApiErrorMessage
+                    {
+                        developerMessage = ex.Message,
+                        userMessage = "We had some problems processing your request - " + ex.InnerException
+                    }
+                };
+                _logger.LogError(ex.Message);
+                var json = Json(errors);
+                json.StatusCode = 500;
+                json.ContentType = "application/json";
+                return json;
+            }
+        }
     }
 }

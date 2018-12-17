@@ -9,5 +9,6 @@ namespace ManageATenancyAPI.Interfaces
     public interface ITRARepository
     {
         List<TRA> FindTRAsForPatch(string patchId);
+        TRAInformation FindTRAInformation (int TRAId);
     }
 }

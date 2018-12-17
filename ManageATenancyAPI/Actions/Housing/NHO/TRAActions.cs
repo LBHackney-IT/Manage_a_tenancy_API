@@ -52,6 +52,34 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 throw ex;
             }
         }
+
+        public async Task<object> GetTRAInformation(int TRAId)
+        {
+            try
+            {
+                _logger.LogInformation($"Get TRAs for a patch requested Started");
+
+                TRAInformation TRAResults = _traRepository.FindTRAInformation(TRAId);
+
+                if (TRAResults != null)
+                {
+                    return new
+                    {
+                        results = TRAResults
+                    };
+                }
+                else
+                {
+                    _logger.LogError($"TRAs not found for the given patch");
+                    throw new MissingTRAsForPatchException();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"GetTRAForPatch has encountered an error: " + ex.InnerException);
+                throw ex;
+            }
+        }
     }
 
     public class MissingTRAsForPatchException : Exception

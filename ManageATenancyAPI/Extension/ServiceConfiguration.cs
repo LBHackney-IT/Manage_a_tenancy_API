@@ -8,6 +8,7 @@ using ManageATenancyAPI.Services.Housing;
 using ManageATenancyAPI.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
+using ManageATenancyAPI.Actions.Housing.NHO;
 
 namespace ManageATenancyAPI.Extension
 {
@@ -31,6 +32,23 @@ namespace ManageATenancyAPI.Extension
 
             services.AddTransient(typeof(IDBAccessRepository), typeof(DBAccessRepository));
             services.AddTransient(typeof(ICitizenIndexRepository), typeof(CitizenIndexRepository));
+
+            services.AddScoped<IBlockRepository, BlockRepository>();
+            services.AddScoped<IEstateRepository, EstateRepository>();
+            services.AddScoped<ITraEstateRepository, TraEstateRepository>();
+            services.AddScoped<ITraRoleAssignmentRepository, TraRoleAssignmentRepository>();
+            services.AddScoped<ITraRoleRepository, TraRoleRepository>();
+
+
+            services.AddScoped<IBlockAction, BlockAction>();
+            services.AddScoped<IEstateAction, EstateAction>();
+            services.AddScoped<ITraEstateAction, TraEstateAction>();
+            services.AddScoped<ITraRoleAssignmentAction, TraRoleAssignmentAction>();
+            services.AddScoped<ITraRoleAction, TraRoleAction>();
+            services.AddScoped<ITraAction, TraAction>();
+
+
+
             services.AddTransient(typeof(ITRARepository), typeof(TRARepository));
             services.AddTransient(typeof(IUHWWarehouseRepository), typeof(UHWWarehouseRepository));
         }

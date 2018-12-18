@@ -15,6 +15,7 @@ using Hackney.ServiceLocator;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.DbContext;
 using ManageATenancyAPI.Extension;
+using ManageATenancyAPI.Filters;
 using ManageATenancyAPI.Tests;
 using Microsoft.IdentityModel.Protocols;
 using MyPropertyAccountAPI.Configuration;
@@ -61,6 +62,8 @@ namespace ManageATenancyAPI
                 option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
             services.AddCustomServices();
+            services.AddMvc(options => options.Filters.Add(typeof(JsonExceptionFilter)));
+
 
             LoadPlugins(services);
         }

@@ -175,7 +175,7 @@ namespace ManageATenancyAPI.Tests.Repository
                 Name = fakeData.Random.String(),
                 Notes = fakeData.Random.String(),
                 PatchCRMId = fakeData.Random.String(),
-                RoleId = fakeData.Random.Int(),
+                Role = fakeData.Random.String(),
                 RoleName = fakeData.Random.String(),
                 TRAId=fakeData.Random.Int(),
                 PersonName = fakeData.Random.String()
@@ -189,7 +189,7 @@ namespace ManageATenancyAPI.Tests.Repository
                 Name = fakeData.Random.String(),
                 Notes = fakeData.Random.String(),
                 PatchCRMId = fakeData.Random.String(),
-                RoleId = fakeData.Random.Int(),
+                Role = fakeData.Random.String(),
                 RoleName = fakeData.Random.String(),
                 TRAId = fakeData.Random.Int(),
                 PersonName = fakeData.Random.String()
@@ -224,7 +224,7 @@ namespace ManageATenancyAPI.Tests.Repository
                 fakeListOfRoles.Add(new TRARolesAssignment()
                 {
                     PersonName = element.PersonName,
-                    RoleId = element.RoleId,
+                    Role = element.Role,
                     RoleName = element.RoleName
                });
             }
@@ -244,7 +244,7 @@ namespace ManageATenancyAPI.Tests.Repository
                 Name = x.Name,
                 Notes = x.Notes,
                 PatchCRMId = x.PatchCRMId,
-                RoleId = x.RoleId,
+                Role = x.Role,
                 RoleName =x.RoleName,
                 TRAId = x.TRAId,
                 PersonName = x.PersonName
@@ -260,7 +260,7 @@ namespace ManageATenancyAPI.Tests.Repository
         public int AreaId { get; set; }
         public string Email { get; set; }
         public string Notes { get; set; }
-        public int RoleId { get; set; }
+        public string Role { get; set; }
         public string PersonName { get; set; }
         public string PatchCRMId { get; set; }
         public string EstateUHRef { get; set; }

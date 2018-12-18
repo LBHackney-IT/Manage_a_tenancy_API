@@ -103,7 +103,7 @@ namespace ManageATenancyAPI.Repository
                   
                     RoleName = dataReader["RoleName"].ToString(),
                     PersonName = dataReader["PersonName"].ToString(),
-                    RoleId = Utils.NullToInteger(dataReader["RoleId"])
+                    Role = dataReader["Role"].ToString()
                 });
             }
 
@@ -123,13 +123,13 @@ namespace ManageATenancyAPI.Repository
                 group role by new
                 {
                    role.RoleName,
-                   role.RoleId,
+                   role.Role,
                    role.PersonName
                 } into grp
                 select new TRARolesAssignment
                 {
                     RoleName = grp.Key.RoleName,
-                    RoleId = grp.Key.RoleId,
+                    Role = grp.Key.Role,
                     PersonName = grp.Key.PersonName
                 }).ToList();
 

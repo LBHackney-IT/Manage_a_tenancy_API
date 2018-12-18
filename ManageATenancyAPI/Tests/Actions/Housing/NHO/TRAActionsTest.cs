@@ -153,7 +153,7 @@ namespace ManageATenancyAPI.Tests.Actions.Housing.NHO
             roles.Add(new TRARolesAssignment()
             {
                 TRAId = fakeData.Random.Int(),
-                RoleId = fakeData.Random.Int(),
+                Role= fakeData.Random.String(),
                 RoleName = fakeData.Random.String(),
                 PersonName = fakeData.Random.String()
              

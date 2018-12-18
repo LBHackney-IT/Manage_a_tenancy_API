@@ -33,7 +33,7 @@ namespace ManageATenancyAPI.Models
     public class TRARolesAssignment
     {
         public int TRAId { get; set; }
-        public int? RoleId { get; set; }
+        public string Role { get; set; }
         public string RoleName { get; set; }      
         public string PersonName { get; set; }
     }

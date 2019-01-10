@@ -22,7 +22,11 @@ namespace ManageATenancyAPI.Models
 
     public class TRAInformation
     {
-        public TRA TRA{ get; set; }
+        public int TRAId { get; set; }
+        public string Name { get; set; }
+        public string Notes { get; set; }
+        public string Email { get; set; }
+        public int AreaId { get; set; }
         public string PatchId { get; set; }
         public List<TRAEstate> ListOfEstates { get; set; }
         public List<TRARolesAssignment> ListOfRoles { get; set; }

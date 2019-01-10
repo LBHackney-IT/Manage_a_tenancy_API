@@ -124,15 +124,12 @@ namespace ManageATenancyAPI.Tests.Actions.Housing.NHO
            var fakeData = new Faker();
            TRAInformation result = new TRAInformation();
            //add tra information
-           result.TRA=new TRA()
-            {
-                AreaId = fakeData.Random.Int(),
-                Name = fakeData.Random.String(),
-                TRAId = fakeData.Random.Int(),
-                TRAEmail = fakeData.Random.String()
-            };
-            //add a patch id
             result.PatchId = fakeData.Random.String();
+            result.AreaId = fakeData.Random.Int();
+            result.Name = fakeData.Random.String();
+            result.TRAId = fakeData.Random.Int();
+            result.Email = fakeData.Random.String();
+           
             //add list of estates
             List<TRAEstate> estates= new List<TRAEstate>();
             estates.Add(new TRAEstate()

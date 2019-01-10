@@ -98,7 +98,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
 
 
         [HttpPatch]
-        [Route("{traId")]
+        [Route("{traId}")]
         public async Task<IActionResult> UpdateTra(int traId, [FromBody] TraRequest tra)
         {
 

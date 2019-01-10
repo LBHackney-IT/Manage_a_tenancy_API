@@ -128,25 +128,24 @@ namespace ManageATenancyAPI.Repository
             var estates = new List<TRAEstate>();
             var roles = new List<TRARolesAssignment>();
             var result = new TRAInformation();
-            var item = new TRA();
             while (dataReader.Read())
             {
-                item.TRAId = (int) dataReader["TRAId"];
-                item.TRAEmail = dataReader["TRAEmail"].ToString();
-                item.AreaId = (int) dataReader["AreaId"];
-                item.Name = Utils.NullToString(dataReader["Name"]);
+                result.TRAId = (int) dataReader["TRAId"];
+                result.Email = dataReader["Email"].ToString();
+                result.AreaId = (int) dataReader["AreaId"];
+                result.Name = Utils.NullToString(dataReader["Name"]);
                 result.PatchId = dataReader["PatchCRMId"].ToString();
+                result.Notes = dataReader["Notes"].ToString();
 
                 estates.Add(new TRAEstate()
                 {
+                    TRAId = (int)dataReader["TRAId"],
                     EstateName = dataReader["EstateName"].ToString(),
                     EstateUHReference = dataReader["EstateUHRef"].ToString()
                 });
 
                 roles.Add(new TRARolesAssignment()
                 {
-                  
-                    RoleName = dataReader["RoleName"].ToString(),
                     PersonName = dataReader["PersonName"].ToString(),
                     Role = dataReader["Role"].ToString()
                 });
@@ -178,7 +177,6 @@ namespace ManageATenancyAPI.Repository
                     PersonName = grp.Key.PersonName
                 }).ToList();
 
-            result.TRA = item;
             result.ListOfEstates = estatesList;
             result.ListOfRoles = rolesList;
             

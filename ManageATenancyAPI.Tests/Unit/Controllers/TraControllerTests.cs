@@ -17,13 +17,11 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         [Fact]
         public void AddRepresentative()
         {
-
             var traRoleAssignmentAction = new Mock<ITraRoleAssignmentAction>();
             var traController = new TRAController(null, null, null, null, null, null, traRoleAssignmentAction.Object,null);
             traRoleAssignmentAction.Setup(x => x.AddRepresentative(3, "Test User", "client"));
             traController.AddRepresentative(3, "Test User", "client");
         }
-
         [Fact]
         public void RemoveRepresentative()
         {
@@ -32,7 +30,6 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
             traRoleAssignmentAction.Setup(x => x.RemoveRepresentative(3, "Test User"));
             traController.RemoveRepresentative(3, "Test User");
         }
-
         [Fact]
         public async void ListRepresentative()
         {
@@ -41,8 +38,11 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
             traRoleAssignmentAction.Setup(x => x.GetRepresentatives(3));
             traController.ListRepresentatives(3);
         }
-
-
-
+        [Fact]
+        public async void FindTRAInformation()
+        {
+            var traController = new TRAController(null, null, null, null, null, null, null, null);
+            traController.GetTRAInformation(1);
+        }
     }
 }

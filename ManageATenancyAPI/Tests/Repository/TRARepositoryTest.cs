@@ -176,7 +176,6 @@ namespace ManageATenancyAPI.Tests.Repository
                 Notes = fakeData.Random.String(),
                 PatchCRMId = fakeData.Random.String(),
                 Role = fakeData.Random.String(),
-                RoleName = fakeData.Random.String(),
                 TRAId=fakeData.Random.Int(),
                 PersonName = fakeData.Random.String()
             });
@@ -190,7 +189,6 @@ namespace ManageATenancyAPI.Tests.Repository
                 Notes = fakeData.Random.String(),
                 PatchCRMId = fakeData.Random.String(),
                 Role = fakeData.Random.String(),
-                RoleName = fakeData.Random.String(),
                 TRAId = fakeData.Random.Int(),
                 PersonName = fakeData.Random.String()
             });                     
@@ -210,10 +208,10 @@ namespace ManageATenancyAPI.Tests.Repository
                 //set patch id
                 fakeResult.PatchId = element.PatchCRMId;
                 //set TRA
-                fakeTRA.TRAId = element.TRAId;
-                fakeTRA.TRAEmail = element.Email;
-                fakeTRA.Name = element.Name;
-                fakeTRA.AreaId = element.AreaId;
+                fakeResult.TRAId = element.TRAId;
+                fakeResult.Email = element.Email;
+                fakeResult.Name = element.Name;
+                fakeResult.AreaId = element.AreaId;
                 //set estates
                 fakeListOfEstates.Add(new TRAEstate()
                 {
@@ -224,11 +222,9 @@ namespace ManageATenancyAPI.Tests.Repository
                 fakeListOfRoles.Add(new TRARolesAssignment()
                 {
                     PersonName = element.PersonName,
-                    Role = element.Role,
-                    RoleName = element.RoleName
+                    Role = element.Role
                });
             }
-            fakeResult.TRA = fakeTRA;
             fakeResult.ListOfEstates = fakeListOfEstates;
             fakeResult.ListOfRoles = fakeListOfRoles;         
             return fakeResult;
@@ -238,14 +234,13 @@ namespace ManageATenancyAPI.Tests.Repository
             return fakeData.AsDataReader(x => new
             {
                 AreaId = x.AreaId,
-                TRAEmail = x.Email,
+                Email = x.Email,
                 EstateName = x.EstateName,
                 EstateUHRef = x.EstateUHRef,
                 Name = x.Name,
                 Notes = x.Notes,
                 PatchCRMId = x.PatchCRMId,
                 Role = x.Role,
-                RoleName =x.RoleName,
                 TRAId = x.TRAId,
                 PersonName = x.PersonName
             }); 

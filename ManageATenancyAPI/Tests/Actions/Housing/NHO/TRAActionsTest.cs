@@ -135,13 +135,11 @@ namespace ManageATenancyAPI.Tests.Actions.Housing.NHO
             estates.Add(new TRAEstate()
             {
                 EstateName = fakeData.Random.String(),
-                TRAId = fakeData.Random.Int(),
                 EstateUHReference = fakeData.Random.String()
             });
             estates.Add(new TRAEstate()
             {
-                EstateName = fakeData.Random.String(),
-                TRAId = fakeData.Random.Int(),
+                EstateName = fakeData.Random.String(),          
                 EstateUHReference = fakeData.Random.String()
             });
 
@@ -149,7 +147,6 @@ namespace ManageATenancyAPI.Tests.Actions.Housing.NHO
             List<TRARolesAssignment> roles =new List<TRARolesAssignment>();
             roles.Add(new TRARolesAssignment()
             {
-                TRAId = fakeData.Random.Int(),
                 Role= fakeData.Random.String(),
                 RoleName = fakeData.Random.String(),
                 PersonName = fakeData.Random.String()

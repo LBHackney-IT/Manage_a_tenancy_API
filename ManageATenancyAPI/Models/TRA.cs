@@ -34,15 +34,13 @@ namespace ManageATenancyAPI.Models
     }
 
     public class TRAEstate
-    {
-        public int TRAId { get; set; }
+    {   
         public string EstateUHReference { get; set; }
         public string EstateName { get; set; }
     }
 
     public class TRARolesAssignment
     {
-        public int TRAId { get; set; }
         public string Role { get; set; }
         public string RoleName { get; set; }      
         public string PersonName { get; set; }

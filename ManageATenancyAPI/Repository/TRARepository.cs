@@ -139,7 +139,6 @@ namespace ManageATenancyAPI.Repository
 
                 estates.Add(new TRAEstate()
                 {
-                    TRAId = (int)dataReader["TRAId"],
                     EstateName = dataReader["EstateName"].ToString(),
                     EstateUHReference = dataReader["EstateUHRef"].ToString()
                 });

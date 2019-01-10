@@ -211,6 +211,7 @@ namespace ManageATenancyAPI.Tests.Repository
                 fakeResult.TRAId = element.TRAId;
                 fakeResult.Email = element.Email;
                 fakeResult.Name = element.Name;
+                fakeResult.Notes = element.Notes;
                 fakeResult.AreaId = element.AreaId;
                 //set estates
                 fakeListOfEstates.Add(new TRAEstate()

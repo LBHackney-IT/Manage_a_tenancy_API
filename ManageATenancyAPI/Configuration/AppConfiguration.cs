@@ -9,5 +9,7 @@ namespace ManageATenancyAPI.Configuration
     {
         public string CompletedClosureType { get; set; }
         public string MaxCISearchResults { get; set; }
+
+        public string EncryptionKey { get; set; }
     }
 }

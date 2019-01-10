@@ -65,7 +65,8 @@ namespace ManageATenancyAPI
             services.AddMvc(options => options.Filters.Add(typeof(JsonExceptionFilter)));
 
 
-            LoadPlugins(services);
+            services.AddScoped<ICryptoMethods, Hackney.Plugin.Crypto.CryptoMethods>();
+
 
         }
         private void LoadPlugins(IServiceCollection services)

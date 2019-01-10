@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Plugins\" />
     <Folder Include="Tests\Controllers\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>

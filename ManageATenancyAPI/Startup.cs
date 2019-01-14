@@ -80,40 +80,9 @@ namespace ManageATenancyAPI
             app.UseCors("AllowAny");
             app.UseMvc();
             app.UseDeveloperExceptionPage();
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    string basePath = "/";
-                    c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {"Development"}");
-                });
-            }
-            else
-            {
-                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Test")
-                {
-                    app.UseSwagger(
-                        c => c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                            swaggerDoc.Host = "sandboxapi.hackney.gov.uk/manageatenancy")
-                    );
-                }
-                else
-                {
-                    app.UseSwagger(
-                        c => c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                            swaggerDoc.Host = "api.hackney.gov.uk/manageatenancy")
-                    );
-                }
 
-                app.UseSwaggerUI(c =>
-                {
-                    string basePath = "/manageatenancy/";
-                    c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
-
-                });
-
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "ManageATenancyAPI"); });
         }
     }
 }

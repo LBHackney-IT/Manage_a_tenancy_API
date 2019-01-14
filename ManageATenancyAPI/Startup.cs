@@ -69,18 +69,7 @@ namespace ManageATenancyAPI
 
 
         }
-        private void LoadPlugins(IServiceCollection services)
-        {
-            ICryptoMethods cryptoService = ServiceRegister<ICryptoMethods>.InstantiateService(
-                "Hackney.Plugin.Crypto.CryptoMethods",
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Plugins"),
-                InstancingType.Singleton);
-            cryptoService.EncryptionKey = Configuration.GetSection("appConfigurations").GetValue<string>("EncryptionKey");
-
-            services.AddSingleton(typeof(ICryptoMethods), cryptoService);
-        }
-
-
+      
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {

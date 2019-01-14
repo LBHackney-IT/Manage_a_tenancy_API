@@ -10,6 +10,10 @@
     <DocumentationFile>C:\Work\GitHub\ManageATenanancyAPI_NetCore\ManageATenancyAPI\ManageATenancyAPI\ManageATenancyAPI.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\development\Hackney\Manage_a_tenancy_API\ManageATenancyAPI\ManageATenancyAPI.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Folder Include="Plugins\" />
     <Folder Include="Tests\Controllers\" />

@@ -333,7 +333,7 @@ namespace ManageATenancyAPI.Actions
                                  group addressResponse by new
                                  {
                                      postCode = addressResponse["contact1_x002e_address1_postalcode"],
-                                     shortAddress = addressResponse["contact1_x002e_address1_line1"].ToString() +" "+ addressResponse["contact1_x002e_address1_line2"].ToString() + " " + addressResponse["contact1_x002e_address1_line3"].ToString(),
+                                     shortAddress = addressResponse["contact1_x002e_address1_line1"].ToString() +" "+ addressResponse["contact1_x002e_address1_line1"] != null ? addressResponse["contact1_x002e_address1_line1"].ToString().Trim() : "" + " " + addressResponse["contact1_x002e_address1_line3"].ToString(),
                                      addressTypeCode = addressResponse["customeraddress2_x002e_addresstypecode"]
 
                                  }).Select(addressResponse => new

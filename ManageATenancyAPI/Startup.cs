@@ -66,7 +66,6 @@ namespace ManageATenancyAPI
 
 
             LoadPlugins(services);
-
         }
         private void LoadPlugins(IServiceCollection services)
         {
@@ -122,7 +121,6 @@ namespace ManageATenancyAPI
                     c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
 
                 });
-
             }
         }
     }

@@ -398,6 +398,10 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     JObject tenancyInteraction = new JObject();
 
                     tenancyInteraction["hackney_estateofficer_updatedbyid@odata.bind"] = "/hackney_estateofficers(" + interaction.estateOfficerId + ")";
+                    if(interaction.processType != "0")
+                    {
+                        tenancyInteraction["hackney_process_stage"] = interaction.processStage;
+                    }
                     tenancyInteraction.Add("modifiedon", DateTime.Now);
 
                     bool returnResponse = await _ManageATenancyAPI.UpdateObject(_client, interactionQuery, tenancyInteraction);

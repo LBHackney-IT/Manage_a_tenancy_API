@@ -48,6 +48,22 @@ namespace ManageATenancyAPI.Repository
             }
         }
 
+        public TRAInformation FindTRAInformation(int TRAId)
+        {
+            SqlParameter[] sqlParams = new SqlParameter[1];
+            sqlParams[0] = new SqlParameter("@TRAId", SqlDbType.VarChar, 200) { Value = TRAId == 0 ? 0 : TRAId };
+            try
+            {
+                TRAInformation result = BuildTRAInformation(_genericRepository.ExecuteReader(_strCrmConnString, CommandType.StoredProcedure, "get_tra_information", sqlParams));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("An error has occurred while retriving data for FindTRAsForPatch method: " + ex.InnerException);
+                throw ex;
+            }
+        }
+
         public Task<bool> Exists(string traName)
         {
             using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
@@ -92,6 +108,7 @@ namespace ManageATenancyAPI.Repository
 
         public List<TRA> BuildListOfTRAs(IDataReader dataReader)
         {
+          
             var results = new List<TRA>();
             while (dataReader.Read())
             {
@@ -106,5 +123,63 @@ namespace ManageATenancyAPI.Repository
             return results;
         }
 
+        public TRAInformation BuildTRAInformation(IDataReader dataReader)
+        {
+            var estates = new List<TRAEstate>();
+            var roles = new List<TRARolesAssignment>();
+            var result = new TRAInformation();
+            while (dataReader.Read())
+            {
+                result.TRAId = (int) dataReader["TRAId"];
+                result.Email = dataReader["Email"].ToString();
+                result.AreaId = (int) dataReader["AreaId"];
+                result.Name = Utils.NullToString(dataReader["Name"]);
+                result.PatchId = dataReader["PatchCRMId"].ToString();
+                result.Notes = dataReader["Notes"].ToString();
+
+                estates.Add(new TRAEstate()
+                {
+                    EstateName = dataReader["EstateName"].ToString(),
+                    EstateUHReference = dataReader["EstateUHRef"].ToString()
+                });
+
+                roles.Add(new TRARolesAssignment()
+                {
+                    PersonName = dataReader["PersonName"].ToString(),
+                    Role = dataReader["Role"].ToString()
+                });
+            }
+
+            List<TRAEstate> estatesList = (from estate in estates
+                                group estate by new
+                                {
+                                    estate.EstateName,
+                                    estate.EstateUHReference
+                                } into grp
+                                select new TRAEstate
+                                {
+                                    EstateName = grp.Key.EstateName,
+                                   EstateUHReference = grp.Key.EstateUHReference
+                                }).ToList();
+
+            List<TRARolesAssignment> rolesList = (from role in roles
+                group role by new
+                {
+                   role.RoleName,
+                   role.Role,
+                   role.PersonName
+                } into grp
+                select new TRARolesAssignment
+                {
+                    RoleName = grp.Key.RoleName,
+                    Role = grp.Key.Role,
+                    PersonName = grp.Key.PersonName
+                }).ToList();
+
+            result.ListOfEstates = estatesList;
+            result.ListOfRoles = rolesList;
+            
+            return result;
+        }
     }
 }

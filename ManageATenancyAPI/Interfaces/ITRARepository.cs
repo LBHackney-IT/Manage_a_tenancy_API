@@ -14,5 +14,6 @@ namespace ManageATenancyAPI.Interfaces
 
         void UpdateNotes(int traId, string notes);
         void UpdateEmail(int traId, string email);
+        TRAInformation FindTRAInformation (int TRAId);
     }
 }

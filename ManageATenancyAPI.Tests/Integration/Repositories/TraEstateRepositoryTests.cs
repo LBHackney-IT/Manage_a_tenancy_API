@@ -65,7 +65,6 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
             traEstateRepository.RemoveEstateFromTra(1, unaddedEstates.First().prop_ref);
             var traEstatesOneRemoved = traEstateRepository.GetEstatesByTraId(1);
             Assert.Equal(traEstatesOneRemoved.Count + 1, traEstatesOneAdded.Count);
-
         }
     }
 }

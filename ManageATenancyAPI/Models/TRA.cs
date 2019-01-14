@@ -19,4 +19,30 @@ namespace ManageATenancyAPI.Models
         public int AreaId { get; set; }
         public Guid PatchId { get; set; }
     }
+
+    public class TRAInformation
+    {
+        public int TRAId { get; set; }
+        public string Name { get; set; }
+        public string Notes { get; set; }
+        public string Email { get; set; }
+        public int AreaId { get; set; }
+        public string PatchId { get; set; }
+        public List<TRAEstate> ListOfEstates { get; set; }
+        public List<TRARolesAssignment> ListOfRoles { get; set; }
+
+    }
+
+    public class TRAEstate
+    {   
+        public string EstateUHReference { get; set; }
+        public string EstateName { get; set; }
+    }
+
+    public class TRARolesAssignment
+    {
+        public string Role { get; set; }
+        public string RoleName { get; set; }      
+        public string PersonName { get; set; }
+    }
 }

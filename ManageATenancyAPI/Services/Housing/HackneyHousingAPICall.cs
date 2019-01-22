@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Web;
+using ManageATenancyAPI.Logging;
 using Newtonsoft.Json.Linq;
 
 namespace ManageATenancyAPI.Services.Housing
@@ -48,6 +49,7 @@ namespace ManageATenancyAPI.Services.Housing
                 HttpRequestMessage request = new HttpRequestMessage(method, requestUri) { Content = new StringContent(content) };
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 response = client.SendAsync(request).Result;
+           
                 if (!response.IsSuccessStatusCode)
                 {
                     throw new ServiceException();

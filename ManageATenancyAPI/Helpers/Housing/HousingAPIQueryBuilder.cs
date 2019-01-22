@@ -163,6 +163,11 @@ namespace ManageATenancyAPI.Helpers.Housing
             return
                 "/api/data/v8.2/hackney_tenancymanagementinteractionses?$select=_hackney_contactid_value,hackney_enquirysubject,_hackney_estateofficer_createdbyid_value,hackney_handleby,_hackney_incidentid_value,hackney_name,hackney_natureofenquiry,_hackney_subjectid_value,hackney_tenancymanagementinteractionsid";
         }
+        public static string PostETRAMeetingQuery()
+        {
+            return
+                "/api/data/v8.2/hackney_tenancymanagementinteractionses?$select=hackney_tenancymanagementinteractionsid";
+        }
 
         public static string PostIncidentQuery()
         {

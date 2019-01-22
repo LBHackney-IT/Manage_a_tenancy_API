@@ -41,9 +41,9 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
             var expected = new JObject();
             expected.Add("interactionid", "testid");
             expected.Add("ticketnumber", "testticket");
-            etraMeetingActions.Setup(x => x.CreateETRAMeeting(It.IsAny<ETRA>())).ReturnsAsync(HackneyResult<JObject>.Create(expected));
+            etraMeetingActions.Setup(x => x.CreateETRAMeeting(It.IsAny<ETRAIssue>())).ReturnsAsync(HackneyResult<JObject>.Create(expected));
 
-            var actual = etraController.Post(It.IsAny<ETRA>()).Result;
+            var actual = etraController.Post(It.IsAny<ETRAIssue>()).Result;
 
             Assert.Equal(JsonConvert.SerializeObject(actual.Value), JsonConvert.SerializeObject(HackneyResult<JObject>.Create(expected)));
             Assert.Equal(actual.StatusCode, 201);
@@ -56,9 +56,9 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
             var expected = new JObject();
             expected.Add("interactionid", null);
             expected.Add("ticketnumber",null);
-            etraMeetingActions.Setup(x => x.CreateETRAMeeting(It.IsAny<ETRA>())).ReturnsAsync(HackneyResult<JObject>.Create(expected));
+            etraMeetingActions.Setup(x => x.CreateETRAMeeting(It.IsAny<ETRAIssue>())).ReturnsAsync(HackneyResult<JObject>.Create(expected));
 
-            var actual = etraController.Post(It.IsAny<ETRA>()).Result;
+            var actual = etraController.Post(It.IsAny<ETRAIssue>()).Result;
 
             Assert.Equal(JsonConvert.SerializeObject(actual.Value), JsonConvert.SerializeObject(HackneyResult<JObject>.Create(expected)));
             Assert.Equal(actual.StatusCode, 201);
@@ -68,9 +68,9 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         {
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
 
-            etraMeetingActions.Setup(x => x.CreateETRAMeeting(It.IsAny<ETRA>())).ThrowsAsync(new ServiceRequestException());
+            etraMeetingActions.Setup(x => x.CreateETRAMeeting(It.IsAny<ETRAIssue>())).ThrowsAsync(new ServiceRequestException());
 
-            var actual = etraController.Post(It.IsAny<ETRA>()).Result;
+            var actual = etraController.Post(It.IsAny<ETRAIssue>()).Result;
 
             Assert.Equal(actual.StatusCode, 500);
         }

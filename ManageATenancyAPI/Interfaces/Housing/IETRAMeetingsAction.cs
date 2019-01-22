@@ -10,6 +10,6 @@ namespace ManageATenancyAPI.Interfaces.Housing
 {
     public interface IETRAMeetingsAction
     {
-        Task<HackneyResult<JObject>> CreateETRAMeeting(ETRA meetingInfo);
+        Task<HackneyResult<JObject>> CreateETRAMeeting(ETRAIssue meetingInfo);
     }
 }

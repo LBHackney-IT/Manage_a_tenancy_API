@@ -45,10 +45,10 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         /// Creates an ETRA meeting
         /// </summary>
         /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
-        /// <response code="200">A successfully created ETRA meeting request</response>
-        [Route("CreateETRAMeeting")]
+        /// <response code="201">A successfully created ETRA meeting request</response>
+        [Route("CreateETRAMeetingOrIssue")]
         [HttpPost]
-        public async Task<JsonResult> Post([FromBody] ETRA etraMeeting)
+        public async Task<JsonResult> Post([FromBody] ETRAIssue etraMeeting)
         {
             try
             {

@@ -246,7 +246,7 @@ namespace ManageATenancyAPI.Helpers.Housing
                             <attribute name='annotationid' />
                         </link-entity>
                     </link-entity>
-                    <link-entity name='contact' from='contactid' to='hackney_contactid' >
+                    <link-entity name='contact' from='contactid' to='hackney_contactid' link-type='outer' >
                         <attribute name='birthdate' />
                         <attribute name='address1_line3' />
                         <attribute name='address1_postalcode' />

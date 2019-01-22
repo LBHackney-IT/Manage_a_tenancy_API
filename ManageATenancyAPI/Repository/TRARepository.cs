@@ -105,6 +105,14 @@ namespace ManageATenancyAPI.Repository
                 return Task.FromResult(connection.Get<TRA>(traId));
             }
         }
+        public Task<TRA> Find(string traName)
+        {
+            using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
+            {
+               var tra=  connection.QuerySingleOrDefault<TRA>("SELECT * FROM TRA WHERE Name =@Name", new { Name = traName});
+                return Task.FromResult(tra);
+            }
+        }
 
         public List<TRA> BuildListOfTRAs(IDataReader dataReader)
         {
@@ -181,5 +189,6 @@ namespace ManageATenancyAPI.Repository
             
             return result;
         }
+
     }
 }

@@ -61,7 +61,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     sr["subjectid@odata.bind"] = "/subjects(" + meetingInfo.ServiceRequest.Subject + ")";
                 }
                 //change this with dynamic account value
-                sr["customerid_account@odata.bind"] = "/accounts(edd56bb7-ba18-e911-a973-002248072781)";
+                sr["customerid_account@odata.bind"] = "/accounts("+_configuration.ETRAAccount+")";
                 if (!string.IsNullOrEmpty(meetingInfo.ServiceRequest.Title))
                 {
                     sr.Add("title", meetingInfo.ServiceRequest.Title);

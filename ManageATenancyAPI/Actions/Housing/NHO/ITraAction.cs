@@ -13,5 +13,6 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
         void UpdateNotes(int traId, string notes);
         void UpdateEmail(int traId, string email);
+        Task<TRA> Find(string traName);
     }
 }

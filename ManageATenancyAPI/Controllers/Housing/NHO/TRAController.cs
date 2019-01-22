@@ -106,7 +106,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             {
                 if (_traEstateAction.AreUnusedEstates(tra.EsatateRefs))
                 {
-                    var persistedTra = await _traAction.Create(tra.Name, tra.Notes, tra.Email, tra.AreaId, tra.PatchId);
+                    var persistedTra = await _traAction.Find(tra.Name);
 
                     var estates = await _estateAction.GetEstates(tra.EsatateRefs);
                     foreach (var estate in estates)

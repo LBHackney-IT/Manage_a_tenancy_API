@@ -38,5 +38,6 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
         {
             _traRepository.UpdateEmail(traId, email);
         }
+
     }
 }

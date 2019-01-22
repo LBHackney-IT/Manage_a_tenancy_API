@@ -11,5 +11,6 @@ namespace ManageATenancyAPI.Configuration
         public string MaxCISearchResults { get; set; }
 
         public string EncryptionKey { get; set; }
+        public string ETRAAccount { get; set; }
     }
 }

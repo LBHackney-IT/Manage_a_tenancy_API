@@ -29,6 +29,7 @@ namespace ManageATenancyAPI.Extension
             services.AddScoped(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
 
             services.AddTransient<IHackneyHousingAPICallBuilder, HackneyHousingAPICallBuilder>();
+            services.AddTransient<IHackneyGetCRM365Token, HackneyGetCRM365Token>();
 
             services.AddTransient(typeof(IDBAccessRepository), typeof(DBAccessRepository));
             services.AddTransient(typeof(ICitizenIndexRepository), typeof(CitizenIndexRepository));
@@ -41,6 +42,7 @@ namespace ManageATenancyAPI.Extension
 
 
             services.AddScoped<IBlockAction, BlockAction>();
+            services.AddScoped<IETRAMeetingsAction, ETRAMeetingsAction>();
             services.AddScoped<IEstateAction, EstateAction>();
             services.AddScoped<ITraEstateAction, TraEstateAction>();
             services.AddScoped<ITraRoleAssignmentAction, TraRoleAssignmentAction>();

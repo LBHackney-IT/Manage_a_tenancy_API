@@ -37,6 +37,13 @@
             </summary>
             <returns>Returns the updated information</returns>
         </member>
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.Post(ManageATenancyAPI.Models.Housing.NHO.ETRA)">
+            <summary>
+            Creates an ETRA meeting
+            </summary>
+            <returns>A JSON object for a successfully created ETRA meeting request</returns>
+            <response code="200">A successfully created ETRA meeting request</response>
+        </member>
         <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.TenancyManagementInteractionsController.Post(ManageATenancyAPI.Models.Housing.NHO.TenancyManagement)">
             <summary>
             Creates a TenancyManagement request

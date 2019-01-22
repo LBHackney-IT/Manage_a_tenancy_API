@@ -64,7 +64,7 @@ namespace ManageATenancyAPI.Tests.Actions
             expectedResponse.Add("interactionid", null);
             expectedResponse.Add("ticketnumber", createdServiceRequest["ticketnumber"]);
 
-            Assert.Equal(JsonConvert.SerializeObject(actualResponse), JsonConvert.SerializeObject(expectedResponse));
+            Assert.Equal(JsonConvert.SerializeObject(actualResponse), JsonConvert.SerializeObject(HackneyResult<JObject>.Create(expectedResponse)));
         }
 
         [Fact]

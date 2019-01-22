@@ -39,7 +39,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             _configuration = config?.Value;
 
         }
-        public async Task<HackneyResult<JObject>> CreateETRAMeeting(ETRA meetingInfo)
+        public async Task<HackneyResult<JObject>> CreateETRAMeeting(ETRAIssue meetingInfo)
         {
             _logger.LogInformation($"Create Service Request");
 
@@ -60,8 +60,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 {
                     sr["subjectid@odata.bind"] = "/subjects(" + meetingInfo.ServiceRequest.Subject + ")";
                 }
-                //change this with dynamic account value
-                sr["customerid_account@odata.bind"] = "/accounts("+_configuration.ETRAAccount+")";
+                //change this with dynamic account value 
+                sr["customerid_account@odata.bind"] = "/accounts("+ _configuration.ETRAAccount +")";
                 if (!string.IsNullOrEmpty(meetingInfo.ServiceRequest.Title))
                 {
                     sr.Add("title", meetingInfo.ServiceRequest.Title);
@@ -88,7 +88,11 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     {
                         throw new ServiceRequestException();
                     }
-
+                    if (!string.IsNullOrWhiteSpace(meetingInfo.ServiceRequest.Description))
+                    {
+                        var annotationResult = await CreateAnnotation(meetingInfo.ServiceRequest.Description, meetingInfo.estateOfficerName,
+                            meetingInfo.ServiceRequest.Id, _client);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -109,6 +113,11 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 if (Utils.NullToString(ticketnumber) != "")
                 {
                     tmiJObject.Add("hackney_name", ticketnumber);
+                }
+                // Parent Interaction (This is self referencing with TM Interactions when we need to create an issue, which needs to link to a parent ETRA meeting
+                if (!string.IsNullOrEmpty(meetingInfo.parentInteractionId))
+                {
+                    tmiJObject.Add("hackney_parent_interactionid@odata.bind", " /hackney_tenancymanagementinteractionses(" + meetingInfo.parentInteractionId + ")");
                 }
                 if (Utils.NullToString(meetingInfo.subject) != "")
                 {
@@ -131,12 +140,18 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     tmiJObject["hackney_areaname"] = meetingInfo.areaName;
                 }
                     //add nature of enquiry
-                tmiJObject.Add("hackney_natureofenquiry", "28");
+                tmiJObject.Add("hackney_natureofenquiry", meetingInfo.natureOfEnquiry);
                 //add subject
-                tmiJObject.Add("hackney_enquirysubject", "100000219");
-                // Process Type :- 0 Interaction , 1 TM Process , 2 Post Visit Action
-                tmiJObject.Add("hackney_processtype", 1);
-                        
+                tmiJObject.Add("hackney_enquirysubject", meetingInfo.enquirySubject);
+                // Process Type :- 0 Interaction , 1 TM Process , 2 Post Visit Action, 3 ETRA meeting issue
+                if (meetingInfo.processType == "3")
+                {
+                    tmiJObject.Add("hackney_issuelocation", meetingInfo.issueLocation);
+                }
+
+                tmiJObject.Add("hackney_processtype", meetingInfo.processType);
+                tmiJObject.Add("hackney_traid", meetingInfo.TRAId);
+
                 try
                 {
                     _logger.LogInformation($"Create Tenancy Management Interaction");
@@ -175,6 +190,48 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 _logger.LogError($" Service Request could not be created");
                 throw new MissingTenancyInteractionRequestException();
             }
+        }
+        
+        private async Task<object> CreateAnnotation(string notes, string estateOfficer, string serviceRequestId, HttpClient client)
+        {
+            try
+            {
+                string descriptionText = notes + " logged on  " + DateTime.Now.ToString() + " by  " + estateOfficer;
+                HttpResponseMessage response;
+                string annotationId = string.Empty;
+                JObject note = new JObject();
+                note["notetext"] = descriptionText;
+                note["objectid_incident@odata.bind"] = "/incidents(" + serviceRequestId+ ")";
+                string requestUrl = "api/data/v8.2/annotations?$select=annotationid";
+
+                response = await _ManageATenancyAPI.SendAsJsonAsync(client, HttpMethod.Post, requestUrl, note);
+                if (response == null)
+                {
+                    _logger.LogError($" Response is null  {serviceRequestId}");
+                    throw new NullResponseException();
+                }
+                else if (response.StatusCode == HttpStatusCode.Created) //201
+                {
+                    //Body should contain the requested annotation information.
+                    JObject createdannotation = JsonConvert.DeserializeObject<JObject>(
+                    await response.Content.ReadAsStringAsync());
+                    //Because 'OData-EntityId' header not returned in a 201 response, you must instead 
+                    // construct the URI.
+                    annotationId = createdannotation["annotationid"].ToString();
+                    return annotationId;
+                }
+                else
+                {
+                    _logger.LogError($" Response is null  {serviceRequestId}");
+                    throw new TenancyServiceException();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($" Create Annotation Error with service reqest  {serviceRequestId}");
+                throw ex;
+            }
+
         }
     }
 }

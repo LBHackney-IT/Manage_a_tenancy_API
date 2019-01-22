@@ -41,6 +41,7 @@ namespace ManageATenancyAPI.Tests.Actions
             mockingApiCall = new Mock<IHackneyHousingAPICall>();
             mockILoggerAdapter = new Mock<ILoggerAdapter<ETRAMeetingsAction>>();
             mockConfig = new Mock<IOptions<AppConfiguration>>();
+            mockConfig.SetupGet(x => x.Value).Returns(new AppConfiguration());
 
         }
 
@@ -88,7 +89,7 @@ namespace ManageATenancyAPI.Tests.Actions
         {
             var fakeServiceRequest = getRandomServiceRequestObject();
             string jsonString = JsonConvert.SerializeObject(fakeServiceRequest);
-            HttpResponseMessage responsMessage = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(jsonString, System.Text.Encoding.UTF8, "application/json") };
+            HttpResponseMessage responsMessage = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(jsonString, System.Text.Encoding.UTF8, "application/json") };
 
             mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responsMessage);
 
@@ -97,6 +98,29 @@ namespace ManageATenancyAPI.Tests.Actions
             ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
 
             await Assert.ThrowsAsync<MissingTenancyInteractionRequestException>(async () => await tmiActions.CreateETRAMeeting(getRandomInteractionObject()));
+        }
+
+        [Fact]
+        public async Task successful_etra_issue_creation_should_return_etra_object()
+        {
+            var fakeServiceRequest = getRandomServiceRequestObject();
+            string jsonString = JsonConvert.SerializeObject(fakeServiceRequest);
+            HttpResponseMessage responsMessage = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(jsonString, System.Text.Encoding.UTF8, "application/json") };
+
+            mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responsMessage);
+
+            mockingApiCall.Setup(x => x.postHousingAPI(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responsMessage);
+
+            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+
+            var actualResponse = tmiActions.CreateETRAMeeting(getRandomInteractionObjectForIssueCreation()).Result;
+
+            JObject createdServiceRequest = JsonConvert.DeserializeObject<JObject>(responsMessage.Content.ReadAsStringAsync().Result);
+            var expectedResponse = new JObject();
+            expectedResponse.Add("interactionid", null);
+            expectedResponse.Add("ticketnumber", createdServiceRequest["ticketnumber"]);
+
+            Assert.Equal(JsonConvert.SerializeObject(actualResponse), JsonConvert.SerializeObject(HackneyResult<JObject>.Create(expectedResponse)));
         }
 
         public JObject getRandomServiceRequestObject()
@@ -110,14 +134,15 @@ namespace ManageATenancyAPI.Tests.Actions
             serviceJObject["_subjectid_value"] = fakeData.Random.Guid();
             serviceJObject["_customerid_value"] = fakeData.Random.Guid();
             serviceJObject.Add("incidentid", fakeData.Random.String());
+            serviceJObject.Add("annotationid", fakeData.Random.Guid());
 
             return serviceJObject;
         }
 
-        public ETRA getRandomInteractionObject()
+        public ETRAIssue getRandomInteractionObject()
         {
             var fakeData = new Faker();
-            var interactionJObject = new ETRA();
+            var interactionJObject = new ETRAIssue();
 
             var serviceRequest = new CRMServiceRequest();
             serviceRequest.Description = fakeData.Random.String();
@@ -132,6 +157,36 @@ namespace ManageATenancyAPI.Tests.Actions
             interactionJObject.ServiceRequest = serviceRequest;
             interactionJObject.subject = fakeData.Random.Guid().ToString();
             interactionJObject.estateOfficerName = fakeData.Random.String();
+            interactionJObject.processType = fakeData.Random.String();
+            interactionJObject.natureOfEnquiry = fakeData.Random.String();
+            interactionJObject.enquirySubject = fakeData.Random.String();
+
+            return interactionJObject;
+        }
+
+        public ETRAIssue getRandomInteractionObjectForIssueCreation()
+        {
+            var fakeData = new Faker();
+            var interactionJObject = new ETRAIssue();
+
+            var serviceRequest = new CRMServiceRequest();
+            serviceRequest.Description = fakeData.Random.String();
+            serviceRequest.Subject = fakeData.Random.Guid().ToString();
+            serviceRequest.CreatedBy = fakeData.Random.Guid().ToString();
+
+            interactionJObject.TRAId = fakeData.Random.String();
+            interactionJObject.areaName = fakeData.Random.String();
+            interactionJObject.estateOfficerId = fakeData.Random.Guid().ToString();
+            interactionJObject.managerId = fakeData.Random.Guid().ToString();
+            interactionJObject.officerPatchId = fakeData.Random.Guid().ToString();
+            interactionJObject.ServiceRequest = serviceRequest;
+            interactionJObject.subject = fakeData.Random.Guid().ToString();
+            interactionJObject.estateOfficerName = fakeData.Random.String();
+            interactionJObject.processType = fakeData.Random.String();
+            interactionJObject.natureOfEnquiry = fakeData.Random.String();
+            interactionJObject.enquirySubject = fakeData.Random.String();
+            interactionJObject.issueLocation = fakeData.Random.String();
+
             return interactionJObject;
         }
     }

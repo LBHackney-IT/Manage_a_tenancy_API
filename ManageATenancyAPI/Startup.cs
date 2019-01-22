@@ -16,10 +16,9 @@ using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.DbContext;
 using ManageATenancyAPI.Extension;
 using ManageATenancyAPI.Filters;
-using ManageATenancyAPI.Tests;
 using Microsoft.IdentityModel.Protocols;
 using MyPropertyAccountAPI.Configuration;
-
+using ManageATenancyAPI.Tests;
 
 namespace ManageATenancyAPI
 {

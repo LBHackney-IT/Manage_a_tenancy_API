@@ -65,20 +65,10 @@ namespace ManageATenancyAPI
             services.AddMvc(options => options.Filters.Add(typeof(JsonExceptionFilter)));
 
 
-            LoadPlugins(services);
+            services.AddScoped<ICryptoMethods, Hackney.Plugin.Crypto.CryptoMethods>();
+
         }
-        private void LoadPlugins(IServiceCollection services)
-        {
-            ICryptoMethods cryptoService = ServiceRegister<ICryptoMethods>.InstantiateService(
-                "Hackney.Plugin.Crypto.CryptoMethods",
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Plugins"),
-                InstancingType.Singleton);
-            cryptoService.EncryptionKey = Configuration.GetSection("appConfigurations").GetValue<string>("EncryptionKey");
-
-            services.AddSingleton(typeof(ICryptoMethods), cryptoService);
-        }
-
-
+      
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
@@ -89,39 +79,9 @@ namespace ManageATenancyAPI
             app.UseCors("AllowAny");
             app.UseMvc();
             app.UseDeveloperExceptionPage();
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    string basePath = "/";
-                    c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {"Development"}");
-                });
-            }
-            else
-            {
-                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Test")
-                {
-                    app.UseSwagger(
-                        c => c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                            swaggerDoc.Host = "sandboxapi.hackney.gov.uk/manageatenancy")
-                    );
-                }
-                else
-                {
-                    app.UseSwagger(
-                        c => c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                            swaggerDoc.Host = "api.hackney.gov.uk/manageatenancy")
-                    );
-                }
 
-                app.UseSwaggerUI(c =>
-                {
-                    string basePath = "/manageatenancy/";
-                    c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
-
-                });
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "ManageATenancyAPI"); });
         }
     }
 }

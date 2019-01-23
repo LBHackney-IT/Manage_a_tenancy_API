@@ -33,7 +33,7 @@ namespace ManageATenancyAPI.Tests.Integration.Repositories
             var options = new OptionsWrapper<ConnStringConfiguration>(GetConfiguration<ConnStringConfiguration>(Config, "ConnectionStrings"));
             var traEstateRepository = new TraEstateRepository(options);
             var estatesWithTra = traEstateRepository.GetAllUsedEstateRefs();
-            var traEstates = traEstateRepository.GetEstatesByTraId(2);
+            var traEstates = traEstateRepository.GetEstatesByTraId(3);
 
             Assert.Contains(estatesWithTra, x => x == traEstates.First().EstateUHRef);
         }

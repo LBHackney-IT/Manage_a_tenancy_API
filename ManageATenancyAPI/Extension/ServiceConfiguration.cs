@@ -5,10 +5,10 @@ using ManageATenancyAPI.Logging;
 using ManageATenancyAPI.Repository;
 using ManageATenancyAPI.Services;
 using ManageATenancyAPI.Services.Housing;
-using ManageATenancyAPI.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using ManageATenancyAPI.Actions.Housing.NHO;
+using ManageATenancyAPI.Tests;
 
 namespace ManageATenancyAPI.Extension
 {

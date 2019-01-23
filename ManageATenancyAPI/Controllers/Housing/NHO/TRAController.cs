@@ -104,11 +104,11 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
 
             if (await _traAction.Exists(tra.Name))
             {
-                if (_traEstateAction.AreUnusedEstates(tra.EsatateRefs))
+                if (_traEstateAction.AreUnusedEstates(tra.EstateRefs))
                 {
-                    var persistedTra = await _traAction.Create(tra.Name, tra.Notes, tra.Email, tra.AreaId, tra.PatchId);
+                    var persistedTra = await _traAction.Find(tra.Name);
 
-                    var estates = await _estateAction.GetEstates(tra.EsatateRefs);
+                    var estates = await _estateAction.GetEstates(tra.EstateRefs);
                     foreach (var estate in estates)
                     {
                         _traEstateAction.AddEstateToTra(persistedTra.TRAId, estate.EstateId, estate.EstateName);
@@ -132,11 +132,11 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
 
             if (await _traAction.Exists(tra.Name))
             {
-                if (_traEstateAction.AreUnusedEstates(tra.EsatateRefs))
+                if (_traEstateAction.AreUnusedEstates(tra.EstateRefs))
                 {
                     var persistedTra = await _traAction.Create(tra.Name, tra.Notes, tra.Email, tra.AreaId, tra.PatchId);
 
-                    var estates = await _estateAction.GetEstates(tra.EsatateRefs);
+                    var estates = await _estateAction.GetEstates(tra.EstateRefs);
                     foreach (var estate in estates)
                     {
                         _traEstateAction.AddEstateToTra(persistedTra.TRAId, estate.EstateId, estate.EstateName);

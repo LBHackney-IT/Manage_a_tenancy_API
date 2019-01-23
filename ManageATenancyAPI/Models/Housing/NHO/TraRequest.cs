@@ -12,7 +12,7 @@ namespace ManageATenancyAPI.Models.Housing.NHO
         public string Email { get; set; }
         public int AreaId { get; set; }
         public Guid PatchId { get; set; }
-        public List<string> EsatateRefs { get; set; }
+        public List<string> EstateRefs { get; set; }
 
     }
 }

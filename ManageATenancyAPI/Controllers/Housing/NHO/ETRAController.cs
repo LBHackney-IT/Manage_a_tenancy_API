@@ -70,5 +70,36 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
                 return jsonResponse;
             }
         }
+
+        /// <summary>
+        /// Gets ETRA Issues by TRA ID or parent interaction. Used to retrieve issue for a TRA or for a specific ETRA meeting.
+        /// </summary>
+        /// <returns>A list of ETRA issue for a TRA or a specific ETRA meeting</returns>
+        /// <response code="200">Successfully retrieved ETRA issues request</response>
+        [Route("GetETRAIssues/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetETRAISsues(string id, bool retrieveETRAMeetingIssues)
+        {
+
+            try
+            {
+                var getETRAIssues = _etraMeetingsAction.GetETRAIssuesByTRAorETRAMeeting(id, retrieveETRAMeetingIssues);
+                var json = Json(getETRAIssues);
+                json.ContentType = "application/json";
+                json.StatusCode = 200;
+                return json;
+            }
+            catch (Exception e)
+            {
+                var errorMessage = new ApiErrorMessage
+                {
+                    developerMessage = e.Message,
+                    userMessage = "We had some problems processing your request"
+                };
+                var jsonResponse = Json(errorMessage);
+                jsonResponse.StatusCode = 500;
+                return jsonResponse;
+            }
+        }
     }
 }

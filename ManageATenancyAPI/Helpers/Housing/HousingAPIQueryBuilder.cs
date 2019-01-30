@@ -880,6 +880,8 @@ namespace ManageATenancyAPI.Helpers.Housing
                 <attribute name='hackney_incidentid' />
                 <attribute name='hackney_transferred' />
                 <attribute name='hackney_process_stage' />
+                <attribute name='hackney_issuelocation' />
+                <attribute name='hackney_traid' />
                 <filter>";
             if (issuesPerMeeting)
             {

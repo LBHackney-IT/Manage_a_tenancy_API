@@ -151,6 +151,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 }
 
                 tmiJObject.Add("hackney_processtype", meetingInfo.processType);
+                tmiJObject.Add("hackney_process_stage", meetingInfo.processType);
                 tmiJObject.Add("hackney_traid", meetingInfo.TRAId);
 
                 try
@@ -301,7 +302,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      stateCode = response["statecode"],
                                      processStage = response["hackney_process_stage"],
                                      nccOfficersId = response["_hackney_estateofficer_createdbyid_value"],
-                                     nccEstateOfficer = response["_hackney_estateofficer_createdbyid_value@OData.Community.Display.V1.FormattedValue"],
+                                     nccOfficerName = response["_hackney_estateofficer_createdbyid_value@OData.Community.Display.V1.FormattedValue"],
                                      createdon = response["createdon"],
                                      nccOfficerUpdatedById = response["_hackney_estateofficer_updatedbyid_value"],
                                      nccOfficerUpdatedByName = response["_hackney_estateofficer_updatedbyid_value@OData.Community.Display.V1.FormattedValue"],
@@ -314,8 +315,11 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      areaManagerName = response["ManagerFirstName"] + " " + response["ManagerLastName"],
                                      officerPatchId = response["_hackney_estateofficerpatchid_value"],
                                      officerPatchName = response["OfficerFirstName"] + " " + response["OfficerLastName"],
-                                     areaName = response["hackney_areaname@OData.Community.Display.V1.FormattedValue"]
-                                    
+                                     areaName = response["hackney_areaname@OData.Community.Display.V1.FormattedValue"],
+                                     traId = response["hackney_traid"],
+                                     issueLocation = response["hackney_issuelocation"],
+                                     processType = response["hackney_processtype"]
+
 
                                  } into grp
                                  select new
@@ -326,7 +330,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      grp.Key.stateCode,
                                      grp.Key.processStage,
                                      grp.Key.nccOfficersId,
-                                     grp.Key.nccEstateOfficer,
+                                     grp.Key.nccOfficerName,
                                      grp.Key.createdon,
                                      grp.Key.nccOfficerUpdatedById,
                                      grp.Key.nccOfficerUpdatedByName,
@@ -340,6 +344,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      grp.Key.officerPatchId,
                                      grp.Key.officerPatchName,
                                      grp.Key.areaName,
+                                     grp.Key.traId,
+                                     grp.Key.issueLocation,
+                                     grp.Key.processType,
                                      Annotation = grp.ToList()
 
                                  });
@@ -355,7 +362,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 tenancyObj.stateCode = response.stateCode;
                 tenancyObj.processStage = response.processStage;
                 tenancyObj.nccOfficersId = response.nccOfficersId;
-                tenancyObj.nccEstateOfficer = response.nccEstateOfficer;
+                tenancyObj.nccOfficerName = response.nccOfficerName;
                 tenancyObj.createdon = response.createdon.ToString("yyyy-MM-dd HH:mm:ss");
                 tenancyObj.nccOfficerUpdatedById = response.nccOfficerUpdatedById;
                 tenancyObj.nccOfficerUpdatedByName = response.nccOfficerUpdatedByName;
@@ -369,6 +376,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 tenancyObj.officerPatchId = response.officerPatchId;
                 tenancyObj.officerPatchName = response.officerPatchName;
                 tenancyObj.areaName = response.areaName;
+                tenancyObj.traId = response.traId;
+                tenancyObj.issueLocation = response.issueLocation;
+                tenancyObj.processType = response.processType;
                 tenancyObj.AnnotationList = new List<ExpandoObject>();
 
                 foreach (var annotationResponse in response.Annotation)

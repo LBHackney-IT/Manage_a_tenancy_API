@@ -239,7 +239,6 @@ namespace ManageATenancyAPI.Tests.Actions
             value["hackney_name"] = "CAS-00059-000000";
             value["hackney_transferred"] = true;
             value["statecode"] = 0;
-            value["contact3_x002e_telephone1"] = "123";
             value["hackney_tenancymanagementinteractionsid"] = "d9f0fd60-b5e0-e711-810f-111111";
             value["_housing_contact_value"] = "463adffe-61a5-db11-882c-000000000000";
             value["createdon@OData.Community.Display.V1.FormattedValue"] = "14/12/2017 09:58";
@@ -263,7 +262,10 @@ namespace ManageATenancyAPI.Tests.Actions
             value["OfficerFirstName"] = "Officer";
             value["OfficerLastName"] = "Patch name";
             value["hackney_areaname"] = "Homerton";
-          
+            value["hackney_traid"] = "1";
+            value["hackney_issuelocation"] = "test location";
+            value["hackney_processtype"] = "1";
+
 
             listJObject.Add(value);
             TenancyManagement.Add("value", listJObject);
@@ -283,7 +285,7 @@ namespace ManageATenancyAPI.Tests.Actions
             tenancyObj.stateCode = 0;
             tenancyObj.processStage = null;
             tenancyObj.nccOfficersId = "284216e9-d365-e711-80f9-70106aaaaaaa";
-            tenancyObj.nccEstateOfficer = "Test Test";
+            tenancyObj.nccOfficerName = "Test Test";
             tenancyObj.createdon = "2017-12-14 09:58:49";
             tenancyObj.nccOfficerUpdatedById = null;
             tenancyObj.nccOfficerUpdatedByName = null;
@@ -297,11 +299,15 @@ namespace ManageATenancyAPI.Tests.Actions
             tenancyObj.officerPatchId = "OfficerPatch9684056oi046";
             tenancyObj.officerPatchName = "Officer Patch name";
             tenancyObj.areaName = null;
+            tenancyObj.traId = "1";
+            tenancyObj.issueLocation = "test location";
+            tenancyObj.processType = "1";
             tenancyObj.AnnotationList = new List<ExpandoObject>();
             dynamic annotation = new ExpandoObject();
             annotation.noteText = "Testing closure  at 21/12/2017 13:37:18 by  Test dev";
             annotation.annotationId = "b6521622-54e6-e711-8111-7010bbbbbbbb";
             annotation.noteCreatedOn = "2017-12-21 13:37:49";
+           
             tenancyObj.AnnotationList.Add(annotation);
             tenancyList.Add(tenancyObj);
             return new

@@ -54,6 +54,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             var sr = new JObject();
             var incidentid = string.Empty;
             var ticketnumber = string.Empty;
+            string annotationResult = string.Empty;
             //create the service request / incident
             if (meetingInfo.ServiceRequest != null)
             {
@@ -91,7 +92,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     }
                     if (!string.IsNullOrWhiteSpace(meetingInfo.ServiceRequest.Description))
                     {
-                        var annotationResult = await CreateAnnotation(meetingInfo.ServiceRequest.Description, meetingInfo.estateOfficerName,
+                         annotationResult = await CreateAnnotation(meetingInfo.ServiceRequest.Description, meetingInfo.estateOfficerName,
                             meetingInfo.ServiceRequest.Id, _client);
                     }
                 }
@@ -172,7 +173,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
                         JObject response = new JObject();
                         response.Add("interactionid", apiResponse["hackney_tenancymanagementinteractionsid"]);
+                        response.Add("incidentId", incidentid);
                         response.Add("ticketnumber", ticketnumber);
+                        response.Add("annotationId", annotationResult);
 
                         return HackneyResult<JObject>.Create(response);
                     }
@@ -193,9 +196,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 throw new MissingTenancyInteractionRequestException();
             }
         }
-
-        private async Task<object> CreateAnnotation(string notes, string estateOfficer, string serviceRequestId,
-            HttpClient client)
+        
+        private async Task<string> CreateAnnotation(string notes, string estateOfficer, string serviceRequestId, HttpClient client)
         {
             try
             {

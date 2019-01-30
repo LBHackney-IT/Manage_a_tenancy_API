@@ -64,7 +64,10 @@ namespace ManageATenancyAPI.Tests.Actions
             JObject createdServiceRequest = JsonConvert.DeserializeObject<JObject>(responsMessage.Content.ReadAsStringAsync().Result);
             var expectedResponse = new JObject();
             expectedResponse.Add("interactionid", null);
+            expectedResponse.Add("incidentId", createdServiceRequest["incidentid"]);
             expectedResponse.Add("ticketnumber", createdServiceRequest["ticketnumber"]);
+            expectedResponse.Add("annotationId", createdServiceRequest["annotationid"]);
+
 
             Assert.Equal(JsonConvert.SerializeObject(actualResponse), JsonConvert.SerializeObject(HackneyResult<JObject>.Create(expectedResponse)));
         }
@@ -119,7 +122,10 @@ namespace ManageATenancyAPI.Tests.Actions
             JObject createdServiceRequest = JsonConvert.DeserializeObject<JObject>(responsMessage.Content.ReadAsStringAsync().Result);
             var expectedResponse = new JObject();
             expectedResponse.Add("interactionid", null);
+            expectedResponse.Add("incidentId", createdServiceRequest["incidentid"]);
             expectedResponse.Add("ticketnumber", createdServiceRequest["ticketnumber"]);
+            expectedResponse.Add("annotationId", createdServiceRequest["annotationid"]);
+
 
             Assert.Equal(JsonConvert.SerializeObject(actualResponse), JsonConvert.SerializeObject(HackneyResult<JObject>.Create(expectedResponse)));
         }

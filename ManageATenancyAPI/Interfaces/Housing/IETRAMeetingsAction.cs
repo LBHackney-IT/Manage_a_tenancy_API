@@ -11,5 +11,6 @@ namespace ManageATenancyAPI.Interfaces.Housing
     public interface IETRAMeetingsAction
     {
         Task<HackneyResult<JObject>> CreateETRAMeeting(ETRAIssue meetingInfo);
+        Task<object> GetETRAIssuesByTRAorETRAMeeting(string id, bool retrieveIssuesPerMeeting);
     }
 }

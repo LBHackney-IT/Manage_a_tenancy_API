@@ -58,11 +58,36 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
                     json.StatusCode = 201;
                     return json;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 var errorMessage = new ApiErrorMessage
                 {
-                    developerMessage = e.Message,
+                    developerMessage = ex.Message,
+                    userMessage = "We had some problems processing your request"
+                };
+                var jsonResponse = Json(errorMessage);
+                jsonResponse.StatusCode = 500;
+                return jsonResponse;
+            }
+        }
+
+        [Route("UpdateETRAIssue")]
+        [HttpPatch]
+        public async Task<JsonResult> UpdateETRAIssue([FromBody] UpdateETRAIssue etraIssueToBeUpdated)
+        {
+            try
+            {
+                var createEtraMeeting = _etraMeetingsAction.UpdateIssue(etraIssueToBeUpdated).Result;
+                var json = Json(createEtraMeeting);
+                json.ContentType = "application/json";
+                json.StatusCode = 204;
+                return json;
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = new ApiErrorMessage
+                {
+                    developerMessage = ex.Message,
                     userMessage = "We had some problems processing your request"
                 };
                 var jsonResponse = Json(errorMessage);

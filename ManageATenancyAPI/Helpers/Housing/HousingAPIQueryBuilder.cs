@@ -860,7 +860,11 @@ namespace ManageATenancyAPI.Helpers.Housing
         {
             return "/api/data/v8.2/contacts(" + contactID + ")?$select=hackney_nextofkinname, hackney_nextofkinaddress,hackney_nextofkinrelationship,hackney_nextofkinotherphone,hackney_nextofkinemail,hackney_nextofkinmobile";
         }
-
+        public static string updateIssueQuery(string id)
+        {
+            return
+                $"/api/data/v8.2/hackney_tenancymanagementinteractionses({id})?$select=hackney_tenancymanagementinteractionsid";
+        }
     }
 }
 

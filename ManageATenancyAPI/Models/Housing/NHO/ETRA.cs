@@ -53,4 +53,27 @@ namespace ManageATenancyAPI.Models.Housing.NHO
         [Required]
         public string enquirySubject { get; set; }
     }
+
+    public class UpdateETRAIssue
+    {
+        [Required]
+        public string estateOfficerId { get; set; }
+        [Required]
+        public string estateOfficerName { get; set; }
+        [Required]
+        public string note { get; set; }
+        public string serviceArea { get; set; }
+        public string issueStage { get; set; }
+        public Guid annotationId { get; set; }
+        [Required]
+        public Guid issueInteractionId { get; set; } //CRM interaction Guid 
+        [Required]
+        public Guid issueIncidentId { get; set; } //CRM incident Guid 
+        [Required]
+        public bool isNewNote { get; set; } //true if note is new, false if note needs to be updated
+        [Required]
+        public bool issueIsToBeDeleted { get; set; }
+
+    }
+
 }

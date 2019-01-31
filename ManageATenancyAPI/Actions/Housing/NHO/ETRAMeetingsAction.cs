@@ -31,7 +31,11 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
         public ETRAMeetingsAction(ILoggerAdapter<ETRAMeetingsAction> logger, IHackneyHousingAPICallBuilder apiCallBuilder, IHackneyHousingAPICall apiCall, IHackneyGetCRM365Token accessToken, IOptions<AppConfiguration> config)
         {
+            //set up client
             _client = new HttpClient();
+            _client.DefaultRequestHeaders.Add("Prefer", "return=representation");
+            _client.DefaultRequestHeaders.Add("Prefer",
+                "odata.include-annotations=\"OData.Community.Display.V1.FormattedValue\"");
             _hackneyAccountApiBuilder = apiCallBuilder;
             _ManageATenancyAPI = apiCall;
             _logger = logger;
@@ -46,9 +50,6 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             //set up client
             var token = _crmAccessToken.getCRM365AccessToken().Result;
             _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
-            _client.DefaultRequestHeaders.Add("Prefer", "return=representation");
-            _client.DefaultRequestHeaders.Add("Prefer",
-                "odata.include-annotations=\"OData.Community.Display.V1.FormattedValue\"");
 
             var sr = new JObject();
             var incidentid = string.Empty;
@@ -92,7 +93,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     if (!string.IsNullOrWhiteSpace(meetingInfo.ServiceRequest.Description))
                     {
                          annotationResult = await CreateAnnotation(meetingInfo.ServiceRequest.Description, meetingInfo.estateOfficerName,
-                            meetingInfo.ServiceRequest.Id, _client);
+                            meetingInfo.ServiceRequest.Id);
                     }
                 }
                 catch (Exception ex)
@@ -195,7 +196,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
         }
         
-        private async Task<string> CreateAnnotation(string notes, string estateOfficer, string serviceRequestId, HttpClient client)
+        private async Task<string> CreateAnnotation(string notes, string estateOfficer, string serviceRequestId)
         {
             try
             {
@@ -207,7 +208,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 note["objectid_incident@odata.bind"] = "/incidents(" + serviceRequestId+ ")";
                 string requestUrl = "api/data/v8.2/annotations?$select=annotationid";
 
-                response = await _ManageATenancyAPI.SendAsJsonAsync(client, HttpMethod.Post, requestUrl, note);
+                response = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Post, requestUrl, note);
                 if (response == null)
                 {
                     _logger.LogError($" Response is null  {serviceRequestId}");
@@ -235,6 +236,131 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 throw ex;
             }
 
+        }
+
+
+        public async Task<JObject> UpdateIssue(UpdateETRAIssue issueToBeUpdated)
+        {
+            try
+            {
+                _logger.LogInformation($"Update for issue with id {issueToBeUpdated.issueInteractionId} is starting");
+                JObject result = new JObject();
+                if (issueToBeUpdated.issueIsToBeDeleted)
+                {
+                    await CloseIncidentAndDeleteIssue(issueToBeUpdated.note,
+                        issueToBeUpdated.issueIncidentId.ToString(), issueToBeUpdated.issueInteractionId.ToString());
+
+                    result.Add("interactionId", issueToBeUpdated.issueInteractionId);
+                    result.Add("incidentId", issueToBeUpdated.issueIncidentId);
+                    result.Add("action", "deleted");
+                    return result;
+
+                }
+
+                var token = _crmAccessToken.getCRM365AccessToken().Result;
+                _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
+                var issueUpdateObject = new JObject();
+                if (issueToBeUpdated.serviceArea != null)
+                {
+                    //TODO create hackney_servicearea field 
+                    issueUpdateObject.Add("hackney_servicearea", issueToBeUpdated.serviceArea);
+                }
+
+                if (issueToBeUpdated.issueStage != null)
+                {
+                    issueUpdateObject.Add("hackney_proces_stage", issueToBeUpdated.issueStage);
+                }
+
+                issueUpdateObject.Add("hackney_estateofficer_updatedbyid@odata.bind",
+                    $"/hackney_estateofficers({issueToBeUpdated.estateOfficerId})");
+                if (issueToBeUpdated.isNewNote)
+                {
+                    var annotationid = CreateAnnotation(issueToBeUpdated.note, issueToBeUpdated.estateOfficerName,
+                        issueToBeUpdated.issueIncidentId.ToString()).Result;
+                }
+                else
+                {
+                    await UpdateAnnotation(issueToBeUpdated.note, issueToBeUpdated.estateOfficerName,
+                        issueToBeUpdated.annotationId.ToString());
+                }
+
+                //updated interaction record
+                var updateIssueIntractionQuery = HousingAPIQueryBuilder.updateIssueQuery(issueToBeUpdated.issueInteractionId.ToString());
+                
+                var updateIntractionResponse = 
+                _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, updateIssueIntractionQuery, issueUpdateObject).Result;
+                if (!updateIntractionResponse.IsSuccessStatusCode)
+                {
+                    throw new TenancyServiceException();
+                }
+
+                result.Add("interactionId", issueToBeUpdated.issueInteractionId);
+                result.Add("incidentId", issueToBeUpdated.issueIncidentId);
+                result.Add("action", "updated");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+        private async Task UpdateAnnotation(string notes, string estateOfficer, string annotationId)
+        {
+            try
+            {
+                string descriptionText = notes + " logged on  " + DateTime.Now.ToString() + " by  " + estateOfficer;
+                HttpResponseMessage response;
+                JObject note = new JObject();
+                note["notetext"] = descriptionText;
+                string requestUrl = $"api/data/v8.2/annotations({annotationId})";
+
+                response = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, requestUrl, note);
+               
+               if(!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($" An error has occured while updating the annotation with id:  {annotationId}");
+                    throw new TenancyServiceException();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($" Update Annotation Error {ex.Message} with id  {annotationId}");
+                throw ex; 
+            }
+
+        }
+
+        private async Task CloseIncidentAndDeleteIssue(string closingNotes, string incidentId,string interactionId)
+        {
+            try
+            {
+                string requestUrl = "/api/data/v8.2/CloseIncident";
+                JObject srClose = new JObject();
+                srClose["incidentid@odata.bind"] = $"/incidents({incidentId})";
+                srClose.Add("description", closingNotes);
+                JObject resolution = new JObject();
+                resolution["IncidentResolution"] = srClose; 
+                resolution["Status"] = _configuration.CompletedClosureType; //closing incident
+
+                HttpResponseMessage response = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Post, requestUrl, resolution);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new TenancyServiceException();
+                }
+                string deleteUrl = $"/api/data/v8.2/hackney_tenancymanagementinteractionses({interactionId})";
+                var deleteIneraction = await _ManageATenancyAPI.deleteObjectAPIResponse(_client, deleteUrl);
+                if (!deleteIneraction.IsSuccessStatusCode)
+                {
+                    throw new TenancyServiceException();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($" Close incident error {ex.Message} with service request {incidentId}");
+                throw new TenancyServiceException();
+            }
         }
     }
 }

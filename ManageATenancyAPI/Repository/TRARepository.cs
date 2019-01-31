@@ -74,6 +74,27 @@ namespace ManageATenancyAPI.Repository
                 return Task.FromResult(result > 0);
             }
         }
+        public Task<bool> Exists(int traId)
+        {
+            using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
+            {
+                var result = connection.ExecuteScalar<int>(
+                    "SELECT COUNT(*) FROM TRA WHERE TraId=@TraId", new { TraId = traId });
+                return Task.FromResult(result > 0);
+            }
+        }
+        public Task<TRA> Get(int traId)
+        {
+            using (var connection = GetOpenConnection(_connectionStringConfig.ManageATenancyDatabase))
+            {
+                var result = connection.QuerySingleOrDefault<TRA>(
+                    "SELECT * FROM TRA WHERE TraId=@TraId", new { TraId = traId });
+
+                return Task.FromResult(result);
+            }
+        }
+
+
 
         public void UpdateNotes(int traId, string notes)
         {

@@ -16,9 +16,10 @@ using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.DbContext;
 using ManageATenancyAPI.Extension;
 using ManageATenancyAPI.Filters;
+using ManageATenancyAPI.Tests;
 using Microsoft.IdentityModel.Protocols;
 using MyPropertyAccountAPI.Configuration;
-using ManageATenancyAPI.Tests;
+
 
 namespace ManageATenancyAPI
 {
@@ -38,15 +39,15 @@ namespace ManageATenancyAPI
         {
             // Add framework services.
 
-         
-         //   var connString = Configuration.GetSection("ConnectionStrings");
+
+            //   var connString = Configuration.GetSection("ConnectionStrings");
             var uhCon = Configuration.GetSection("ConnectionStrings").GetValue<string>("UHWReportingWarehouse");
             services.AddDbContext<UHWWarehouseDbContext>(options =>
                 options.UseSqlServer(uhCon));
             services.Configure<URLConfiguration>(Configuration.GetSection("URLs"));
             services.Configure<ConnStringConfiguration>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<AppConfiguration>(Configuration.GetSection("appConfigurations"));
-            
+
             services.AddMvc();
             services.AddSwaggerGen(c =>
             {
@@ -66,8 +67,9 @@ namespace ManageATenancyAPI
 
             services.AddScoped<ICryptoMethods, Hackney.Plugin.Crypto.CryptoMethods>();
 
+
         }
-      
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
@@ -78,9 +80,40 @@ namespace ManageATenancyAPI
             app.UseCors("AllowAny");
             app.UseMvc();
             app.UseDeveloperExceptionPage();
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    string basePath = "/";
+                    c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {"Development"}");
+                });
+            }
+            else
+            {
+                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Test")
+                {
+                    app.UseSwagger(
+                        c => c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
+                            swaggerDoc.Host = "sandboxapi.hackney.gov.uk/manageatenancy")
+                    );
+                }
+                else
+                {
+                    app.UseSwagger(
+                        c => c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
+                            swaggerDoc.Host = "api.hackney.gov.uk/manageatenancy")
+                    );
+                }
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "ManageATenancyAPI"); });
+                app.UseSwaggerUI(c =>
+                {
+                    string basePath = "/manageatenancy/";
+                    c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
+
+                });
+
+            }
         }
     }
 }

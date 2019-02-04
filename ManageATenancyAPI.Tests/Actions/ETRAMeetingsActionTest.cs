@@ -393,7 +393,7 @@ namespace ManageATenancyAPI.Tests.Actions
 
 
         [Fact]
-        public async Task update_annotation_should_execute_succesfully_without_exceptions_being_th()
+        public async Task update_should_throw_an_exception_when_a_service_responds_with_error()
         {
             var faker = new Faker();
             var requestObject = new UpdateETRAIssue()
@@ -407,7 +407,7 @@ namespace ManageATenancyAPI.Tests.Actions
                 issueIsToBeDeleted = false
             };
 
-            HttpResponseMessage responsMessageUpdateIncident = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json") };
+            HttpResponseMessage responsMessageUpdateIncident = new HttpResponseMessage(HttpStatusCode.BadGateway) { Content = new StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json") };
             HttpResponseMessage responsMessageDeleteInteraction = new HttpResponseMessage(HttpStatusCode.NoContent) { Content = new StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json") };
 
             mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responsMessageUpdateIncident);
@@ -415,14 +415,10 @@ namespace ManageATenancyAPI.Tests.Actions
 
             ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
 
-            var actualResponse = tmiActions.UpdateIssue(requestObject).Result;
-            var expectedResult = new JObject();
-            expectedResult.Add("interactionId", requestObject.issueInteractionId);
-            expectedResult.Add("incidentId", requestObject.issueIncidentId);
-            expectedResult.Add("action", "updated");
-            Assert.Equal(JsonConvert.SerializeObject(expectedResult), JsonConvert.SerializeObject(actualResponse));
-            Assert.Equal("updated", actualResponse["action"]);
+            await Assert.ThrowsAsync<TenancyServiceException>(async () => await tmiActions.UpdateIssue(requestObject));
         }
+
+
         #endregion
     }
 }

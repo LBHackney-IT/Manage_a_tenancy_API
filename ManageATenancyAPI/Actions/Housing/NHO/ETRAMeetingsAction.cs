@@ -216,7 +216,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     _logger.LogError($" Response is null  {serviceRequestId}");
                     throw new NullResponseException();
                 }
-                else if (response.StatusCode == HttpStatusCode.Created) //201
+                else if (response.IsSuccessStatusCode) 
                 {
                     //Body should contain the requested annotation information.
                     JObject createdannotation = JsonConvert.DeserializeObject<JObject>(

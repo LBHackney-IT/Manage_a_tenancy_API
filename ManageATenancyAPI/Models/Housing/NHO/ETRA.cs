@@ -8,7 +8,7 @@ namespace ManageATenancyAPI.Models.Housing.NHO
 {
     public class ETRA
     {
-     
+
         [Required]
         public string estateOfficerId { get; set; }
         public string subject { get; set; }
@@ -28,29 +28,43 @@ namespace ManageATenancyAPI.Models.Housing.NHO
 
     public class ETRAIssue
     {
+        [Required] public string estateOfficerId { get; set; }
+        public string subject { get; set; }
+        [Required] public string estateOfficerName { get; set; }
+        [Required] public string officerPatchId { get; set; }
+        [Required] public string areaName { get; set; }
+        [Required] public string managerId { get; set; }
+        public CRMServiceRequest ServiceRequest { get; set; }
+        [Required] public string processType { get; set; }
+        [Required] public string TRAId { get; set; }
+
+        public string issueLocation { get; set; }
+
+        public string parentInteractionId { get; set; }
+        [Required] public string natureOfEnquiry { get; set; }
+        [Required] public string enquirySubject { get; set; }
+    }
+
+    public class UpdateETRAIssue
+    {
         [Required]
         public string estateOfficerId { get; set; }
-        public string subject { get; set; }
         [Required]
         public string estateOfficerName { get; set; }
         [Required]
-        public string officerPatchId { get; set; }
+        public string note { get; set; }
+        public string serviceArea { get; set; }
+        public string issueStage { get; set; }
+        public Guid annotationId { get; set; }
         [Required]
-        public string areaName { get; set; }
+        public Guid issueInteractionId { get; set; } //CRM interaction Guid 
         [Required]
-        public string managerId { get; set; }
-        public CRMServiceRequest ServiceRequest { get; set; }
+        public Guid issueIncidentId { get; set; } //CRM incident Guid 
         [Required]
-        public string processType { get; set; }
+        public bool isNewNote { get; set; } //true if note is new, false if note needs to be updated
         [Required]
-        public string TRAId { get; set; }
-       
-        public string issueLocation { get; set; }
-       
-        public string parentInteractionId { get; set; }
-        [Required]
-        public string natureOfEnquiry { get; set; }
-        [Required]
-        public string enquirySubject { get; set; }
+        public bool issueIsToBeDeleted { get; set; }
+
     }
 }
+

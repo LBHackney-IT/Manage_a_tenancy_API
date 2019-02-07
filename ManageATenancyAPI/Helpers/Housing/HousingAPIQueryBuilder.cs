@@ -924,6 +924,11 @@ namespace ManageATenancyAPI.Helpers.Housing
             query.Append("/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=" + HttpUtility.UrlEncode(fetchXml.Trim()));
             return query.ToString();
         }
+        public static string updateIssueQuery(string id)
+        {
+            return
+                $"/api/data/v8.2/hackney_tenancymanagementinteractionses({id})?$select=hackney_tenancymanagementinteractionsid";
+        }
     }
 }
 

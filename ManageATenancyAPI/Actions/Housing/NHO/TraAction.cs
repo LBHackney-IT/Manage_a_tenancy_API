@@ -19,9 +19,17 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
         {
             return await _traRepository.Exists(traName);
         }
+        public async Task<bool> Exists(int traid)
+        {
+            return await _traRepository.Exists(traid);
+        }
         public async Task<TRA> Find(string traName)
         {
             return await _traRepository.Find(traName);
+        }
+        public async Task<TRA> Get(int traId)
+        {
+            return await _traRepository.Get(traId);
         }
 
         public async Task<TRA> Create(string name, string notes, string email, int areaId, Guid patchId)

@@ -326,5 +326,99 @@ namespace ManageATenancyAPI.Tests.Actions
 
 
         #endregion
+
+        #region Update ETRA Issue
+        [Fact]
+        public async Task update_issue_succesfully_deletes_issue_if_issueIsToBeDeleted_is_true()
+        {
+            var faker = new Faker();
+            var requestObject = new UpdateETRAIssue()
+            {
+                note = faker.Random.String(),
+                issueIncidentId = faker.Random.Guid(),
+                issueInteractionId = faker.Random.Guid(),
+                estateOfficerId = faker.Random.String(),
+                estateOfficerName = faker.Random.String(),
+                isNewNote = false,
+                issueIsToBeDeleted = true
+            };
+
+            HttpResponseMessage responsMessageUpdateIncident = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json") };
+            HttpResponseMessage responsMessageDeleteInteraction = new HttpResponseMessage(HttpStatusCode.NoContent) { Content = new StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json") };
+
+            mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responsMessageUpdateIncident);
+            mockingApiCall.Setup(x => x.deleteObjectAPIResponse(It.IsAny<HttpClient>(),  It.IsAny<string>())).ReturnsAsync(responsMessageDeleteInteraction);
+
+            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+
+            var actualResponse = tmiActions.UpdateIssue(requestObject).Result;
+            var expectedResult = new JObject();
+            expectedResult.Add("interactionId", requestObject.issueInteractionId);
+            expectedResult.Add("incidentId", requestObject.issueIncidentId);
+            expectedResult.Add("action", "deleted");
+            Assert.Equal(JsonConvert.SerializeObject(expectedResult),JsonConvert.SerializeObject(actualResponse));
+        }
+
+        [Fact]
+        public async Task update_issue_action_returned_is_updated_if_issueIsToBeDeleted_is_false()
+        {
+            var faker = new Faker();
+            var requestObject = new UpdateETRAIssue()
+            {
+                note = faker.Random.String(),
+                issueIncidentId = faker.Random.Guid(),
+                issueInteractionId = faker.Random.Guid(),
+                estateOfficerId = faker.Random.String(),
+                estateOfficerName = faker.Random.String(),
+                isNewNote = false,
+                issueIsToBeDeleted = false
+            };
+
+            HttpResponseMessage responsMessageUpdateIncident = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json") };
+            HttpResponseMessage responsMessageDeleteInteraction = new HttpResponseMessage(HttpStatusCode.NoContent) { Content = new StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json") };
+
+            mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responsMessageUpdateIncident);
+            mockingApiCall.Setup(x => x.deleteObjectAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>())).ReturnsAsync(responsMessageDeleteInteraction);
+
+            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+
+            var actualResponse = tmiActions.UpdateIssue(requestObject).Result;
+            var expectedResult = new JObject();
+            expectedResult.Add("interactionId", requestObject.issueInteractionId);
+            expectedResult.Add("incidentId", requestObject.issueIncidentId);
+            expectedResult.Add("action", "updated");
+            Assert.Equal(JsonConvert.SerializeObject(expectedResult), JsonConvert.SerializeObject(actualResponse));
+            Assert.Equal("updated", actualResponse["action"]);
+        }
+
+
+        [Fact]
+        public async Task update_should_throw_an_exception_when_a_service_responds_with_error()
+        {
+            var faker = new Faker();
+            var requestObject = new UpdateETRAIssue()
+            {
+                note = faker.Random.String(),
+                issueIncidentId = faker.Random.Guid(),
+                issueInteractionId = faker.Random.Guid(),
+                estateOfficerId = faker.Random.String(),
+                estateOfficerName = faker.Random.String(),
+                isNewNote = false,
+                issueIsToBeDeleted = false
+            };
+
+            HttpResponseMessage responsMessageUpdateIncident = new HttpResponseMessage(HttpStatusCode.BadGateway) { Content = new StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json") };
+            HttpResponseMessage responsMessageDeleteInteraction = new HttpResponseMessage(HttpStatusCode.NoContent) { Content = new StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json") };
+
+            mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responsMessageUpdateIncident);
+            mockingApiCall.Setup(x => x.deleteObjectAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>())).ReturnsAsync(responsMessageDeleteInteraction);
+
+            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+
+            await Assert.ThrowsAsync<TenancyServiceException>(async () => await tmiActions.UpdateIssue(requestObject));
+        }
+
+
+        #endregion
     }
 }

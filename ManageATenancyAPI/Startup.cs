@@ -16,6 +16,7 @@ using ManageATenancyAPI.DbContext;
 using ManageATenancyAPI.Extension;
 using ManageATenancyAPI.Filters;
 using ManageATenancyAPI.Tests;
+using Microsoft.AspNetCore.Rewrite;
 using MyPropertyAccountAPI.Configuration;
 
 
@@ -78,40 +79,58 @@ namespace ManageATenancyAPI
             app.UseCors("AllowAny");
             app.UseMvc();
             app.UseDeveloperExceptionPage();
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+
+
+            if (Environment.GetEnvironmentVariable("USE_OLD_VIRTUAL_DIRS") == "true")
             {
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
+
+                //Legacy support for old servers
+                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
                 {
-                    string basePath = "/";
-                    c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {"Development"}");
-                });
-            }
-            else
-            {
-                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Test")
-                {
-                    app.UseSwagger(
-                        c => c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                            swaggerDoc.Host = "sandboxapi.hackney.gov.uk/manageatenancy")
-                    );
+                    app.UseSwagger();
+                    app.UseSwaggerUI(c =>
+                    {
+                        string basePath = "/";
+                        c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {"Development"}");
+                    });
                 }
                 else
                 {
-                    app.UseSwagger(
-                        c => c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                            swaggerDoc.Host = "api.hackney.gov.uk/manageatenancy")
-                    );
+                    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Test")
+                    {
+                        app.UseSwagger(
+                            c => c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
+                                swaggerDoc.Host = "sandboxapi.hackney.gov.uk/manageatenancy")
+                        );
+                    }
+                    else
+                    {
+                        app.UseSwagger(
+                            c => c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
+                                swaggerDoc.Host = "api.hackney.gov.uk/manageatenancy")
+                        );
+                    }
+
+                    app.UseSwaggerUI(c =>
+                    {
+                        string basePath = "/manageatenancy/";
+                        c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
+
+                    });
+
                 }
-
-                app.UseSwaggerUI(c =>
-                {
-                    string basePath = "/manageatenancy/";
-                    c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
-
-                });
-
             }
+            else
+            {
+
+                app.UseSwagger();
+                app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "ManageATenancyAPI"); });
+                var option = new RewriteOptions();
+                option.AddRedirect("^$", "swagger");
+                app.UseRewriter(option);
+            }
+
+
         }
     }
 }

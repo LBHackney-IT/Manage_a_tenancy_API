@@ -11,13 +11,11 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 using Hackney.InterfaceStubs;
-using Hackney.ServiceLocator;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.DbContext;
 using ManageATenancyAPI.Extension;
 using ManageATenancyAPI.Filters;
 using ManageATenancyAPI.Tests;
-using Microsoft.IdentityModel.Protocols;
 using MyPropertyAccountAPI.Configuration;
 
 

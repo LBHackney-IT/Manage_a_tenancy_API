@@ -45,9 +45,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Hackney.InterfaceStubs\Hackney.InterfaceStubs.csproj" />
-    <ProjectReference Include="..\Hackney.ServiceLocator\Hackney.ServiceLocator.csproj" />
-  </ItemGroup>
-
 </Project>

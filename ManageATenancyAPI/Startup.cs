@@ -65,7 +65,7 @@ namespace ManageATenancyAPI
 
 
             services.AddScoped<ICryptoMethods, Hackney.Plugin.Crypto.CryptoMethods>();
-
+            services.AddScoped<AdminEnabledFilter>();
 
         }
 

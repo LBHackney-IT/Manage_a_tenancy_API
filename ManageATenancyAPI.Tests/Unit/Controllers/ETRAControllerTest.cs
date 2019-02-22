@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.Controllers.Housing.NHO;
@@ -9,6 +6,7 @@ using ManageATenancyAPI.Interfaces;
 using ManageATenancyAPI.Interfaces.Housing;
 using ManageATenancyAPI.Models;
 using ManageATenancyAPI.Models.Housing.NHO;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Moq;
 using MyPropertyAccountAPI.Configuration;
@@ -73,6 +71,23 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
             var actual = etraController.Post(It.IsAny<ETRAIssue>()).Result;
 
             Assert.Equal(actual.StatusCode, 500);
+        }
+        [Fact]
+        public async Task FinaliseMeeting_ValidInput_ReturnsTrue()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+
+            etraMeetingActions.Setup(x => x.FinaliseMeeting(It.IsAny<string>(), It.IsAny<FinaliseETRAMeetingRequest>())).ReturnsAsync(true);
+
+            var actionResult = etraController.FinaliseMeeting(It.IsAny<string>(), It.IsAny<FinaliseETRAMeetingRequest>()).Result;
+
+            var okResult = actionResult as OkObjectResult;
+            Assert.NotNull(okResult);
+
+            var value = okResult.Value as HackneyResult<bool>;
+            Assert.NotNull(value);
+
+            Assert.True(value.Result);
         }
     }
 }

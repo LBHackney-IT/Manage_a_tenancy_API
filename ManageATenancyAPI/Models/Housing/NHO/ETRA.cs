@@ -76,4 +76,10 @@ namespace ManageATenancyAPI.Models.Housing.NHO
 
     }
 
+    public class FinaliseETRAMeetingRequest
+    {
+        public string Role { get; set; }
+        public Guid SignatureId { get; set; }
+    }
+
 }

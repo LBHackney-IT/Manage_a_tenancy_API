@@ -130,6 +130,59 @@ namespace ManageATenancyAPI.Tests.Actions
             Assert.Equal(JsonConvert.SerializeObject(actualResponse), JsonConvert.SerializeObject(HackneyResult<JObject>.Create(expectedResponse)));
         }
 
+        [Fact]
+        public async Task FinaliseMeeting_WithMeetingIdAndPopulatedRequestObject_ReturnsTrue()
+        {
+            var fakeMeetingId = "id123";
+            var fakeFinalisationRequest = GetRandomMeetingFinalisationRequest();
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var responseJObject = new JObject {
+                {"annotationid", Guid.NewGuid() }
+            };
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
+            mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responseMessage);
+
+            var response = service.FinaliseMeeting(fakeMeetingId, fakeFinalisationRequest).Result;
+
+            Assert.True(response);
+        }
+
+        [Fact]
+        public async Task FinaliseMeeting_WithMeetingIdAndNullRequestObject_ReturnsTrue()
+        {
+            var fakeMeetingId = "id123";
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var responseJObject = new JObject {
+                {"annotationid", Guid.NewGuid() }
+            };
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
+            mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responseMessage);
+
+            var response = service.FinaliseMeeting(fakeMeetingId, null).Result;
+
+            Assert.True(response);
+        }
+
+        [Fact]
+        public async Task FinaliseMeeting_WithNullMeetingId_ThrowsArgumentException()
+        {
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+
+            async Task act() => await service.FinaliseMeeting(null, null);
+
+            await Assert.ThrowsAsync<ArgumentException>(act);
+        }
+
+        [Fact]
+        public async Task FinaliseMeeting_WithEmptyStringMeetingId_ThrowsArgumentException()
+        {
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+
+            async Task act() => await service.FinaliseMeeting(string.Empty, null);
+
+            await Assert.ThrowsAsync<ArgumentException>(act);
+        }
+
         public JObject getRandomServiceRequestObject()
         {
             var fakeData = new Faker();
@@ -195,6 +248,17 @@ namespace ManageATenancyAPI.Tests.Actions
             interactionJObject.issueLocation = fakeData.Random.String();
 
             return interactionJObject;
+        }
+
+        public FinaliseETRAMeetingRequest GetRandomMeetingFinalisationRequest()
+        {
+            var fakeData = new Faker();
+            var finalisationObject = new FinaliseETRAMeetingRequest
+            {
+                Role = fakeData.Random.String(),
+                SignatureId = fakeData.Random.Guid()
+            };
+            return finalisationObject;
         }
 
         #region Get ETRA Issues

@@ -500,12 +500,17 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
         private async Task UpdateAnnotation(string notes, string estateOfficer, string annotationId)
         {
+            var descriptionText = notes + " logged on  " + DateTime.Now.ToString() + " by  " + estateOfficer;
+            await UpdateAnnotation(descriptionText, annotationId);
+        }
+
+        private async Task UpdateAnnotation(string notes, string annotationId)
+        {
             try
             {
-                string descriptionText = notes + " logged on  " + DateTime.Now.ToString() + " by  " + estateOfficer;
                 HttpResponseMessage response;
                 JObject note = new JObject();
-                note["notetext"] = descriptionText;
+                note["notetext"] = notes;
                 string requestUrl = $"api/data/v8.2/annotations({annotationId})";
 
                 response = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, requestUrl, note);

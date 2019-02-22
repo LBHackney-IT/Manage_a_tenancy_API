@@ -472,6 +472,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
         public async Task<bool> FinaliseMeeting(string id, FinaliseETRAMeetingRequest request)
         {
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentException("id parameter cannot be null or empty", "id");
+
             var dict = new Dictionary<string, object>
             {
                 { "confirmationDate", DateTime.Now }

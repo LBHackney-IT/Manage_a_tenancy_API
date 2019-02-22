@@ -200,7 +200,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
         
         private async Task<string> CreateAnnotation(string notes, string estateOfficer, string serviceRequestId)
         {
-            string descriptionText = notes + " logged on  " + DateTime.Now.ToString() + " by  " + estateOfficer;
+            string descriptionText = $"{notes} logged on {DateTime.Now} by {estateOfficer}";
             return await CreateAnnotation(descriptionText, serviceRequestId);
         }
 
@@ -500,7 +500,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
         private async Task UpdateAnnotation(string notes, string estateOfficer, string annotationId)
         {
-            var descriptionText = notes + " logged on  " + DateTime.Now.ToString() + " by  " + estateOfficer;
+            var descriptionText = $"{notes} logged on {DateTime.Now} by {estateOfficer}";
             await UpdateAnnotation(descriptionText, annotationId);
         }
 

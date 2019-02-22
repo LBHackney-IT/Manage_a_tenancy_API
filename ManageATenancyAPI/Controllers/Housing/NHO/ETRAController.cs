@@ -96,6 +96,14 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             }
         }
 
+        [Route("finalise-meeting/{id}")]
+        [HttpPatch]
+        public async Task<IActionResult> FinaliseMeeting(string id, [FromBody] FinaliseETRAMeetingRequest request)
+        {
+            var success = await _etraMeetingsAction.FinaliseMeeting(id, request);
+            return Ok(HackneyResult<bool>.Create(success));
+        }
+
         /// <summary>
         /// Gets ETRA Issues by TRA ID or parent interaction. Used to retrieve issue for a TRA or for a specific ETRA meeting.
         /// </summary>

@@ -13,5 +13,6 @@ namespace ManageATenancyAPI.Interfaces.Housing
         Task<HackneyResult<JObject>> CreateETRAMeeting(ETRAIssue meetingInfo);
         Task<object> GetETRAIssuesByTRAorETRAMeeting(string id, bool retrieveIssuesPerMeeting);
         Task<JObject> UpdateIssue(UpdateETRAIssue etraIssueToBeUpdated);
+        Task<bool> FinaliseMeeting(string id, FinaliseETRAMeetingRequest request);
     }
 }

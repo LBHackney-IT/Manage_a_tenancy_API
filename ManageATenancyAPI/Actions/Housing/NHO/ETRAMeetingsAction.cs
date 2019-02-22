@@ -200,13 +200,18 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
         
         private async Task<string> CreateAnnotation(string notes, string estateOfficer, string serviceRequestId)
         {
+            string descriptionText = notes + " logged on  " + DateTime.Now.ToString() + " by  " + estateOfficer;
+            return await CreateAnnotation(descriptionText, serviceRequestId);
+        }
+
+        private async Task<string> CreateAnnotation(string notes, string serviceRequestId)
+        {
             try
             {
-                string descriptionText = notes + " logged on  " + DateTime.Now.ToString() + " by  " + estateOfficer;
                 HttpResponseMessage response;
                 string annotationId = string.Empty;
                 JObject note = new JObject();
-                note["notetext"] = descriptionText;
+                note["notetext"] = notes;
                 note["objectid_incident@odata.bind"] = "/incidents(" + serviceRequestId + ")";
                 string requestUrl = "api/data/v8.2/annotations?$select=annotationid";
 
@@ -464,6 +469,32 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
 
         }
+
+        public async Task<bool> FinaliseMeeting(string id, FinaliseETRAMeetingRequest request)
+        {
+            var dict = new Dictionary<string, object>
+            {
+                { "confirmationDate", DateTime.Now }
+            };
+
+            if (request != null)
+            {
+                if (!string.IsNullOrEmpty(request.Role))
+                    dict.Add("role", request.Role);
+
+                if (request.SignatureId != Guid.NewGuid())
+                    dict.Add("signatureId", request.SignatureId);
+            }
+
+            var token = _crmAccessToken.getCRM365AccessToken().Result;
+            _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
+            var noteText = JsonConvert.SerializeObject(dict);
+
+            var annotationId = CreateAnnotation(noteText, id).Result;
+
+            return !string.IsNullOrEmpty(annotationId);
+        }
+
         private async Task UpdateAnnotation(string notes, string estateOfficer, string annotationId)
         {
             try

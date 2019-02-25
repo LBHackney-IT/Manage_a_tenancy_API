@@ -488,8 +488,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     confirmation.Add("hackney_signaturereference", request.SignatureId);
             }
 
-            var token = _crmAccessToken.getCRM365AccessToken().Result;
-            _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
+            var token = await _crmAccessToken.getCRM365AccessToken();
+            _client = await _hackneyAccountApiBuilder.CreateRequest(token);
 
             var updateIssueIntractionQuery = HousingAPIQueryBuilder.updateIssueQuery(id);
 

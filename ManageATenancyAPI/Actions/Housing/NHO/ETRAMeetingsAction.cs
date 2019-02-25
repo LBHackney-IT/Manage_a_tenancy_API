@@ -475,27 +475,33 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentException("id parameter cannot be null or empty", "id");
 
-            var dict = new Dictionary<string, object>
-            {
-                { "confirmationDate", DateTime.Now }
+            var confirmation = new JObject {
+                { "hackney_confirmationdate", DateTime.Now }
             };
 
             if (request != null)
             {
                 if (!string.IsNullOrEmpty(request.Role))
-                    dict.Add("role", request.Role);
+                    confirmation.Add("hackney_signatoryrole", request.Role);
 
                 if (request.SignatureId != Guid.NewGuid())
-                    dict.Add("signatureId", request.SignatureId);
+                    confirmation.Add("hackney_signaturereference", request.SignatureId);
             }
 
             var token = _crmAccessToken.getCRM365AccessToken().Result;
             _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
-            var noteText = JsonConvert.SerializeObject(dict);
 
-            var annotationId = CreateAnnotation(noteText, id).Result;
+            var updateIssueIntractionQuery = HousingAPIQueryBuilder.updateIssueQuery(id);
 
-            return !string.IsNullOrEmpty(annotationId);
+            var updateIntractionResponse = await 
+                _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, updateIssueIntractionQuery, confirmation);
+
+            if (!updateIntractionResponse.IsSuccessStatusCode)
+            {
+                throw new TenancyServiceException();
+            }
+
+            return updateIntractionResponse.IsSuccessStatusCode;
         }
 
         private async Task UpdateAnnotation(string notes, string estateOfficer, string annotationId)

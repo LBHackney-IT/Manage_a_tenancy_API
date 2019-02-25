@@ -72,6 +72,8 @@ namespace ManageATenancyAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            var manageATennancyDb = Configuration.GetConnectionString("ManageATenancyDatabase");
+            NLog.GlobalDiagnosticsContext.Set("ManageATenancyDatabase", manageATennancyDb);
 
             loggerFactory.AddNLog();
             app.AddNLogWeb();

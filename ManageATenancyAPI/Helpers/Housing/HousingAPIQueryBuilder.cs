@@ -883,6 +883,7 @@ namespace ManageATenancyAPI.Helpers.Housing
                 <attribute name='hackney_process_stage' />
                 <attribute name='hackney_issuelocation' />
                 <attribute name='hackney_traid' />
+                <attribute name='hackney_servicearea' />
                 <filter>";
             if (issuesPerMeeting)
             {

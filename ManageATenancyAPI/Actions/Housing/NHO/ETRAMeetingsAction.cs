@@ -214,14 +214,14 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 note["notetext"] = notes;
                 note["objectid_incident@odata.bind"] = "/incidents(" + serviceRequestId + ")";
                 string requestUrl = "api/data/v8.2/annotations?$select=annotationid";
-
+                _client.DefaultRequestHeaders.Add("Prefer", "return=representation");
                 response = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Post, requestUrl, note);
                 if (response == null)
                 {
                     _logger.LogError($" Response is null  {serviceRequestId}");
                     throw new NullResponseException();
                 }
-                else if (response.IsSuccessStatusCode) 
+                else if (response.IsSuccessStatusCode)
                 {
                     //Body should contain the requested annotation information.
                     JObject createdannotation = JsonConvert.DeserializeObject<JObject>(
@@ -326,7 +326,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      areaName = response["hackney_areaname@OData.Community.Display.V1.FormattedValue"],
                                      traId = response["hackney_traid"],
                                      issueLocation = response["hackney_issuelocation"],
-                                     processType = response["hackney_processtype"]
+                                     processType = response["hackney_processtype"],
+                                     serviceArea = response["hackney_servicearea"],
+                                     serviceAreaName = response["hackney_servicearea@OData.Community.Display.V1.FormattedValue"]
 
 
                                  } into grp
@@ -355,6 +357,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      grp.Key.traId,
                                      grp.Key.issueLocation,
                                      grp.Key.processType,
+                                     grp.Key.serviceArea,
+                                     grp.Key.serviceAreaName,
                                      Annotation = grp.ToList()
 
                                  });
@@ -387,6 +391,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 tenancyObj.traId = response.traId;
                 tenancyObj.issueLocation = response.issueLocation;
                 tenancyObj.processType = response.processType;
+                tenancyObj.serviceArea = response.serviceArea;
+                tenancyObj.serviceAreaName = response.serviceAreaName;
                 tenancyObj.AnnotationList = new List<ExpandoObject>();
 
                 foreach (var annotationResponse in response.Annotation)
@@ -409,6 +415,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             {
                 _logger.LogInformation($"Update for issue with id {issueToBeUpdated.issueInteractionId} is starting");
                 JObject result = new JObject();
+                var token = _crmAccessToken.getCRM365AccessToken().Result;
+                _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
+                //delete issue scenario
                 if (issueToBeUpdated.issueIsToBeDeleted)
                 {
                     await CloseIncidentAndDeleteIssue(issueToBeUpdated.note,
@@ -418,29 +427,30 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     result.Add("incidentId", issueToBeUpdated.issueIncidentId);
                     result.Add("action", "deleted");
                     return result;
-
                 }
-
-                var token = _crmAccessToken.getCRM365AccessToken().Result;
-                _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
+                
                 var issueUpdateObject = new JObject();
+
+                //update service area scenario
                 if (issueToBeUpdated.serviceArea != null)
                 {
-                    //TODO create hackney_servicearea field 
                     issueUpdateObject.Add("hackney_servicearea", issueToBeUpdated.serviceArea);
                 }
 
+                //update issue stage (status)
                 if (issueToBeUpdated.issueStage != null)
                 {
-                    issueUpdateObject.Add("hackney_proces_stage", issueToBeUpdated.issueStage);
+                    issueUpdateObject.Add("hackney_process_stage", issueToBeUpdated.issueStage);
                 }
 
                 issueUpdateObject.Add("hackney_estateofficer_updatedbyid@odata.bind",
                     $"/hackney_estateofficers({issueToBeUpdated.estateOfficerId})");
+
+                //adding new notes scenario (could be when issue is updated by officer or when response is added by service
                 if (issueToBeUpdated.isNewNote)
                 {
-                    var annotationid = CreateAnnotation(issueToBeUpdated.note, issueToBeUpdated.estateOfficerName,
-                        issueToBeUpdated.issueIncidentId.ToString()).Result;
+                    var annotationid = await CreateAnnotation(issueToBeUpdated.note, issueToBeUpdated.estateOfficerName,
+                        issueToBeUpdated.issueIncidentId.ToString());
                 }
                 else
                 {

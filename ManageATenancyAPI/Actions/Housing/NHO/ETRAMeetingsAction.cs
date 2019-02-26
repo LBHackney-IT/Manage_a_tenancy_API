@@ -223,11 +223,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 }
                 else if (response.IsSuccessStatusCode)
                 {
-
-                    var testing = await response.Content.ReadAsStringAsync();
                     //Body should contain the requested annotation information.
                     JObject createdannotation = JsonConvert.DeserializeObject<JObject>(
-                        testing);
+                        await response.Content.ReadAsStringAsync());
                     //Because 'OData-EntityId' header not returned in a 201 response, you must instead 
                     // construct the URI.
                     annotationId = createdannotation["annotationid"].ToString();

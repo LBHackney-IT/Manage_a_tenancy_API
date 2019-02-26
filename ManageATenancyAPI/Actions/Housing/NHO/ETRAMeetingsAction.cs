@@ -480,32 +480,61 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
         }
 
-        public async Task<bool> FinaliseMeeting(string id, FinaliseETRAMeetingRequest request)
+        public async Task<ETRAMeeting> GetMeeting(string id)
         {
-            if (string.IsNullOrEmpty(id))
-                throw new ArgumentException("id parameter cannot be null or empty", "id");
+            var token = await _crmAccessToken.getCRM365AccessToken();
+            _client = await _hackneyAccountApiBuilder.CreateRequest(token);
+            var getMeetingQuery = HousingAPIQueryBuilder.GetActionById(id);
 
-            var dict = new Dictionary<string, object>
+            var result = await _ManageATenancyAPI.getHousingAPIResponse(_client, getMeetingQuery, null);
+
+            if (result != null)
             {
-                { "confirmationDate", DateTime.Now }
+                if (!result.IsSuccessStatusCode)
+                {
+                    throw new TenancyServiceException();
+                }
+
+                var meetingResponse = JsonConvert.DeserializeObject<JObject>(await result.Content.ReadAsStringAsync());
+                var meeting = JsonConvert.DeserializeObject<dynamic>(meetingResponse.ToString());
+
+                return new ETRAMeeting(meeting);
+            }
+            else
+            {
+                _logger.LogError($"ETRA meeting missing for id: {id}");
+                throw new NullResponseException();
+            }
+        }
+
+        public async Task<FinaliseETRAMeetingResponse> FinaliseMeeting(string id, FinaliseETRAMeetingRequest request)
+        {
+            var confirmation = new JObject {
+                { "hackney_confirmationdate", DateTime.Now }
             };
 
             if (request != null)
             {
                 if (!string.IsNullOrEmpty(request.Role))
-                    dict.Add("role", request.Role);
+                    confirmation.Add("hackney_signatoryrole", request.Role);
 
                 if (request.SignatureId != Guid.NewGuid())
-                    dict.Add("signatureId", request.SignatureId);
+                    confirmation.Add("hackney_signaturereference", request.SignatureId);
             }
 
-            var token = _crmAccessToken.getCRM365AccessToken().Result;
-            _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
-            var noteText = JsonConvert.SerializeObject(dict);
+            var updateIssueIntractionQuery = HousingAPIQueryBuilder.updateIssueQuery(id);
+            var token = await _crmAccessToken.getCRM365AccessToken();
+            _client = await _hackneyAccountApiBuilder.CreateRequest(token);
 
-            var annotationId = CreateAnnotation(noteText, id).Result;
+            var updateIntractionResponse = await 
+                _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, updateIssueIntractionQuery, confirmation);
 
-            return !string.IsNullOrEmpty(annotationId);
+            if (!updateIntractionResponse.IsSuccessStatusCode)
+            {
+                throw new TenancyServiceException();
+            }
+
+            return new FinaliseETRAMeetingResponse { Id = id, IsFinalised = updateIntractionResponse.IsSuccessStatusCode };
         }
 
         private async Task UpdateAnnotation(string notes, string estateOfficer, string annotationId)

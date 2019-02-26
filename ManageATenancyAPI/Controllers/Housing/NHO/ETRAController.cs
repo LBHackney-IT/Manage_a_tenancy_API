@@ -96,12 +96,32 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             }
         }
 
+        /// <summary>
+        /// Finalises ETRA Meetings by meeting id, and optionally a signatory with their role.
+        /// </summary>
+        /// <param name="id">Interaction id.</param>
+        /// <param name="request">Object containing the guid reference of the signature and the string with the signatory's role.</param>
+        /// <returns>Whether the meeting has been successfully finalised</returns>
+        /// <response code="200">Successfully finalised meeting</response>
+        /// <response code="404">No meeting with the specified id found</response>
+        /// <response code="403">Meeting has already been finalised</response>
         [Route("finalise-meeting/{id}")]
         [HttpPatch]
         public async Task<IActionResult> FinaliseMeeting(string id, [FromBody] FinaliseETRAMeetingRequest request)
         {
-            var success = await _etraMeetingsAction.FinaliseMeeting(id, request);
-            return Ok(HackneyResult<bool>.Create(success));
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentException("id parameter cannot be null or empty", "id");
+
+            var meeting = await _etraMeetingsAction.GetMeeting(id);
+
+            if (meeting == null)
+                return NotFound();
+
+            if (meeting.ConfirmationDate != null)
+                return Forbid();
+
+            var response = await _etraMeetingsAction.FinaliseMeeting(meeting.Id, request);
+            return Ok(HackneyResult<FinaliseETRAMeetingResponse>.Create(response));
         }
 
         /// <summary>

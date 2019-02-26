@@ -82,4 +82,10 @@ namespace ManageATenancyAPI.Models.Housing.NHO
         public Guid SignatureId { get; set; }
     }
 
+    public class FinaliseETRAMeetingResponse
+    {
+        public string Id { get; set; }
+        public bool IsFinalised { get; set; }
+    }
+
 }

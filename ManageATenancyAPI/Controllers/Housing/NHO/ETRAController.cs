@@ -80,7 +80,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
                 var createEtraMeeting = _etraMeetingsAction.UpdateIssue(etraIssueToBeUpdated).Result;
                 var json = Json(createEtraMeeting);
                 json.ContentType = "application/json";
-                json.StatusCode = 204;
+                json.StatusCode = 201;
                 return json;
             }
             catch (Exception ex)

@@ -926,12 +926,15 @@ namespace ManageATenancyAPI.Helpers.Housing
         }
         public static string updateIssueQuery(string id)
         {
-            return
-                $"/api/data/v8.2/hackney_tenancymanagementinteractionses({id})?$select=hackney_tenancymanagementinteractionsid";
+            return $"{GetActionById(id)}?$select=hackney_tenancymanagementinteractionsid";
         }
         public static string GetAnnotationsByIssueId(string id)
         {
             return $"/api/data/v8.2/annotations?$filter=_objectid_value eq {id}";
+        }
+        public static string GetActionById(string id)
+        {
+            return $"/api/data/v8.2/hackney_tenancymanagementinteractionses({id})";
         }
     }
 }

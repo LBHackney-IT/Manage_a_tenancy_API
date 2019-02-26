@@ -131,9 +131,9 @@ namespace ManageATenancyAPI.Tests.Actions
         }
 
         [Fact]
-        public async Task FinaliseMeeting_WithMeetingIdAndPopulatedRequestObject_ReturnsTrue()
+        public async Task FinaliseMeeting_WithMeetingIdAndPopulatedRequestObject_ReturnsSuccessfulResponse()
         {
-            var fakeMeetingId = "id123";
+            const string fakeMeetingId = "id123";
             var fakeFinalisationRequest = GetRandomMeetingFinalisationRequest();
             var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
             var responseJObject = new JObject {
@@ -142,15 +142,15 @@ namespace ManageATenancyAPI.Tests.Actions
             var responseMessage = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
             mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responseMessage);
 
-            var response = service.FinaliseMeeting(fakeMeetingId, fakeFinalisationRequest).Result;
+            var response = await service.FinaliseMeeting(fakeMeetingId, fakeFinalisationRequest);
 
-            Assert.True(response);
+            Assert.True(response.IsFinalised);
         }
 
         [Fact]
-        public async Task FinaliseMeeting_WithMeetingIdAndNullRequestObject_ReturnsTrue()
+        public async Task FinaliseMeeting_WithMeetingIdAndNullRequestObject_ReturnsSuccessfulResponse()
         {
-            var fakeMeetingId = "id123";
+            const string fakeMeetingId = "id123";
             var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
             var responseJObject = new JObject {
                 {"annotationid", Guid.NewGuid() }
@@ -158,29 +158,87 @@ namespace ManageATenancyAPI.Tests.Actions
             var responseMessage = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
             mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responseMessage);
 
-            var response = service.FinaliseMeeting(fakeMeetingId, null).Result;
+            var response = await service.FinaliseMeeting(fakeMeetingId, null);
 
-            Assert.True(response);
+            Assert.True(response.IsFinalised);
         }
 
         [Fact]
-        public async Task FinaliseMeeting_WithNullMeetingId_ThrowsArgumentException()
+        public async Task FinaliseMeeting_APICallFails_ThrowsTenancyServiceException()
         {
+            const string fakeMeetingId = "id123";
             var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responseMessage);
 
-            async Task act() => await service.FinaliseMeeting(null, null);
+            async Task act() => await service.FinaliseMeeting(fakeMeetingId, null);
 
-            await Assert.ThrowsAsync<ArgumentException>(act);
+            await Assert.ThrowsAsync<TenancyServiceException>(act);
         }
 
         [Fact]
-        public async Task FinaliseMeeting_WithEmptyStringMeetingId_ThrowsArgumentException()
+        public async Task GetMeeting_HousingApiNullResponse_ThrowsNullResponseException()
         {
+            const string fakeMeetingId = "id123";
             var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            HttpResponseMessage responseMessage = null;
+            mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
 
-            async Task act() => await service.FinaliseMeeting(string.Empty, null);
+            async Task act() => await service.GetMeeting(fakeMeetingId);
 
-            await Assert.ThrowsAsync<ArgumentException>(act);
+            await Assert.ThrowsAsync<NullResponseException>(act);
+        }
+
+        [Fact]
+        public async Task GetMeeting_HousingApiNonSuccessStatusCode_ThrowsTenancyServiceException()
+        {
+            const string fakeMeetingId = "id123";
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
+
+            async Task act() => await service.GetMeeting(fakeMeetingId);
+
+            await Assert.ThrowsAsync<TenancyServiceException>(act);
+        }
+
+        [Fact]
+        public async Task GetMeeting_ValidMeetingId_ReturnsCorrectMeetingObject()
+        {
+            const string fakeMeetingId = "id123";
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var responseJObject = GetRandomETRAMeeting(true);
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
+            mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
+
+            var response = await service.GetMeeting(fakeMeetingId);
+
+            Assert.Equal(responseJObject["hackney_tenancymanagementinteractionsid"], response.Id);
+        }
+
+        public JObject GetRandomETRAMeeting(bool isConfirmed)
+        {
+            var fakeData = new Faker();
+            var meeting = new JObject {
+                { "hackney_tenancymanagementinteractionsid", fakeData.Random.Guid() },
+                { "hackney_name", fakeData.Random.String() },
+                { "createdon", DateTime.Now.AddDays(-2) },
+                { "modifiedon", DateTime.Now.AddDays(-1) },
+                { "hackney_confirmationdate", null },
+                { "hackney_signaturereference", null },
+                { "hackney_signatoryrole", null },
+                { "hackney_pdfreference", null }
+            };
+
+            if (isConfirmed)
+            {
+                meeting["hackney_confirmationdate"] = DateTime.Now;
+                meeting["hackney_signaturereference"] = fakeData.Random.Guid();
+                meeting["hackney_signatoryrole"] = fakeData.Random.String();
+                meeting["hackney_pdfreference"] = fakeData.Random.Guid();
+            }
+
+            return meeting;
         }
 
         public JObject getRandomServiceRequestObject()

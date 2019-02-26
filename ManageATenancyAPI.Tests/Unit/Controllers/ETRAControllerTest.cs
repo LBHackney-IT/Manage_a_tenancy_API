@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.Controllers.Housing.NHO;
@@ -73,21 +74,66 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
             Assert.Equal(actual.StatusCode, 500);
         }
         [Fact]
-        public async Task FinaliseMeeting_ValidInput_ReturnsTrue()
+        public async Task FinaliseMeeting_IncorrectMeetingId_ReturnsNotFound()
         {
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            const string id = "123id";
+            etraMeetingActions.Setup(x => x.GetMeeting(id)).ReturnsAsync((ETRAMeeting)null);
 
-            etraMeetingActions.Setup(x => x.FinaliseMeeting(It.IsAny<string>(), It.IsAny<FinaliseETRAMeetingRequest>())).ReturnsAsync(true);
+            var actionResult = await etraController.FinaliseMeeting(id, It.IsAny<FinaliseETRAMeetingRequest>());
 
-            var actionResult = etraController.FinaliseMeeting(It.IsAny<string>(), It.IsAny<FinaliseETRAMeetingRequest>()).Result;
+            Assert.IsType<NotFoundResult>(actionResult);
+        }
+        [Fact]
+        public async Task FinaliseMeeting_IdOfAlreadyConfirmedMeeting_ReturnsForbidden()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            const string id = "123id";
+            etraMeetingActions.Setup(x => x.GetMeeting(id)).ReturnsAsync(new ETRAMeeting { ConfirmationDate = DateTime.Now });
+
+            var actionResult = await etraController.FinaliseMeeting(id, It.IsAny<FinaliseETRAMeetingRequest>());
+
+            Assert.IsType<ForbidResult>(actionResult);
+        }
+
+        [Fact]
+        public async Task FinaliseMeeting_ValidInput_ReturnsSuccessfulResponse()
+        {
+            const string id = "123id";
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            etraMeetingActions.Setup(x => x.GetMeeting(id)).ReturnsAsync(new ETRAMeeting { Id = id });
+            etraMeetingActions.Setup(x => x.FinaliseMeeting(id, It.IsAny<FinaliseETRAMeetingRequest>())).ReturnsAsync(new FinaliseETRAMeetingResponse { Id = id, IsFinalised = true });
+
+            var actionResult = await etraController.FinaliseMeeting(id, It.IsAny<FinaliseETRAMeetingRequest>());
 
             var okResult = actionResult as OkObjectResult;
             Assert.NotNull(okResult);
 
-            var value = okResult.Value as HackneyResult<bool>;
+            var value = okResult.Value as HackneyResult<FinaliseETRAMeetingResponse>;
             Assert.NotNull(value);
 
-            Assert.True(value.Result);
+            Assert.Equal(id, value.Result.Id);
+            Assert.True(value.Result.IsFinalised);
+        }
+
+        [Fact]
+        public async Task FinaliseMeeting_WithNullMeetingId_ThrowsArgumentException()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            
+            async Task act() => await etraController.FinaliseMeeting(null, null);
+
+            await Assert.ThrowsAsync<ArgumentException>(act);
+        }
+
+        [Fact]
+        public async Task FinaliseMeeting_WithEmptyStringMeetingId_ThrowsArgumentException()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+
+            async Task act() => await etraController.FinaliseMeeting(string.Empty, null);
+
+            await Assert.ThrowsAsync<ArgumentException>(act);
         }
     }
 }

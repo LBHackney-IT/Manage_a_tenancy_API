@@ -13,18 +13,20 @@ namespace ManageATenancyAPI.Models.Housing.NHO
         public string SignatoryRole { get; set; }
         public Guid? PdfId { get; set; }
 
-        public ETRAMeeting(){ }
+        private ETRAMeeting(){ }
 
-        public ETRAMeeting(dynamic crmMeeting)
+        public static ETRAMeeting Create(dynamic crmMeeting)
         {
-            Id = crmMeeting["hackney_tenancymanagementinteractionsid"];
-            Name = crmMeeting["hackney_name"];
-            CreatedOn = crmMeeting["createdon"];
-            ModifiedOn = crmMeeting["modifiedon"];
-            ConfirmationDate = crmMeeting["hackney_confirmationdate"];
-            SignatureId = crmMeeting["hackney_signaturereference"];
-            SignatoryRole = crmMeeting["hackney_signatoryrole"];
-            PdfId = crmMeeting["hackney_pdfreference"];
+            return new ETRAMeeting {
+                Id = crmMeeting["hackney_tenancymanagementinteractionsid"],
+                Name = crmMeeting["hackney_name"],
+                CreatedOn = crmMeeting["createdon"],
+                ModifiedOn = crmMeeting["modifiedon"],
+                ConfirmationDate = crmMeeting["hackney_confirmationdate"],
+                SignatureId = crmMeeting["hackney_signaturereference"],
+                SignatoryRole = crmMeeting["hackney_signatoryrole"],
+                PdfId = crmMeeting["hackney_pdfreference"]
+            };
         }
     }
 }

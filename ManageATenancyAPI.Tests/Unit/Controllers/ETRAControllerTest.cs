@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Configuration;
@@ -88,10 +89,10 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         public async Task FinaliseMeeting_IdOfAlreadyConfirmedMeeting_ReturnsForbidden()
         {
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
-            const string id = "123id";
-            etraMeetingActions.Setup(x => x.GetMeeting(id)).ReturnsAsync(new ETRAMeeting { ConfirmationDate = DateTime.Now });
+            var meeting = GetMeeting();
+            etraMeetingActions.Setup(x => x.GetMeeting(meeting.Id)).ReturnsAsync(meeting);
 
-            var actionResult = await etraController.FinaliseMeeting(id, It.IsAny<FinaliseETRAMeetingRequest>());
+            var actionResult = await etraController.FinaliseMeeting(meeting.Id, It.IsAny<FinaliseETRAMeetingRequest>());
 
             Assert.IsType<ForbidResult>(actionResult);
         }
@@ -99,12 +100,12 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         [Fact]
         public async Task FinaliseMeeting_ValidInput_ReturnsSuccessfulResponse()
         {
-            const string id = "123id";
+            var meeting = GetMeeting(false);
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
-            etraMeetingActions.Setup(x => x.GetMeeting(id)).ReturnsAsync(new ETRAMeeting { Id = id });
-            etraMeetingActions.Setup(x => x.FinaliseMeeting(id, It.IsAny<FinaliseETRAMeetingRequest>())).ReturnsAsync(new FinaliseETRAMeetingResponse { Id = id, IsFinalised = true });
+            etraMeetingActions.Setup(x => x.GetMeeting(meeting.Id)).ReturnsAsync(meeting);
+            etraMeetingActions.Setup(x => x.FinaliseMeeting(meeting.Id, It.IsAny<FinaliseETRAMeetingRequest>())).ReturnsAsync(new FinaliseETRAMeetingResponse { Id = meeting.Id, IsFinalised = true });
 
-            var actionResult = await etraController.FinaliseMeeting(id, It.IsAny<FinaliseETRAMeetingRequest>());
+            var actionResult = await etraController.FinaliseMeeting(meeting.Id, It.IsAny<FinaliseETRAMeetingRequest>());
 
             var okResult = actionResult as OkObjectResult;
             Assert.NotNull(okResult);
@@ -112,7 +113,7 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
             var value = okResult.Value as HackneyResult<FinaliseETRAMeetingResponse>;
             Assert.NotNull(value);
 
-            Assert.Equal(id, value.Result.Id);
+            Assert.Equal(meeting.Id, value.Result.Id);
             Assert.True(value.Result.IsFinalised);
         }
 
@@ -134,6 +135,30 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
             async Task act() => await etraController.FinaliseMeeting(string.Empty, null);
 
             await Assert.ThrowsAsync<ArgumentException>(act);
+        }
+
+        public ETRAMeeting GetMeeting(bool isCompleted = true)
+        {
+            var meeting = new Dictionary<string,object> {
+                { "hackney_tenancymanagementinteractionsid", "686c2e06-e639-e911-a973-00224807251a" },
+                { "hackney_name", "CAS-07377-V5Q6Q1" },
+                { "createdon", DateTime.Now.AddDays(-2) },
+                { "modifiedon", DateTime.Now.AddDays(-1) },
+                { "hackney_confirmationdate", null },
+                { "hackney_signaturereference", null },
+                { "hackney_signatoryrole", null },
+                { "hackney_pdfreference", null }
+            };
+
+            if (isCompleted)
+            {
+                meeting["hackney_confirmationdate"] = DateTime.Now;
+                meeting["hackney_signaturereference"] = Guid.Empty;
+                meeting["hackney_signatoryrole"] = "Boss";
+                meeting["hackney_pdfreference"] = Guid.Empty;
+            }
+
+            return ETRAMeeting.Create(meeting);
         }
     }
 }

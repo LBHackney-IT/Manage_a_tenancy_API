@@ -495,10 +495,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     throw new TenancyServiceException();
                 }
 
-                var meetingResponse = JsonConvert.DeserializeObject<JObject>(await result.Content.ReadAsStringAsync());
-                var meeting = JsonConvert.DeserializeObject<dynamic>(meetingResponse.ToString());
+                var meeting = ETRAMeeting.Create(JsonConvert.DeserializeObject<dynamic>(await result.Content.ReadAsStringAsync()));
 
-                return new ETRAMeeting(meeting);
+                return meeting;
             }
             else
             {

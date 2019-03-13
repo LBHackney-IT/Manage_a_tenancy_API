@@ -15,5 +15,6 @@ namespace ManageATenancyAPI.Interfaces.Housing
         Task<object> GetETRAIssuesByTRAorETRAMeeting(string id, bool retrieveIssuesPerMeeting);
         Task<JObject> UpdateIssue(UpdateETRAIssue etraIssueToBeUpdated);
         Task<FinaliseETRAMeetingResponse> FinaliseMeeting(string id, FinaliseETRAMeetingRequest request);
+        Task<RecordETRAMeetingAttendanceResponse> RecordETRAMeetingAttendance(string id, RecordETRAMeetingAttendanceRequest request);
     }
 }

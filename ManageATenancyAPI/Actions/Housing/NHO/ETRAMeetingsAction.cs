@@ -506,6 +506,37 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
         }
 
+        public async Task<RecordETRAMeetingAttendanceResponse> RecordETRAMeetingAttendance(string id, RecordETRAMeetingAttendanceRequest request)
+        {
+            var attendance = new JObject
+            {
+                { "hackney_councillorsattendingmeeting", request.Councillors },
+                { "hackney_othercouncilstaffattendingmeeting", request.OtherCouncilStaff },
+                { "hackney_totalmeetingattendees", request.TotalAttendees }
+            };
+
+            var updateIssueIntractionQuery = HousingAPIQueryBuilder.updateIssueQuery(id);
+            var token = await _crmAccessToken.getCRM365AccessToken();
+            _client = await _hackneyAccountApiBuilder.CreateRequest(token);
+
+            var updateIntractionResponse = await
+                _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, updateIssueIntractionQuery, attendance);
+
+            if (!updateIntractionResponse.IsSuccessStatusCode)
+            {
+                throw new TenancyServiceException();
+            }
+
+            return new RecordETRAMeetingAttendanceResponse
+            {
+                TotalAttendees = request.TotalAttendees,
+                OtherCouncilStaff = request.OtherCouncilStaff,
+                Councillors = request.Councillors,
+                MeetingId = id,
+                Recorded = updateIntractionResponse.IsSuccessStatusCode
+            };
+        }
+
         public async Task<FinaliseETRAMeetingResponse> FinaliseMeeting(string id, FinaliseETRAMeetingRequest request)
         {
             var confirmation = new JObject {

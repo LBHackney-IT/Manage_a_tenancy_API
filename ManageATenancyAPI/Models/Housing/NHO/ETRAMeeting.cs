@@ -12,6 +12,9 @@ namespace ManageATenancyAPI.Models.Housing.NHO
         public Guid? SignatureId { get; set; }
         public string SignatoryRole { get; set; }
         public Guid? PdfId { get; set; }
+        public string CouncillorsAttending { get; set; }
+        public string OtherCouncilStaffAttending { get; set; }
+        public int? TotalAttendees { get; set; }
 
         private ETRAMeeting(){ }
 
@@ -25,7 +28,10 @@ namespace ManageATenancyAPI.Models.Housing.NHO
                 ConfirmationDate = crmMeeting["hackney_confirmationdate"],
                 SignatureId = crmMeeting["hackney_signaturereference"],
                 SignatoryRole = crmMeeting["hackney_signatoryrole"],
-                PdfId = crmMeeting["hackney_pdfreference"]
+                PdfId = crmMeeting["hackney_pdfreference"],
+                CouncillorsAttending = crmMeeting["hackney_councillorsattendingmeeting"],
+                OtherCouncilStaffAttending = crmMeeting["hackney_othercouncilstaffattendingmeeting"],
+                TotalAttendees = crmMeeting["hackney_totalmeetingattendees"]
             };
         }
     }

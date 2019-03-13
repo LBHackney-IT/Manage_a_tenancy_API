@@ -96,6 +96,22 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             }
         }
 
+        [Route("record-attendance/{id}")]
+        [HttpPatch]
+        public async Task<ActionResult<RecordETRAMeetingAttendanceResponse>> RecordAttendance(string meetingId, [FromBody] RecordETRAMeetingAttendanceRequest request)
+        {
+            if (string.IsNullOrEmpty(meetingId) || request == null)
+                return BadRequest();
+
+            var meeting = await _etraMeetingsAction.GetMeeting(meetingId);
+
+            if (meeting == null)
+                return NotFound();
+
+            var response = await _etraMeetingsAction.RecordETRAMeetingAttendance(meeting.Id, request);
+            return Ok(response);
+        }
+
         /// <summary>
         /// Finalises ETRA Meetings by meeting id, and optionally a signatory with their role.
         /// </summary>

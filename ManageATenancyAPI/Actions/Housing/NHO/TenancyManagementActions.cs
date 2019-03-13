@@ -765,6 +765,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      requestCallBack = response["incident1_x002e_housing_requestcallback"],
                                      contactId = response["_hackney_contactid_value"],
                                      contactName = response["_hackney_contactid_value@OData.Community.Display.V1.FormattedValue"],
+                                     contactTitle = response["contact3_x002e_hackney_title"],
                                      contactPostcode = response["contact3_x002e_address1_postalcode"],
                                      contactAddressLine1 = response["contact3_x002e_address1_line1"],
                                      contactAddressLine2 = response["contact3_x002e_address1_line2"],
@@ -773,6 +774,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      contactBirthDate = response["contact3_x002e_birthdate"],
                                      contactTelephone = response["contact3_x002e_telephone1"],
                                      contactEmailAddress = response["contact3_x002e_emailaddress1"],
+                                     contactCautionaryAlert = response["contact3_x002e_hackney_cautionaryalert"],
+                                     contactPropertyCautionaryAlert = response["contact3_x002e_hackney_propertycautionaryalert"],
                                      contactLarn = response["contact3_x002e_hackney_larn"],
                                      contactUPRN = response["contact3_x002e_hackney_uprn"],
                                      householdID = response["_hackney_household_interactionid_value"]
@@ -804,6 +807,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      grp.Key.requestCallBack,
                                      grp.Key.contactId,
                                      grp.Key.contactName,
+                                     grp.Key.contactTitle,
                                      grp.Key.contactPostcode,
                                      grp.Key.contactAddressLine1,
                                      grp.Key.contactAddressLine2,
@@ -812,6 +816,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      grp.Key.contactBirthDate,
                                      grp.Key.contactTelephone,
                                      grp.Key.contactEmailAddress,
+                                     grp.Key.contactCautionaryAlert,
+                                     grp.Key.contactPropertyCautionaryAlert,
                                      grp.Key.contactLarn,
                                      grp.Key.contactUPRN,
                                      grp.Key.householdID,
@@ -848,6 +854,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 tenancyObj.requestCallBack = response.requestCallBack;
                 tenancyObj.contactId = response.contactId;
                 tenancyObj.contactName = response.contactName;
+                tenancyObj.contactTitle = response.contactTitle;
                 tenancyObj.contactPostcode = response.contactPostcode;
                 tenancyObj.contactAddressLine1 = response.contactAddressLine1;
                 tenancyObj.contactAddressLine2 = response.contactAddressLine2;
@@ -856,6 +863,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 tenancyObj.contactBirthDate = response.contactBirthDate;
                 tenancyObj.contactTelephone = response.contactTelephone;
                 tenancyObj.contactEmailAddress = response.contactEmailAddress;
+                tenancyObj.contactCautionaryAlert = response.contactCautionaryAlert;
+                tenancyObj.contactPropertyCautionaryAlert = response.contactPropertyCautionaryAlert;
                 tenancyObj.contactLarn = response.contactLarn;
                 tenancyObj.contactUPRN = response.contactUPRN;
                 tenancyObj.householdID = response.householdID;

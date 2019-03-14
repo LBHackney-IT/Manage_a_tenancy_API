@@ -74,6 +74,89 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
 
             Assert.Equal(actual.StatusCode, 500);
         }
+
+        [Fact]
+        public async Task RecordAttendance_IncorrectMeetingId_ReturnsNotFound()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            const string id = "123id";
+            etraMeetingActions.Setup(x => x.GetMeeting(id)).ReturnsAsync((ETRAMeeting)null);
+
+            var request = new RecordETRAMeetingAttendanceRequest
+            {
+                TotalAttendees = 5,
+                Councillors = "Joseph P. Bloggs",
+                OtherCouncilStaff = "Jonathan H. Smith"
+            };
+            var actionResult = await etraController.RecordAttendance(id, request);
+
+            Assert.IsType<NotFoundResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task RecordAttendance_ValidInput_ReturnsSuccessfulResponse()
+        {
+            var meeting = GetMeeting(false);
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            etraMeetingActions.Setup(x => x.GetMeeting(meeting.Id)).ReturnsAsync(meeting);
+            var response = new RecordETRAMeetingAttendanceResponse
+            {
+                Councillors = string.Empty,
+                MeetingId = meeting.Id,
+                OtherCouncilStaff = string.Empty,
+                Recorded = true,
+                TotalAttendees = 5
+            };
+            etraMeetingActions.Setup(x => x.RecordETRAMeetingAttendance(meeting.Id, It.IsAny<RecordETRAMeetingAttendanceRequest>())).ReturnsAsync(response);
+
+            var request = new RecordETRAMeetingAttendanceRequest
+            {
+                TotalAttendees = 5,
+                Councillors = "Joseph P. Bloggs",
+                OtherCouncilStaff = "Jonathan H. Smith"
+            };
+            var actionResult = await etraController.RecordAttendance(meeting.Id, request);
+
+            var okResult = actionResult.Result as OkObjectResult;
+            Assert.NotNull(okResult);
+
+            var value = okResult.Value as RecordETRAMeetingAttendanceResponse;
+            Assert.NotNull(value);
+
+            Assert.Equal(meeting.Id, value.MeetingId);
+            Assert.True(value.Recorded);
+        }
+
+        [Fact]
+        public async Task RecordAttendance_WithNullMeetingId_ReturnsBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+
+            var actionResult = await etraController.RecordAttendance(null, null);
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task RecordAttendance_WithEmptyStringMeetingId_ReturnsBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+
+            var actionResult = await etraController.RecordAttendance(string.Empty, null);
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task RecordAttendance_WithNullRecordAttendanceRequest_ReturnsBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+
+            var actionResult = await etraController.RecordAttendance("123id", null);
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
         [Fact]
         public async Task FinaliseMeeting_IncorrectMeetingId_ReturnsNotFound()
         {
@@ -147,7 +230,10 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
                 { "hackney_confirmationdate", null },
                 { "hackney_signaturereference", null },
                 { "hackney_signatoryrole", null },
-                { "hackney_pdfreference", null }
+                { "hackney_pdfreference", null },
+                { "hackney_councillorsattendingmeeting", string.Empty },
+                { "hackney_othercouncilstaffattendingmeeting", string.Empty },
+                { "hackney_totalmeetingattendees", null }
             };
 
             if (isCompleted)

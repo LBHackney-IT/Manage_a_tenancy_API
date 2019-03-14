@@ -131,6 +131,38 @@ namespace ManageATenancyAPI.Tests.Actions
         }
 
         [Fact]
+        public async Task RecordETRAMeetingAttendance_WithMeetingIdAndPopulatedRequestObject_ReturnsSuccessfulResponse()
+        {
+            const string fakeMeetingId = "id123";
+            var request = GetRandomMeetingAttendanceRequest();
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var responseJObject = new JObject {
+                {"annotationid", Guid.NewGuid() }
+            };
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
+            mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responseMessage);
+
+            var response = await service.RecordETRAMeetingAttendance(fakeMeetingId, request);
+
+            Assert.True(response.Recorded);
+        }
+
+        [Fact]
+        public async Task RecordETRAMeetingAttendance_APICallFails_ThrowsTenancyServiceException()
+        {
+            const string fakeMeetingId = "id123";
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responseMessage);
+
+            var request = GetRandomMeetingAttendanceRequest();
+
+            async Task act() => await service.RecordETRAMeetingAttendance(fakeMeetingId, request);
+
+            await Assert.ThrowsAsync<TenancyServiceException>(act);
+        }
+
+        [Fact]
         public async Task FinaliseMeeting_WithMeetingIdAndPopulatedRequestObject_ReturnsSuccessfulResponse()
         {
             const string fakeMeetingId = "id123";
@@ -317,6 +349,18 @@ namespace ManageATenancyAPI.Tests.Actions
                 SignatureId = fakeData.Random.Guid()
             };
             return finalisationObject;
+        }
+
+        public RecordETRAMeetingAttendanceRequest GetRandomMeetingAttendanceRequest()
+        {
+            var fakeData = new Faker();
+            var attendanceObject = new RecordETRAMeetingAttendanceRequest
+            {
+                Councillors = fakeData.Random.String(),
+                OtherCouncilStaff = fakeData.Random.String(),
+                TotalAttendees = fakeData.Random.Int(2, 200)
+            };
+            return attendanceObject;
         }
 
         #region Get ETRA Issues

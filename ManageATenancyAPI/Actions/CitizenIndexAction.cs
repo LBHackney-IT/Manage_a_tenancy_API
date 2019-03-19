@@ -170,8 +170,8 @@ namespace ManageATenancyAPI.Actions
                         Telephone3 = response.telephone3,
                         IsActiveTenant = response.parentcustomerid_account != null ? response.parentcustomerid_account.housing_present : false,
                         Accounttype = response.parentcustomerid_account != null ? response.parentcustomerid_account.housing_accounttype : null,
-                        HouseholdId = response.hackney_household_contactId != null ? response.hackney_household_contactId.hackney_householdid : null
-                        
+                        HouseholdId = response.hackney_household_contactId != null ? response.hackney_household_contactId.hackney_householdid : null,
+                        MainTenant = response.hackney_responsible
                     };
                     return tenant;
                 }).Where(tenant => tenant.IsActiveTenant).ToList();

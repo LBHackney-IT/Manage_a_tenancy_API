@@ -49,7 +49,7 @@ namespace ManageATenancyAPI.Extension
             services.AddScoped<ITraRoleAction, TraRoleAction>();
             services.AddScoped<ITraAction, TraAction>();
 
-
+            services.AddScoped<IOfficerService, OfficerService>();
 
             services.AddTransient(typeof(ITRARepository), typeof(TRARepository));
             services.AddTransient(typeof(IUHWWarehouseRepository), typeof(UHWWarehouseRepository));

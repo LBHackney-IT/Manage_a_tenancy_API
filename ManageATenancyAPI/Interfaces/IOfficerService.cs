@@ -8,7 +8,7 @@ namespace ManageATenancyAPI.Interfaces
     public interface IOfficerService
     {
         Task<OfficerDetails> GetOfficerDetails(string emailAddress);
-        Task<IList<NewTenancyResponse>> GetNewTenanciesForHousingOfficer(string id, DateTime lastCheckDate);
+        Task<IList<NewTenancyResponse>> GetNewTenanciesForHousingOfficer(OfficerDetails officer);
         Task UpdateLastNewTenancyCheckDate(string id, DateTime date);
     }
 }

@@ -16,24 +16,24 @@ namespace ManageATenancyAPI.Services
     public class OfficerService : IOfficerService
     {
         private readonly HttpClient _client;
-        private IHackneyHousingAPICall _manageATenancyAPI;
-        private IHackneyHousingAPICallBuilder _hackneyAccountApiBuilder;
-        private IHackneyGetCRM365Token _crmAccessToken;
+        private readonly IHackneyHousingAPICall _manageATenancyAPI;
 
         public OfficerService(IHackneyHousingAPICallBuilder apiCallBuilder, IHackneyHousingAPICall apiCall, IHackneyGetCRM365Token accessToken)
         {
-            _hackneyAccountApiBuilder = apiCallBuilder;
             _manageATenancyAPI = apiCall;
-            _crmAccessToken = accessToken;
 
-            var token = _crmAccessToken.getCRM365AccessToken().Result;
-            _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
+            var token = accessToken.getCRM365AccessToken().Result;
+            _client = apiCallBuilder.CreateRequest(token).Result;
 
         }
 
-        public async Task<IList<NewTenancyResponse>> GetNewTenanciesForHousingOfficer(string id, DateTime lastCheckDate)
+        public async Task<IList<NewTenancyResponse>> GetNewTenanciesForHousingOfficer(OfficerDetails officer)
         {
-            var query = HousingAPIQueryBuilder.GetNewTenanciesForHousingOfficer(id, lastCheckDate);
+            var checkFrom = officer.LastNewTenancyCheck == null
+                ? DateTime.Today
+                : officer.LastNewTenancyCheck.Value;
+
+            var query = HousingAPIQueryBuilder.GetNewTenanciesForHousingOfficer(officer.Id, checkFrom);
 
             var newCheckDate = DateTime.Now;
 
@@ -42,8 +42,14 @@ namespace ManageATenancyAPI.Services
             var newTenancies = new List<NewTenancyResponse>();
             foreach (var entry in response)
             {
+                var accountId = (string)entry["accountid"];
+                var housingTenure = (string)entry["housing_tenure"];
                 var fullAddress = (string)entry["contact1_x002e_address1_composite"];
-                var existingNewTenancy = newTenancies.FirstOrDefault(x => x.FullAddress == fullAddress);
+                var existingNewTenancy = newTenancies.FirstOrDefault(x =>
+                    x.AccountId == accountId &&
+                    x.HousingTenure == housingTenure &&
+                    x.FullAddress == fullAddress
+                );
                 if (existingNewTenancy != null)
                 {
                     var newContact = new NewTenancyContact
@@ -71,6 +77,7 @@ namespace ManageATenancyAPI.Services
                     {
                         AccountCreatedOn = entry["createdon"],
                         AccountId = entry["accountid"],
+                        HousingTenure = entry["housing_tenure"],
                         AddressLine1 = entry["contact1_x002e_address1_line1"],
                         AddressLine2 = entry["contact1_x002e_address1_line2"],
                         AddressLine3 = entry["contact1_x002e_address1_line3"],
@@ -93,7 +100,7 @@ namespace ManageATenancyAPI.Services
                 }
             }
 
-            await UpdateLastNewTenancyCheckDate(id, newCheckDate);
+            await UpdateLastNewTenancyCheckDate(officer.Id, newCheckDate);
 
             return newTenancies.OrderBy(x => x.AccountCreatedOn).ToList();
         }

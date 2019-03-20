@@ -874,6 +874,7 @@ namespace ManageATenancyAPI.Helpers.Housing
                                     </filter>
 		                            <attribute name='accountid' />
 		                            <attribute name='createdon' />
+		                            <attribute name='housing_tenure' />
 		                            <link-entity name='contact' from='parentcustomerid' to='accountid' link-type='inner' >
 			                            <attribute name='fullname' />
 			                            <attribute name='address1_composite' />

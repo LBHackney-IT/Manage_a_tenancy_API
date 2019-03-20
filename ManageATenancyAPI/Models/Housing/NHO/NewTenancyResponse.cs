@@ -7,6 +7,7 @@ namespace ManageATenancyAPI.Models.Housing.NHO
     {
         public string AccountId { get; set; }
         public DateTime AccountCreatedOn { get; set; }
+        public string HousingTenure { get; set; }
         public string NeighbourhoodOffice { get; set; }
         public string EstateAddress { get; set; }
         public string AddressLine1 { get; set; }

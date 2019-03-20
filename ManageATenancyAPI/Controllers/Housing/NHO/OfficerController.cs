@@ -2,7 +2,6 @@
 using ManageATenancyAPI.Models;
 using ManageATenancyAPI.Models.Housing.NHO;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -31,13 +30,9 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             if (officerDetails == null)
                 return NotFound();
 
-            var checkFrom = officerDetails.LastNewTenancyCheck == null
-                ? DateTime.Today
-                : officerDetails.LastNewTenancyCheck.Value;
+            var response = await _officerService.GetNewTenanciesForHousingOfficer(officerDetails);
 
-            var response = await _officerService.GetNewTenanciesForHousingOfficer(officerDetails.Id, checkFrom);
-
-            return Ok(HackneyResult<FinaliseETRAMeetingResponse>.Create(response));
+            return Ok(HackneyResult<IList<NewTenancyResponse>>.Create(response));
         }
     }
 }

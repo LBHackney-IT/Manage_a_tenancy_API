@@ -29,8 +29,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
         private IHackneyHousingAPICall _ManageATenancyAPI;
         private IHackneyHousingAPICallBuilder _hackneyAccountApiBuilder;
         private IHackneyGetCRM365Token _crmAccessToken;
+        private readonly IDateService _dateService;
 
-        public ETRAMeetingsAction(ILoggerAdapter<ETRAMeetingsAction> logger, IHackneyHousingAPICallBuilder apiCallBuilder, IHackneyHousingAPICall apiCall, IHackneyGetCRM365Token accessToken, IOptions<AppConfiguration> config)
+        public ETRAMeetingsAction(ILoggerAdapter<ETRAMeetingsAction> logger, IHackneyHousingAPICallBuilder apiCallBuilder, IHackneyHousingAPICall apiCall, IHackneyGetCRM365Token accessToken, IOptions<AppConfiguration> config, IDateService dateService)
         {
             //set up client
             _client = new HttpClient();
@@ -42,6 +43,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             _logger = logger;
             _crmAccessToken = accessToken;
             _configuration = config?.Value;
+            _dateService = dateService;
 
         }
         public async Task<HackneyResult<JObject>> CreateETRAMeeting(ETRAIssue meetingInfo)
@@ -146,10 +148,11 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 tmiJObject.Add("hackney_natureofenquiry", meetingInfo.natureOfEnquiry);
                 //add subject
                 tmiJObject.Add("hackney_enquirysubject", meetingInfo.enquirySubject);
-                // Process Type :- 0 Interaction , 1 TM Process , 2 Post Visit Action, 3 ETRA meeting issue
+                // Process Type :- 0 Interaction , 1 TM Process , 2 Post Visit Action, 3 ETRA meeting issue, 4 ETRA Issue Response
                 if (meetingInfo.processType == "3")
                 {
                     tmiJObject.Add("hackney_issuelocation", meetingInfo.issueLocation);
+                    tmiJObject.Add("hackney_issuedeadlinedate", await _dateService.GetIssueDueDate(DateTime.Now, 3));
                 }
 
                 tmiJObject.Add("hackney_processtype", meetingInfo.processType);
@@ -565,6 +568,62 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
 
             return new FinaliseETRAMeetingResponse { Id = id, IsFinalised = updateIntractionResponse.IsSuccessStatusCode };
+        }
+
+        public async Task<ETRAIssueResponseModel> AddETRAIssueResponse(ETRAIssueResponseRequest request)
+        {
+            var responseData = new JObject
+            {
+                { "hackney_issuestatus", (int)request.IssueStatus },
+                { "hackney_processtype", 4 }, //process type 4 = ETRA issue response
+                { "hackney_parent_interactionid", request.IssueId },
+                { "hackney_respionsefrom", request.ResponseFrom },
+                { "hackney_responseispublic", request.IsPublic },
+                { "hackney_responsetext", request.ResponseText },
+                { "hackney_responseservicearea", request.ServiceArea } //there is already a hackney_servicearea entity. What is it used for? Can we use it here?
+            };
+
+            if (request.ProjectedCompletionDate != null)
+                responseData.Add("hackney_issuedeadlinedate", request.ProjectedCompletionDate.Value);
+
+            var token = await _crmAccessToken.getCRM365AccessToken();
+            _client = await _hackneyAccountApiBuilder.CreateRequest(token);
+
+            var query = HousingAPIQueryBuilder.PostETRAMeetingQuery();
+
+            var responseResponse = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Post, query, responseData);
+
+            ETRAIssueResponseModel response = null;
+            if (responseResponse.StatusCode == HttpStatusCode.Created)
+            {
+                var createdResponse = JsonConvert.DeserializeObject<JObject>(await responseResponse.Content.ReadAsStringAsync());
+
+                response = new ETRAIssueResponseModel
+                {
+                    IsPublic = request.IsPublic,
+                    IssueId = request.IssueId,
+                    IssueStatus = request.IssueStatus,
+                    ProjectedCompletionDate = request.ProjectedCompletionDate,
+                    ResponseFrom = request.ResponseFrom,
+                    ResponseId = createdResponse["id"].ToString(),
+                    ResponseText = request.ResponseText,
+                    ServiceArea = request.ServiceArea
+                };
+            }
+            if (!responseResponse.IsSuccessStatusCode)
+            {
+                throw new ServiceRequestException();
+            }
+
+            var updateIssueData = new JObject
+            {
+                { "hackney_issuestatus", (int)request.IssueStatus }
+            };
+            var issueUpdateQuery = HousingAPIQueryBuilder.updateIncidentQuery(request.IssueId);
+
+            var issueResponse = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, query, updateIssueData);
+
+            return response;
         }
 
         private async Task UpdateAnnotation(string notes, string estateOfficer, string annotationId)

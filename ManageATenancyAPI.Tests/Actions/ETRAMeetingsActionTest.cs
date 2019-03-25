@@ -31,6 +31,7 @@ namespace ManageATenancyAPI.Tests.Actions
         private Mock<ILoggerAdapter<ETRAMeetingsAction>> mockILoggerAdapter;
         private Mock<IOptions<AppConfiguration>> mockConfig;
         private Mock<IHackneyGetCRM365Token> mockAccessToken;
+        private Mock<IDateService> mockDateService;
         public ETRAMeetingsActionTest()
         { 
             token = "TokenOnValidRequest";
@@ -43,7 +44,7 @@ namespace ManageATenancyAPI.Tests.Actions
             mockILoggerAdapter = new Mock<ILoggerAdapter<ETRAMeetingsAction>>();
             mockConfig = new Mock<IOptions<AppConfiguration>>();
             mockConfig.SetupGet(x => x.Value).Returns(new AppConfiguration());
-
+            mockDateService = new Mock<IDateService>();
         }
 
         [Fact]
@@ -57,7 +58,7 @@ namespace ManageATenancyAPI.Tests.Actions
 
             mockingApiCall.Setup(x => x.postHousingAPI(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responsMessage);
 
-            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
 
             var actualResponse = tmiActions.CreateETRAMeeting(getRandomInteractionObject()).Result;
 
@@ -83,7 +84,7 @@ namespace ManageATenancyAPI.Tests.Actions
 
             mockingApiCall.Setup(x => x.postHousingAPI(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responsMessage);
 
-            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
             
             await Assert.ThrowsAsync<ServiceRequestException>(async () => await tmiActions.CreateETRAMeeting(getRandomInteractionObject()));
         }
@@ -99,7 +100,7 @@ namespace ManageATenancyAPI.Tests.Actions
 
             mockingApiCall.Setup(x => x.postHousingAPI(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(() => null);
 
-            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
 
             await Assert.ThrowsAsync<MissingTenancyInteractionRequestException>(async () => await tmiActions.CreateETRAMeeting(getRandomInteractionObject()));
         }
@@ -115,7 +116,7 @@ namespace ManageATenancyAPI.Tests.Actions
 
             mockingApiCall.Setup(x => x.postHousingAPI(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responsMessage);
 
-            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
 
             var actualResponse = tmiActions.CreateETRAMeeting(getRandomInteractionObjectForIssueCreation()).Result;
 
@@ -135,7 +136,7 @@ namespace ManageATenancyAPI.Tests.Actions
         {
             const string fakeMeetingId = "id123";
             var request = GetRandomMeetingAttendanceRequest();
-            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
             var responseJObject = new JObject {
                 {"annotationid", Guid.NewGuid() }
             };
@@ -151,7 +152,7 @@ namespace ManageATenancyAPI.Tests.Actions
         public async Task RecordETRAMeetingAttendance_APICallFails_ThrowsTenancyServiceException()
         {
             const string fakeMeetingId = "id123";
-            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
             var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
             mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responseMessage);
 
@@ -167,7 +168,7 @@ namespace ManageATenancyAPI.Tests.Actions
         {
             const string fakeMeetingId = "id123";
             var fakeFinalisationRequest = GetRandomMeetingFinalisationRequest();
-            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
             var responseJObject = new JObject {
                 {"annotationid", Guid.NewGuid() }
             };
@@ -183,7 +184,7 @@ namespace ManageATenancyAPI.Tests.Actions
         public async Task FinaliseMeeting_WithMeetingIdAndNullRequestObject_ReturnsSuccessfulResponse()
         {
             const string fakeMeetingId = "id123";
-            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
             var responseJObject = new JObject {
                 {"annotationid", Guid.NewGuid() }
             };
@@ -199,7 +200,7 @@ namespace ManageATenancyAPI.Tests.Actions
         public async Task FinaliseMeeting_APICallFails_ThrowsTenancyServiceException()
         {
             const string fakeMeetingId = "id123";
-            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
             var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
             mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responseMessage);
 
@@ -212,7 +213,7 @@ namespace ManageATenancyAPI.Tests.Actions
         public async Task GetMeeting_HousingApiNullResponse_ThrowsNullResponseException()
         {
             const string fakeMeetingId = "id123";
-            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
             HttpResponseMessage responseMessage = null;
             mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
 
@@ -225,7 +226,7 @@ namespace ManageATenancyAPI.Tests.Actions
         public async Task GetMeeting_HousingApiNonSuccessStatusCode_ThrowsTenancyServiceException()
         {
             const string fakeMeetingId = "id123";
-            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
             var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
             mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
 
@@ -238,7 +239,7 @@ namespace ManageATenancyAPI.Tests.Actions
         public async Task GetMeeting_ValidMeetingId_ReturnsCorrectMeetingObject()
         {
             const string fakeMeetingId = "id123";
-            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
             var responseJObject = GetRandomETRAMeeting(true);
             var responseMessage = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
             mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
@@ -369,7 +370,7 @@ namespace ManageATenancyAPI.Tests.Actions
         {
             mockingApiCall.Setup(x => x.getHousingAPIResponse(client, It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(getIssuesDetailList());
 
-            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
 
             var actualResponse = tmiActions.GetETRAIssuesByTRAorETRAMeeting(It.IsAny<string>(),false).Result;
 
@@ -386,7 +387,7 @@ namespace ManageATenancyAPI.Tests.Actions
             HttpResponseMessage serviceResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError) { Content = new StringContent("", System.Text.Encoding.UTF8, "application/json") };
             mockingApiCall.Setup(x => x.getHousingAPIResponse(client, It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(serviceResponse);
             
-            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
 
             await Assert.ThrowsAsync<TenancyServiceException>(async () => await tmiActions.GetETRAIssuesByTRAorETRAMeeting(It.IsAny<string>(),false));
         }
@@ -398,7 +399,7 @@ namespace ManageATenancyAPI.Tests.Actions
 
             mockApiCall.Setup(x => x.getHousingAPIResponse(client, It.IsAny<string>(), null)).ReturnsAsync(() => null);
             
-            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
 
             await Assert.ThrowsAsync<NullResponseException>(async () =>  await tmiActions.GetETRAIssuesByTRAorETRAMeeting(It.IsAny<string>(), false));
         }
@@ -515,7 +516,7 @@ namespace ManageATenancyAPI.Tests.Actions
             mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responsMessageUpdateIncident);
             mockingApiCall.Setup(x => x.deleteObjectAPIResponse(It.IsAny<HttpClient>(),  It.IsAny<string>())).ReturnsAsync(responsMessageDeleteInteraction);
 
-            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
 
             var actualResponse = tmiActions.UpdateIssue(requestObject).Result;
             var expectedResult = new JObject();
@@ -546,7 +547,7 @@ namespace ManageATenancyAPI.Tests.Actions
             mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responsMessageUpdateIncident);
             mockingApiCall.Setup(x => x.deleteObjectAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>())).ReturnsAsync(responsMessageDeleteInteraction);
 
-            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
 
             var actualResponse = tmiActions.UpdateIssue(requestObject).Result;
             var expectedResult = new JObject();
@@ -579,7 +580,7 @@ namespace ManageATenancyAPI.Tests.Actions
             mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responsMessageUpdateIncident);
             mockingApiCall.Setup(x => x.deleteObjectAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>())).ReturnsAsync(responsMessageDeleteInteraction);
 
-            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object);
+            ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
 
             await Assert.ThrowsAsync<TenancyServiceException>(async () => await tmiActions.UpdateIssue(requestObject));
         }

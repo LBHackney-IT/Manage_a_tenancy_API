@@ -22,7 +22,7 @@ namespace ManageATenancyAPI.Services.Housing
             var response = new HttpResponseMessage();
             try
             {
-                response = httpClient.GetAsync(query).Result;
+                response = await httpClient.GetAsync(query);
                 if (!response.IsSuccessStatusCode)
                 {
                     throw new ServiceException();
@@ -48,7 +48,7 @@ namespace ManageATenancyAPI.Services.Housing
 
                 HttpRequestMessage request = new HttpRequestMessage(method, requestUri) { Content = new StringContent(content) };
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                response = client.SendAsync(request).Result;
+                response = await client.SendAsync(request);
            
                 if (!response.IsSuccessStatusCode)
                 {
@@ -71,7 +71,7 @@ namespace ManageATenancyAPI.Services.Housing
             {
                 
                 var content = new StringContent(jObject.ToString(), Encoding.UTF8, "application/json");
-                response = client.PostAsync(query, content).Result;
+                response = await client.PostAsync(query, content);
                
                 if (!response.IsSuccessStatusCode)
                 {
@@ -115,7 +115,7 @@ namespace ManageATenancyAPI.Services.Housing
             var response = new HttpResponseMessage();
             try
             {
-                response = client.DeleteAsync(query).Result;
+                response = await client.DeleteAsync(query);
                 if (!response.IsSuccessStatusCode)
                 {
                     throw new ServiceException();

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ManageATenancyAPI.Models;
 using ManageATenancyAPI.Models.Housing.NHO;
 using Newtonsoft.Json.Linq;
@@ -16,5 +13,6 @@ namespace ManageATenancyAPI.Interfaces.Housing
         Task<JObject> UpdateIssue(UpdateETRAIssue etraIssueToBeUpdated);
         Task<FinaliseETRAMeetingResponse> FinaliseMeeting(string id, FinaliseETRAMeetingRequest request);
         Task<RecordETRAMeetingAttendanceResponse> RecordETRAMeetingAttendance(string id, RecordETRAMeetingAttendanceRequest request);
+        Task<ETRAIssueResponseModel> AddETRAIssueResponse(ETRAIssueResponseRequest request);
     }
 }

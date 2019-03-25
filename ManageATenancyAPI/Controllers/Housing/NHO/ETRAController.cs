@@ -140,6 +140,19 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             return Ok(HackneyResult<FinaliseETRAMeetingResponse>.Create(response));
         }
 
+        [Route("add-issue-response")]
+        [HttpPost]
+        public async Task<ActionResult<HackneyResult<ETRAIssueResponseModel>>> AddETRAIssueResponse([FromBody] ETRAIssueResponseRequest request)
+        {
+            if (request == null ||
+                (request.IssueStatus == Helpers.IssueStatus.NotYetCompleted && !request.ProjectedCompletionDate.HasValue))
+                return BadRequest();
+
+            var responseModel = await _etraMeetingsAction.AddETRAIssueResponse(request);
+
+            return Ok(HackneyResult<ETRAIssueResponseModel>.Create(responseModel));
+        }
+
         /// <summary>
         /// Gets ETRA Issues by TRA ID or parent interaction. Used to retrieve issue for a TRA or for a specific ETRA meeting.
         /// </summary>

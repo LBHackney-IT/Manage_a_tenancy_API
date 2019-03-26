@@ -6,8 +6,16 @@ namespace ManageATenancyAPI.Models.Housing.NHO
     public class NewTenancyResponse
     {
         public string AccountId { get; set; }
+        public string OfficerId { get; set; }
+        public string OfficerName { get; set; }
         public DateTime AccountCreatedOn { get; set; }
         public string HousingTenure { get; set; }
+        public string PatchId { get; set; }
+        public int AreaId { get; set; }
+        public string ManagerId { get; set; }
+        public string HouseholdId { get; set; }
+        public string TagReference { get; set; }
+
         public string NeighbourhoodOffice { get; set; }
         public string EstateAddress { get; set; }
         public string AddressLine1 { get; set; }
@@ -20,6 +28,7 @@ namespace ManageATenancyAPI.Models.Housing.NHO
 
     public class NewTenancyContact
     {
+        public string ContactId { get; set; }
         public bool Responsible { get; set; }
         public string Title { get; set; }
         public string FirstName { get; set; }

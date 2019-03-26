@@ -415,7 +415,7 @@ namespace ManageATenancyAPI.Helpers.Housing
         {
 
             var queryParams =
-                "?$select=contactid,firstname,lastname,fullname,jobtitle,birthdate,emailaddress1,telephone1,telephone2,telephone3,hackney_larn,hackney_uprn,address1_name,address1_line1,address1_line2,address1_line3, address1_city,address1_postalcode,hackney_cautionaryalert,hackney_propertycautionaryalert,hackney_hackneyhomesid&";
+                "?$select=contactid,firstname,lastname,fullname,jobtitle,birthdate,emailaddress1,telephone1,telephone2,telephone3,hackney_larn,hackney_uprn,address1_name,address1_line1,address1_line2,address1_line3, address1_city,address1_postalcode,hackney_cautionaryalert,hackney_propertycautionaryalert,hackney_responsible,hackney_hackneyhomesid&";
             queryParams += "$filter=";
             bool fliter = false;
             if ((!string.IsNullOrEmpty(firstname) && !string.IsNullOrWhiteSpace(firstname)) &&

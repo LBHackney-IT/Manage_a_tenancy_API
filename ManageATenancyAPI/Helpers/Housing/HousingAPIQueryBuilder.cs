@@ -864,19 +864,23 @@ namespace ManageATenancyAPI.Helpers.Housing
             return "/api/data/v8.2/contacts(" + contactID + ")?$select=hackney_nextofkinname, hackney_nextofkinaddress,hackney_nextofkinrelationship,hackney_nextofkinotherphone,hackney_nextofkinemail,hackney_nextofkinmobile";
         }
 
-        public static string GetNewTenanciesForHousingOfficer(string id, DateTime lastCheckDate)
+        public static string GetNewTenanciesSinceDate(DateTime date)
         {
             var urlString = "/api/data/v8.2/accounts?fetchXml=";
             var fetchXml = $@"<fetch>
 	                            <entity name='account'>
                                     <filter>
-                                        <condition attribute='createdon' operator='gt' value='{lastCheckDate.ToString("yyyy-MM-ddTHH:mm:ssZ")}'/>
+                                        <condition attribute='createdon' operator='gt' value='{date.ToString("yyyy-MM-ddTHH:mm:ssZ")}'/>
                                     </filter>
 		                            <attribute name='accountid' />
 		                            <attribute name='createdon' />
 		                            <attribute name='housing_tenure' />
+		                            <attribute name='housing_tag_ref' />
+		                            <attribute name='housing_house_ref' />
+		                            <attribute name='hackney_household_accountid' />
 		                            <link-entity name='contact' from='parentcustomerid' to='accountid' link-type='inner' >
 			                            <attribute name='fullname' />
+			                            <attribute name='contactid' />
 			                            <attribute name='address1_composite' />
 			                            <attribute name='hackney_responsible' />
 			                            <attribute name='hackney_personno' />
@@ -891,10 +895,8 @@ namespace ManageATenancyAPI.Helpers.Housing
 				                            <attribute name='hackney_estateaddress' />
                                             <attribute name='hackney_neighbourhoodofficedesc' />
                                             <link-entity name='hackney_estateofficerpatch' from='hackney_estateofficerpatchid' to='hackney_estateofficerpropertypatchid' link-type='inner' >
+                                                <attribute name='hackney_patchid' />
                                                 <link-entity name='hackney_estateofficer' from='hackney_estateofficerid' to='hackney_patchid' link-type='inner' >
-                                                    <filter>
-                                                        <condition attribute='hackney_estateofficerid' operator='eq' value='{id}' />
-                                                    </filter>
                                                     <attribute name='hackney_estateofficerid' alias='estateOfficerId' />
                                                     <attribute name='hackney_name' alias='OfficerFullName' />
                                                     <attribute name='hackney_lastname' alias='OfficerLastName' />
@@ -908,7 +910,7 @@ namespace ManageATenancyAPI.Helpers.Housing
                             </fetch>";
 
             return urlString + fetchXml;
-        }
+        }        
 
         public static string getETRAIssues(string id, bool issuesPerMeeting)
         {

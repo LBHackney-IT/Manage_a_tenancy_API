@@ -3,7 +3,7 @@ using ManageATenancyAPI.Services;
 using Microsoft.Extensions.Options;
 using Moq;
 using MyPropertyAccountAPI.Configuration;
-using Newtonsoft.Json.Linq;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -37,6 +37,52 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             var result = await _service.GetEnglishBankHolidays();
 
             Assert.True(result.Count() == 8);
+        }
+
+        [Fact]
+        public async Task GetEnglishBankHolidays_FromDateButNoToDate_ReturnsCorrectBankHolidays()
+        {
+            var json = GetBankHolidayResponse();
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json") };
+            _mockApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(responseMessage);
+            var fromDate = new DateTime(2020, 4, 25);
+
+            var result = await _service.GetEnglishBankHolidays(fromDate);
+
+            //there are 5 bank holidays after 25th April
+            Assert.True(result.Count() == 5);
+        }
+
+        [Fact]
+        public async Task GetEnglishBankHolidays_NoFromDateButWithToDate_ReturnsCorrectBankHolidays()
+        {
+            var json = GetBankHolidayResponse();
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json") };
+            _mockApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(responseMessage);
+            var toDate = new DateTime(2020, 4, 25);
+
+            var result = await _service.GetEnglishBankHolidays(to: toDate);
+
+            //there are 3 bank holidays before 25th April
+            Assert.True(result.Count() == 3);
+        }
+
+        [Fact]
+        public async Task GetEnglishBankHolidays_FromAndToDate_ReturnsCorrectBankHolidays()
+        {
+            var json = GetBankHolidayResponse();
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json") };
+            _mockApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(responseMessage);
+            var fromDate = new DateTime(2020, 4, 25);
+            var toDate = new DateTime(2020, 12, 26);
+
+            var result = await _service.GetEnglishBankHolidays(fromDate, toDate);
+
+            //there are 4 bank holidays between 25th April and 26th December
+            Assert.True(result.Count() == 4);
         }
 
         private static string GetBankHolidayResponse()

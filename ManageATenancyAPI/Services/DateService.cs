@@ -21,6 +21,7 @@ namespace ManageATenancyAPI.Services
 
         public DateService(IOptions<URLConfiguration> config, IHackneyHousingAPICall apiCall)
         {
+            _apiCall = apiCall;
             var configVal = config.Value;
 
             _client = new HttpClient

@@ -90,8 +90,8 @@ namespace ManageATenancyAPI.Services
                             HouseholdId = entry["_hackney_household_accountid_value"],
                             PatchId = entry["hackney_estateofficerpatch3_x002e_hackney_patchid"],
                             TagReference = entry["housing_tag_ref"],
-                            AreaId = null,
-                            ManagerId = null,
+                            AreaId = entry["hackney_propertyareapatch2_x002e_hackney_areaname"],
+                            ManagerId = entry["hackney_propertyareapatch2_x002e_hackney_managerpropertypatchid"],
                             Contacts = new List<NewTenancyContact>
                             {
                                 new NewTenancyContact

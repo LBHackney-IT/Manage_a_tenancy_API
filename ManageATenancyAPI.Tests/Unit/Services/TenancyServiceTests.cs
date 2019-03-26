@@ -41,7 +41,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
 
             var newTenancies = await _service.GetNewTenancies();
 
-            Assert.IsAssignableFrom<IList<NewTenancyResponse>>(newTenancies);
+            Assert.IsAssignableFrom<IEnumerable<NewTenancyResponse>>(newTenancies);
             Assert.True(newTenancies.Count() == 1);
         }
 
@@ -93,7 +93,9 @@ namespace ManageATenancyAPI.Tests.Unit.Services
                     contact1_x002e_address1_line3= "HACKNEY",
                     contact1_x002e_address1_line2= "WOODBERRY DOWN ESTATE",
                     contact1_x002e_address1_line1= "FLAT 57 SAVERNAKE HOUSE",
-                    contact1_x002e_hackney_personno= "1"
+                    contact1_x002e_hackney_personno= "1",
+                    hackney_propertyareapatch2_x002e_hackney_areaname= 6,
+                    hackney_propertyareapatch2_x002e_hackney_managerpropertypatchid= "5512c473-9953-e811-8126-70106faaf8c1"
                 }
             };
         }

@@ -11,7 +11,7 @@ namespace ManageATenancyAPI.Models.Housing.NHO
         public DateTime AccountCreatedOn { get; set; }
         public string HousingTenure { get; set; }
         public string PatchId { get; set; }
-        public string AreaId { get; set; }
+        public int AreaId { get; set; }
         public string ManagerId { get; set; }
         public string HouseholdId { get; set; }
         public string TagReference { get; set; }

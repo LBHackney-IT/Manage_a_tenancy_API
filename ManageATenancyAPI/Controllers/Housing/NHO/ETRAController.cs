@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.Factories.Housing;
+using ManageATenancyAPI.Helpers;
 using ManageATenancyAPI.Interfaces;
 using ManageATenancyAPI.Interfaces.Housing;
 using ManageATenancyAPI.Models;
@@ -145,10 +146,15 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         public async Task<ActionResult<HackneyResult<ETRAIssueResponseModel>>> AddETRAIssueResponse([FromBody] ETRAIssueResponseRequest request)
         {
             if (request == null ||
-                (request.IssueStatus == Helpers.IssueStatus.NotYetCompleted && !request.ProjectedCompletionDate.HasValue))
+                (request.IssueStatus == IssueStatus.NotYetCompleted && !request.ProjectedCompletionDate.HasValue))
                 return BadRequest();
 
-            var responseModel = await _etraMeetingsAction.AddETRAIssueResponse(request);
+            var etraIssue = await _etraMeetingsAction.GetIssue(request.IssueId);
+
+            if (etraIssue == null)
+                return NotFound();
+
+            var responseModel = await _etraMeetingsAction.AddETRAIssueResponse(request, etraIssue);
 
             return Ok(HackneyResult<ETRAIssueResponseModel>.Create(responseModel));
         }

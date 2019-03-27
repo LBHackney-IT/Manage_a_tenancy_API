@@ -46,7 +46,7 @@ namespace ManageATenancyAPI.Services
             return bankHolidays;
         }
 
-        public async Task<DateTime> GetIssueDueDate(DateTime issueCreatedDate, int weeksToAdd)
+        public async Task<DateTime> GetIssueResponseDueDate(DateTime issueCreatedDate, int weeksToAdd)
         {
             var bankHolidays = await GetEnglishBankHolidays(issueCreatedDate);
             var filteredBankHolidays = bankHolidays.Select(x => x.Date).ToList();

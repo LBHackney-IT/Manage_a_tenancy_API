@@ -8,6 +8,6 @@ namespace ManageATenancyAPI.Interfaces
     public interface IDateService
     {
         Task<IEnumerable<BankHoliday>> GetEnglishBankHolidays(DateTime? from = null, DateTime? to = null);
-        Task<DateTime> GetIssueDueDate(DateTime issueCreatedDate, int weeksToAdd);
+        Task<DateTime> GetIssueResponseDueDate(DateTime issueCreatedDate, int weeksToAdd);
     }
 }

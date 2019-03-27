@@ -152,7 +152,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 if (meetingInfo.processType == "3")
                 {
                     tmiJObject.Add("hackney_issuelocation", meetingInfo.issueLocation);
-                    tmiJObject.Add("hackney_issuedeadlinedate", await _dateService.GetIssueDueDate(DateTime.Now, 3));
+                    tmiJObject.Add("hackney_issuedeadlinedate", await _dateService.GetIssueResponseDueDate(DateTime.Now, 3));
                 }
 
                 tmiJObject.Add("hackney_processtype", meetingInfo.processType);
@@ -509,6 +509,64 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
         }
 
+        public async Task<ETRAIssue> GetIssue(string id)
+        {
+            var token = await _crmAccessToken.getCRM365AccessToken();
+            _client = await _hackneyAccountApiBuilder.CreateRequest(token);
+            var getMeetingQuery = HousingAPIQueryBuilder.GetActionById(id);
+
+            var result = await _ManageATenancyAPI.getHousingAPIResponse(_client, getMeetingQuery, null);
+
+            if (result != null)
+            {
+                if (!result.IsSuccessStatusCode)
+                {
+                    throw new TenancyServiceException();
+                }
+
+                var response = JsonConvert.DeserializeObject<dynamic>(await result.Content.ReadAsStringAsync());
+
+                var issue = new ETRAIssue
+                {
+                    areaName = response["hackney_areaname"],
+                    enquirySubject = response["hackney_enquirysubject"],
+                    estateOfficerId = response["_hackney_estateofficer_createdbyid_value"],
+                    //estateOfficerName = response[""],
+                    issueLocation = response["hackney_issuelocation"],
+                    managerId = response["_hackney_managerpropertypatchid_value"],
+                    natureOfEnquiry = response["hackney_natureofenquiry"],
+                    officerPatchId = response["_hackney_estateofficerpatchid_value"],
+                    parentInteractionId = response["_hackney_parent_interactionid_value"],
+                    processType = response["hackney_processtype"],
+                    subject = response["_hackney_subjectid_value"],
+                    TRAId = response["hackney_traid"],
+                    ServiceRequest = new CRMServiceRequest
+                    {
+                        ContactId = response["_hackney_contactid_value"],
+                        CreatedBy = response["_createdby_value"],
+                        CreatedDate = response["createdon"],
+                        Description = response["hackney_name"],
+                        EnquiryType = response["hackney_natureofenquiry"],
+                        Id = response["hackney_tenancymanagementinteractionsid"],
+                        //ParentCaseId = response[""],
+                        //RequestCallback = response[""],
+                        //Subject = response[""],
+                        //TicketNumber = response[""],
+                        //Title = response[""],
+                        Transferred = response["hackney_transferred"],
+                        ChildRequests = new List<CRMServiceRequest>()
+                    }
+                };
+
+                return issue;
+            }
+            else
+            {
+                _logger.LogError($"ETRA meeting missing for id: {id}");
+                throw new NullResponseException();
+            }
+        }
+
         public async Task<RecordETRAMeetingAttendanceResponse> RecordETRAMeetingAttendance(string id, RecordETRAMeetingAttendanceRequest request)
         {
             var attendance = new JObject
@@ -570,7 +628,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             return new FinaliseETRAMeetingResponse { Id = id, IsFinalised = updateIntractionResponse.IsSuccessStatusCode };
         }
 
-        public async Task<ETRAIssueResponseModel> AddETRAIssueResponse(ETRAIssueResponseRequest request)
+        public async Task<ETRAIssueResponseModel> AddETRAIssueResponse(ETRAIssueResponseRequest request, ETRAIssue issue)
         {
             var responseData = new JObject
             {
@@ -580,11 +638,18 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 { "hackney_respionsefrom", request.ResponseFrom },
                 { "hackney_responseispublic", request.IsPublic },
                 { "hackney_responsetext", request.ResponseText },
-                { "hackney_responseservicearea", request.ServiceArea } //there is already a hackney_servicearea entity. What is it used for? Can we use it here?
+                { "hackney_responseservicearea", request.ServiceArea },
+                { "hackney_issuedeadlinedate", request.ProjectedCompletionDate },
+                { "hackney_areaname", issue.areaName },
+                { "hackney_enquirysubject", issue.enquirySubject },
+                { "_hackney_estateofficer_createdbyid_value", issue.estateOfficerId },
+                { "hackney_issuelocation", issue.issueLocation },
+                { "_hackney_managerpropertypatchid_value", issue.managerId },
+                { "hackney_natureofenquiry", issue.natureOfEnquiry },
+                { "_hackney_estateofficerpatchid_value", issue.officerPatchId },
+                { "_hackney_subjectid_value", issue.subject },
+                { "hackney_traid", issue.TRAId },
             };
-
-            if (request.ProjectedCompletionDate != null)
-                responseData.Add("hackney_issuedeadlinedate", request.ProjectedCompletionDate.Value);
 
             var token = await _crmAccessToken.getCRM365AccessToken();
             _client = await _hackneyAccountApiBuilder.CreateRequest(token);

@@ -24,16 +24,16 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             _mockConfig.SetupGet(x => x.Value).Returns(new URLConfiguration { BankHolidaysUrl = "http://localhost" });
             _mockApiCall = new Mock<IHackneyHousingAPICall>();
             _service = new DateService(_mockConfig.Object, _mockApiCall.Object);
+
+            var json = GetBankHolidayResponse();
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json") };
+            _mockApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(responseMessage);
         }
 
         [Fact]
         public async Task GetEnglishBankHolidays_NoFromOrToDate_ReturnsAllBankHolidays()
         {
-            var json = GetBankHolidayResponse();
-            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json") };
-            _mockApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(responseMessage);
-
             var result = await _service.GetEnglishBankHolidays();
 
             Assert.True(result.Count() == 8);
@@ -42,10 +42,6 @@ namespace ManageATenancyAPI.Tests.Unit.Services
         [Fact]
         public async Task GetEnglishBankHolidays_FromDateButNoToDate_ReturnsCorrectBankHolidays()
         {
-            var json = GetBankHolidayResponse();
-            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json") };
-            _mockApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(responseMessage);
             var fromDate = new DateTime(2020, 4, 25);
 
             var result = await _service.GetEnglishBankHolidays(fromDate);
@@ -57,10 +53,6 @@ namespace ManageATenancyAPI.Tests.Unit.Services
         [Fact]
         public async Task GetEnglishBankHolidays_NoFromDateButWithToDate_ReturnsCorrectBankHolidays()
         {
-            var json = GetBankHolidayResponse();
-            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json") };
-            _mockApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(responseMessage);
             var toDate = new DateTime(2020, 4, 25);
 
             var result = await _service.GetEnglishBankHolidays(to: toDate);
@@ -72,10 +64,6 @@ namespace ManageATenancyAPI.Tests.Unit.Services
         [Fact]
         public async Task GetEnglishBankHolidays_FromAndToDate_ReturnsCorrectBankHolidays()
         {
-            var json = GetBankHolidayResponse();
-            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json") };
-            _mockApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(responseMessage);
             var fromDate = new DateTime(2020, 4, 25);
             var toDate = new DateTime(2020, 12, 26);
 
@@ -83,6 +71,28 @@ namespace ManageATenancyAPI.Tests.Unit.Services
 
             //there are 4 bank holidays between 25th April and 26th December
             Assert.True(result.Count() == 4);
+        }
+
+        [Fact]
+        public async Task GetIssueResponseDueDate_DateWithNoBankHolidaysAround_ReturnsDate5WorkingDaysPerWeekAway()
+        {
+            var date = new DateTime(2020, 1, 6);
+            var weeksAway = 3;
+
+            var result = await _service.GetIssueResponseDueDate(date, weeksAway);
+
+            Assert.True(result == date.AddDays(weeksAway * 7));
+        }
+
+        [Fact]
+        public async Task GetIssueResponseDueDate_DateWithBankHolidaysAround_ReturnsDate5WorkingDaysPerWeekAwayPlusExtraDaysForBankHolidays()
+        {
+            var date = new DateTime(2020, 4, 6);
+            var weeksAway = 3;
+
+            var result = await _service.GetIssueResponseDueDate(date, weeksAway);
+
+            Assert.True(result == date.AddDays((weeksAway * 7)+2));
         }
 
         private static string GetBankHolidayResponse()

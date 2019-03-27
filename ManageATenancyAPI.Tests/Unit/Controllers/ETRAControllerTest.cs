@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.Controllers.Housing.NHO;
+using ManageATenancyAPI.Helpers;
 using ManageATenancyAPI.Interfaces;
 using ManageATenancyAPI.Interfaces.Housing;
 using ManageATenancyAPI.Models;
@@ -218,6 +219,66 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
             async Task act() => await etraController.FinaliseMeeting(string.Empty, null);
 
             await Assert.ThrowsAsync<ArgumentException>(act);
+        }
+
+        [Fact]
+        public async Task AddETRAIssueResponse_NullRequest_ReturnBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+
+            var actionResult = await etraController.AddETRAIssueResponse(null);
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task AddETRAIssueResponse_NotYetCompletedStatusAndNoProjectedCompletionDate_ReturnBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+
+            var request = new ETRAIssueResponseRequest
+            {
+                IsPublic = false,
+                IssueId = "",
+                IssueStatus = IssueStatus.NotYetCompleted,
+                ProjectedCompletionDate = null,
+                ResponseFrom = "",
+                ResponseText = "",
+                ServiceArea = ""
+            };
+
+            var actionResult = await etraController.AddETRAIssueResponse(request);
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task AddETRAIssueResponse_ValidRequest_ReturnsETRAIssueResponseModel()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+
+            var request = new ETRAIssueResponseRequest
+            {
+                IsPublic = false,
+                IssueId = "",
+                IssueStatus = IssueStatus.Completed,
+                ProjectedCompletionDate = null,
+                ResponseFrom = "",
+                ResponseText = "",
+                ServiceArea = ""
+            };
+
+            etraMeetingActions.Setup(x => x.GetIssue(It.IsAny<string>()))
+                .ReturnsAsync(new ETRAIssue());
+            etraMeetingActions.Setup(x => x.AddETRAIssueResponse(It.IsAny<ETRAIssueResponseRequest>(), It.IsAny<ETRAIssue>()))
+                .ReturnsAsync(new ETRAIssueResponseModel());
+
+            var actionResult = await etraController.AddETRAIssueResponse(request);
+
+            Assert.IsType<OkObjectResult>(actionResult.Result);
+            var objectResult = actionResult.Result as OkObjectResult;
+
+            Assert.IsType<HackneyResult<ETRAIssueResponseModel>>(objectResult.Value);
         }
 
         public ETRAMeeting GetMeeting(bool isCompleted = true)

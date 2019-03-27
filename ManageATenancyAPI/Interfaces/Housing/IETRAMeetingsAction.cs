@@ -8,11 +8,12 @@ namespace ManageATenancyAPI.Interfaces.Housing
     public interface IETRAMeetingsAction
     {
         Task<ETRAMeeting> GetMeeting(string id);
+        Task<ETRAIssue> GetIssue(string id);
         Task<HackneyResult<JObject>> CreateETRAMeeting(ETRAIssue meetingInfo);
         Task<object> GetETRAIssuesByTRAorETRAMeeting(string id, bool retrieveIssuesPerMeeting);
         Task<JObject> UpdateIssue(UpdateETRAIssue etraIssueToBeUpdated);
         Task<FinaliseETRAMeetingResponse> FinaliseMeeting(string id, FinaliseETRAMeetingRequest request);
         Task<RecordETRAMeetingAttendanceResponse> RecordETRAMeetingAttendance(string id, RecordETRAMeetingAttendanceRequest request);
-        Task<ETRAIssueResponseModel> AddETRAIssueResponse(ETRAIssueResponseRequest request);
+        Task<ETRAIssueResponseModel> AddETRAIssueResponse(ETRAIssueResponseRequest request, ETRAIssue issue);
     }
 }

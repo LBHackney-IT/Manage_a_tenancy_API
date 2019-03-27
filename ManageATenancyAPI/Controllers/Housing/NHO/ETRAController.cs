@@ -99,12 +99,12 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
 
         [Route("record-attendance/{id}")]
         [HttpPatch]
-        public async Task<ActionResult<RecordETRAMeetingAttendanceResponse>> RecordAttendance(string meetingId, [FromBody] RecordETRAMeetingAttendanceRequest request)
+        public async Task<ActionResult<RecordETRAMeetingAttendanceResponse>> RecordAttendance(string id, [FromBody] RecordETRAMeetingAttendanceRequest request)
         {
-            if (string.IsNullOrEmpty(meetingId) || request == null)
+            if (string.IsNullOrEmpty(id) || request == null)
                 return BadRequest();
 
-            var meeting = await _etraMeetingsAction.GetMeeting(meetingId);
+            var meeting = await _etraMeetingsAction.GetMeeting(id);
 
             if (meeting == null)
                 return NotFound();

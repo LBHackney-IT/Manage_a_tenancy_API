@@ -26,7 +26,7 @@ namespace ManageATenancyAPI.Models.Housing.NHO
         public string TRAId { get; set; }
     }
 
-    public class ETRAIssue
+    public class ETRAIssueRequest
     {
         [Required]
         public string estateOfficerId { get; set; }

@@ -249,6 +249,46 @@ namespace ManageATenancyAPI.Tests.Actions
             Assert.Equal(responseJObject["hackney_tenancymanagementinteractionsid"], response.Id);
         }
 
+        [Fact]
+        public async Task GetIssue_HousingApiNullResponse_ThrowsNullResponseException()
+        {
+            const string fakeIssueId = "id123";
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
+            HttpResponseMessage responseMessage = null;
+            mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
+
+            async Task act() => await service.GetIssue(fakeIssueId);
+
+            await Assert.ThrowsAsync<NullResponseException>(act);
+        }
+
+        [Fact]
+        public async Task GetIssue_HousingApiNonSuccessStatusCode_ThrowsTenancyServiceException()
+        {
+            const string fakeIssueId = "id123";
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
+
+            async Task act() => await service.GetIssue(fakeIssueId);
+
+            await Assert.ThrowsAsync<TenancyServiceException>(act);
+        }
+
+        [Fact]
+        public async Task GetIssue_ValidIssueId_ReturnsCorrectMeetingObject()
+        {
+            const string fakeIssueId = "id123";
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, mockDateService.Object);
+            var responseJObject = GetRandomETRAIssue();
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
+            mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
+
+            var response = await service.GetIssue(fakeIssueId);
+
+            Assert.Equal(responseJObject["hackney_tenancymanagementinteractionsid"], response.Id);
+        }
+
         //[Fact]
         //public async Task AddETRAIssueResponse_
 
@@ -277,6 +317,41 @@ namespace ManageATenancyAPI.Tests.Actions
             return meeting;
         }
 
+        public JObject GetRandomETRAIssue()
+        {
+            var fakeData = new Faker();
+            var issue = new JObject {
+                {"statecode", fakeData.Random.Int()},
+                {"hackney_issuelocation", fakeData.Random.String()},
+                {"_hackney_incidentid_value", fakeData.Random.Guid()},
+                { "createdon", DateTime.Now.AddDays(-2) },
+                { "modifiedon", DateTime.Now.AddDays(-1) },
+                {"_hackney_estateofficer_createdbyid_value", fakeData.Random.Guid()},
+                {"hackney_natureofenquiry", fakeData.Random.Int()},
+                {"_ownerid_value", fakeData.Random.Guid()},
+                {"hackney_areaname", fakeData.Random.Int()},
+                {"hackney_tenancymanagementinteractionsid", fakeData.Random.Guid()},
+                {"versionnumber", fakeData.Random.Int()},
+                {"_modifiedby_value", fakeData.Random.Guid()},
+                {"_hackney_estateofficerpatchid_value", fakeData.Random.Guid()},
+                {"statuscode", fakeData.Random.Int()},
+                {"hackney_enquirysubject", fakeData.Random.Int()},
+                {"hackney_traid", fakeData.Random.Int()},
+                {"hackney_transferred", fakeData.Random.Bool()},
+                {"_hackney_managerpropertypatchid_value", fakeData.Random.Guid()},
+                {"_hackney_parent_interactionid_value", fakeData.Random.Guid()},
+                {"_createdby_value", fakeData.Random.Guid()},
+                {"_owningbusinessunit_value", fakeData.Random.Guid()},
+                {"_owninguser_value", fakeData.Random.Guid()},
+                {"_hackney_subjectid_value", fakeData.Random.Guid()},
+                {"hackney_name", fakeData.Random.String()},
+                {"hackney_processtype", fakeData.Random.Int()},
+                {"_hackney_contactid_value", null}
+            };
+
+            return issue;
+        }
+
         public JObject getRandomServiceRequestObject()
         {
             var fakeData = new Faker();
@@ -293,10 +368,10 @@ namespace ManageATenancyAPI.Tests.Actions
             return serviceJObject;
         }
 
-        public ETRAIssue getRandomInteractionObject()
+        public ETRAIssueRequest getRandomInteractionObject()
         {
             var fakeData = new Faker();
-            var interactionJObject = new ETRAIssue();
+            var interactionJObject = new ETRAIssueRequest();
 
             var serviceRequest = new CRMServiceRequest();
             serviceRequest.Description = fakeData.Random.String();
@@ -318,10 +393,10 @@ namespace ManageATenancyAPI.Tests.Actions
             return interactionJObject;
         }
 
-        public ETRAIssue getRandomInteractionObjectForIssueCreation()
+        public ETRAIssueRequest getRandomInteractionObjectForIssueCreation()
         {
             var fakeData = new Faker();
-            var interactionJObject = new ETRAIssue();
+            var interactionJObject = new ETRAIssueRequest();
 
             var serviceRequest = new CRMServiceRequest();
             serviceRequest.Description = fakeData.Random.String();

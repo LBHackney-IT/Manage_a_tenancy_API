@@ -49,7 +49,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         /// <response code="201">A successfully created ETRA meeting request</response>
         [Route("CreateETRAMeetingOrIssue")]
         [HttpPost]
-        public async Task<JsonResult> Post([FromBody] ETRAIssue etraMeeting)
+        public async Task<JsonResult> Post([FromBody] ETRAIssueRequest etraMeeting)
         {
             try
             {
@@ -141,15 +141,16 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             return Ok(HackneyResult<FinaliseETRAMeetingResponse>.Create(response));
         }
 
-        [Route("add-issue-response")]
+        [Route("add-response/{id}")]
         [HttpPost]
-        public async Task<ActionResult<HackneyResult<ETRAIssueResponseModel>>> AddETRAIssueResponse([FromBody] ETRAIssueResponseRequest request)
+        public async Task<ActionResult<HackneyResult<ETRAIssueResponseModel>>> AddETRAIssueResponse(string id, [FromBody] ETRAIssueResponseRequest request)
         {
-            if (request == null ||
+            if (string.IsNullOrEmpty(id) ||
+                request == null ||
                 (request.IssueStatus == IssueStatus.NotYetCompleted && !request.ProjectedCompletionDate.HasValue))
                 return BadRequest();
 
-            var etraIssue = await _etraMeetingsAction.GetIssue(request.IssueId);
+            var etraIssue = await _etraMeetingsAction.GetIssue(id);
 
             if (etraIssue == null)
                 return NotFound();

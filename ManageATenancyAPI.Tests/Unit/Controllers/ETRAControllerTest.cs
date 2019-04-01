@@ -222,34 +222,65 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         }
 
         [Fact]
-        public async Task AddETRAIssueResponse_NullRequest_ReturnBadRequest()
+        public async Task AddETRAIssueResponse_NullIdAndValidRequest_ReturnBadRequest()
         {
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
 
-            var actionResult = await etraController.AddETRAIssueResponse(null);
+            var request = GetResponseRequest();
+
+            var actionResult = await etraController.AddETRAIssueResponse(null, request);
 
             Assert.IsType<BadRequestResult>(actionResult.Result);
         }
 
         [Fact]
-        public async Task AddETRAIssueResponse_NotYetCompletedStatusAndNoProjectedCompletionDate_ReturnBadRequest()
+        public async Task AddETRAIssueResponse_EmptyIdAndValidRequest_ReturnBadRequest()
         {
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
 
-            var request = new ETRAIssueResponseRequest
-            {
-                IsPublic = false,
-                IssueId = "",
-                IssueStatus = IssueStatus.NotYetCompleted,
-                ProjectedCompletionDate = null,
-                ResponseFrom = "",
-                ResponseText = "",
-                ServiceArea = ""
-            };
+            var request = GetResponseRequest();
 
-            var actionResult = await etraController.AddETRAIssueResponse(request);
+            var actionResult = await etraController.AddETRAIssueResponse("", request);
 
             Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task AddETRAIssueResponse_ValidIdAndNullRequest_ReturnBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+
+            var actionResult = await etraController.AddETRAIssueResponse("test123", null);
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task AddETRAIssueResponse_ValidIdAndNotYetCompletedStatusAndNoProjectedCompletionDate_ReturnBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+
+            var request = GetResponseRequest();
+            request.IssueStatus = IssueStatus.NotYetCompleted;
+
+            var actionResult = await etraController.AddETRAIssueResponse("test123", request);
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task AddETRAIssueResponse_NonExistantIssueIdAndValidRequest_ReturnsNotFound()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+
+            var request = GetResponseRequest();
+
+            etraMeetingActions.Setup(x => x.GetIssue(It.IsAny<string>()))
+                .ReturnsAsync((ETRAIssue)null);
+
+            var actionResult = await etraController.AddETRAIssueResponse("test123", request);
+
+            Assert.IsType<NotFoundResult>(actionResult.Result);
         }
 
         [Fact]
@@ -257,23 +288,14 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         {
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
 
-            var request = new ETRAIssueResponseRequest
-            {
-                IsPublic = false,
-                IssueId = "",
-                IssueStatus = IssueStatus.Completed,
-                ProjectedCompletionDate = null,
-                ResponseFrom = "",
-                ResponseText = "",
-                ServiceArea = ""
-            };
-
+            var request = GetResponseRequest();
+            var issue = GetIssue();
             etraMeetingActions.Setup(x => x.GetIssue(It.IsAny<string>()))
-                .ReturnsAsync(new ETRAIssue());
+                .ReturnsAsync(issue);
             etraMeetingActions.Setup(x => x.AddETRAIssueResponse(It.IsAny<ETRAIssueResponseRequest>(), It.IsAny<ETRAIssue>()))
                 .ReturnsAsync(new ETRAIssueResponseModel());
 
-            var actionResult = await etraController.AddETRAIssueResponse(request);
+            var actionResult = await etraController.AddETRAIssueResponse("test123", request);
 
             Assert.IsType<OkObjectResult>(actionResult.Result);
             var objectResult = actionResult.Result as OkObjectResult;
@@ -306,6 +328,56 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
             }
 
             return ETRAMeeting.Create(meeting);
+        }
+
+        public ETRAIssue GetIssue()
+        {
+            var issue = new Dictionary<string, object>
+            {
+                {"statecode", "0"},
+                {"hackney_issuelocation", "St Peters Way 1-12 Poole Court"},
+                {"_hackney_incidentid_value", "756540fe-8b28-e911-a971-00224807251a"},
+                {"createdon", DateTime.Parse("04/02/2019 14:49:00")},
+                {"_hackney_estateofficer_createdbyid_value", "1f1bb727-ce1b-e811-8118-70106faa6a31"},
+                {"hackney_natureofenquiry", "28"},
+                {"_ownerid_value", "e1207267-40a8-e711-810c-70106faa6a11"},
+                {"hackney_areaname", "6"},
+                {"modifiedon", DateTime.Parse("04/02/2019 14:49:00")},
+                {"hackney_tenancymanagementinteractionsid", "7a6540fe-8b28-e911-a971-00224807251a"},
+                {"versionnumber", "46833082"},
+                {"_modifiedby_value", "e1207267-40a8-e711-810c-70106faa6a11"},
+                {"_hackney_estateofficerpatchid_value", "8e958a37-8653-e811-8126-70106faaf8c1"},
+                {"statuscode", "1"},
+                {"hackney_enquirysubject", "100000222"},
+                {"hackney_traid", "4"},
+                {"hackney_transferred", false},
+                {"_hackney_managerpropertypatchid_value", "5512c473-9953-e811-8126-70106faaf8c1"},
+                {"_hackney_parent_interactionid_value", "4c300ef2-8b28-e911-a96d-002248072abd"},
+                {"_createdby_value", "e1207267-40a8-e711-810c-70106faa6a11"},
+                {"_owningbusinessunit_value", "dd387f80-5b8f-e711-8102-70106faa0331"},
+                {"_owninguser_value", "e1207267-40a8-e711-810c-70106faa6a11"},
+                {"_hackney_subjectid_value", "c1f72d01-28dc-e711-8115-70106faa6a11"},
+                {"hackney_name", "CAS-06165-Y8N5W0"},
+                {"hackney_processtype", "3"},
+                {"_hackney_contactid_value", null}
+            };
+
+            return ETRAIssue.Create(issue);
+        }
+
+        public ETRAIssueResponseRequest GetResponseRequest()
+        {
+            var request = new ETRAIssueResponseRequest
+            {
+                IsPublic = true,
+                IssueStatus = IssueStatus.Completed,
+                ProjectedCompletionDate = null,
+                ResponseFrom = "testy.testerson@hackney.gov.uk",
+                ResponseText = "It's fixed!",
+                ServiceArea = "Repairs"
+            };
+
+            return request;
         }
     }
 }

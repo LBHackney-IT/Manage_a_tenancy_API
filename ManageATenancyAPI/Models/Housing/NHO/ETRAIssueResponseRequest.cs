@@ -7,9 +7,6 @@ namespace ManageATenancyAPI.Models.Housing.NHO
     public class ETRAIssueResponseRequest
     {
         [Required]
-        public string IssueId { get; set; }
-
-        [Required]
         public IssueStatus IssueStatus { get; set; }
 
         [Required]

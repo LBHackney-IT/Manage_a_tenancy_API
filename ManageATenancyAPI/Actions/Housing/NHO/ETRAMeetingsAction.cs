@@ -46,7 +46,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             _dateService = dateService;
 
         }
-        public async Task<HackneyResult<JObject>> CreateETRAMeeting(ETRAIssue meetingInfo)
+        public async Task<HackneyResult<JObject>> CreateETRAMeeting(ETRAIssueRequest meetingInfo)
         {
             _logger.LogInformation($"Create Service Request");
 
@@ -152,7 +152,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 if (meetingInfo.processType == "3")
                 {
                     tmiJObject.Add("hackney_issuelocation", meetingInfo.issueLocation);
-                    tmiJObject.Add("hackney_issuedeadlinedate", await _dateService.GetIssueResponseDueDate(DateTime.Now, 3));
+                    var dueDate = await _dateService.GetIssueResponseDueDate(DateTime.Now, 3);
+                    tmiJObject.Add("hackney_issuedeadlinedate", dueDate);
                 }
 
                 tmiJObject.Add("hackney_processtype", meetingInfo.processType);
@@ -524,45 +525,13 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     throw new TenancyServiceException();
                 }
 
-                var response = JsonConvert.DeserializeObject<dynamic>(await result.Content.ReadAsStringAsync());
-
-                var issue = new ETRAIssue
-                {
-                    areaName = response["hackney_areaname"],
-                    enquirySubject = response["hackney_enquirysubject"],
-                    estateOfficerId = response["_hackney_estateofficer_createdbyid_value"],
-                    //estateOfficerName = response[""],
-                    issueLocation = response["hackney_issuelocation"],
-                    managerId = response["_hackney_managerpropertypatchid_value"],
-                    natureOfEnquiry = response["hackney_natureofenquiry"],
-                    officerPatchId = response["_hackney_estateofficerpatchid_value"],
-                    parentInteractionId = response["_hackney_parent_interactionid_value"],
-                    processType = response["hackney_processtype"],
-                    subject = response["_hackney_subjectid_value"],
-                    TRAId = response["hackney_traid"],
-                    ServiceRequest = new CRMServiceRequest
-                    {
-                        ContactId = response["_hackney_contactid_value"],
-                        CreatedBy = response["_createdby_value"],
-                        CreatedDate = response["createdon"],
-                        Description = response["hackney_name"],
-                        EnquiryType = response["hackney_natureofenquiry"],
-                        Id = response["hackney_tenancymanagementinteractionsid"],
-                        //ParentCaseId = response[""],
-                        //RequestCallback = response[""],
-                        //Subject = response[""],
-                        //TicketNumber = response[""],
-                        //Title = response[""],
-                        Transferred = response["hackney_transferred"],
-                        ChildRequests = new List<CRMServiceRequest>()
-                    }
-                };
+                var issue = ETRAIssue.Create(JsonConvert.DeserializeObject<dynamic>(await result.Content.ReadAsStringAsync()));
 
                 return issue;
             }
             else
             {
-                _logger.LogError($"ETRA meeting missing for id: {id}");
+                _logger.LogError($"ETRA issue missing for id: {id}");
                 throw new NullResponseException();
             }
         }
@@ -634,7 +603,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             {
                 { "hackney_issuestatus", (int)request.IssueStatus },
                 { "hackney_processtype", 4 }, //process type 4 = ETRA issue response
-                { "hackney_parent_interactionid", request.IssueId },
+                { "hackney_parent_interactionid", issue.Id },
                 { "hackney_respionsefrom", request.ResponseFrom },
                 { "hackney_responseispublic", request.IsPublic },
                 { "hackney_responsetext", request.ResponseText },
@@ -666,7 +635,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 response = new ETRAIssueResponseModel
                 {
                     IsPublic = request.IsPublic,
-                    IssueId = request.IssueId,
+                    IssueId = issue.Id,
                     IssueStatus = request.IssueStatus,
                     ProjectedCompletionDate = request.ProjectedCompletionDate,
                     ResponseFrom = request.ResponseFrom,
@@ -684,7 +653,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             {
                 { "hackney_issuestatus", (int)request.IssueStatus }
             };
-            var issueUpdateQuery = HousingAPIQueryBuilder.updateIncidentQuery(request.IssueId);
+            var issueUpdateQuery = HousingAPIQueryBuilder.updateIncidentQuery(issue.Id);
 
             var issueResponse = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, query, updateIssueData);
 

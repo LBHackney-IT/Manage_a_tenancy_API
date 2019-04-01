@@ -29,8 +29,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
         private IHackneyHousingAPICall _ManageATenancyAPI;
         private IHackneyHousingAPICallBuilder _hackneyAccountApiBuilder;
         private IHackneyGetCRM365Token _crmAccessToken;
+        private readonly IDateService _dateService;
 
-        public ETRAMeetingsAction(ILoggerAdapter<ETRAMeetingsAction> logger, IHackneyHousingAPICallBuilder apiCallBuilder, IHackneyHousingAPICall apiCall, IHackneyGetCRM365Token accessToken, IOptions<AppConfiguration> config)
+        public ETRAMeetingsAction(ILoggerAdapter<ETRAMeetingsAction> logger, IHackneyHousingAPICallBuilder apiCallBuilder, IHackneyHousingAPICall apiCall, IHackneyGetCRM365Token accessToken, IOptions<AppConfiguration> config, IDateService dateService)
         {
             //set up client
             _client = new HttpClient();
@@ -42,6 +43,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             _logger = logger;
             _crmAccessToken = accessToken;
             _configuration = config?.Value;
+            _dateService = dateService;
 
         }
         public async Task<HackneyResult<JObject>> CreateETRAMeeting(ETRAIssue meetingInfo)
@@ -150,6 +152,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 if (meetingInfo.processType == "3")
                 {
                     tmiJObject.Add("hackney_issuelocation", meetingInfo.issueLocation);
+                    var dueDate = await _dateService.GetIssueResponseDueDate(DateTime.Now, 3);
+                    tmiJObject.Add("hackney_issuedeadlinedate", dueDate);
                 }
 
                 tmiJObject.Add("hackney_processtype", meetingInfo.processType);

@@ -31,6 +31,7 @@ namespace ManageATenancyAPI.Tests.Actions
         private Mock<ILoggerAdapter<ETRAMeetingsAction>> mockILoggerAdapter;
         private Mock<IOptions<AppConfiguration>> mockConfig;
         private Mock<IHackneyGetCRM365Token> mockAccessToken;
+        private readonly Mock<IDateService> _mockDateService;
         public ETRAMeetingsActionTest()
         { 
             token = "TokenOnValidRequest";
@@ -43,7 +44,7 @@ namespace ManageATenancyAPI.Tests.Actions
             mockILoggerAdapter = new Mock<ILoggerAdapter<ETRAMeetingsAction>>();
             mockConfig = new Mock<IOptions<AppConfiguration>>();
             mockConfig.SetupGet(x => x.Value).Returns(new AppConfiguration());
-
+            //_mockDateService
         }
 
         [Fact]

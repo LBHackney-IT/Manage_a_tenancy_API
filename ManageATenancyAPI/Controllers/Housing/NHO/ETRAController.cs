@@ -112,6 +112,19 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             return Ok(response);
         }
 
+        [Route("add-issue-response/{id}")]
+        [HttpPatch]
+        public async Task<ActionResult<ETRAUpdateResponse>> AddIssueResponse(string id, [FromBody]ETRAIssueResponseRequest request)
+        {
+            if (string.IsNullOrEmpty(id) ||
+                request == null ||
+                (request.IssueStage.ToLower() == "not completed" && !request.ProjectedCompletionDate.HasValue))
+                return BadRequest();
+            
+            var response = await _etraMeetingsAction.AddETRAIssueResponse(id, request);
+            return Ok(response);
+        }
+
         /// <summary>
         /// Finalises ETRA Meetings by meeting id, and optionally a signatory with their role.
         /// </summary>

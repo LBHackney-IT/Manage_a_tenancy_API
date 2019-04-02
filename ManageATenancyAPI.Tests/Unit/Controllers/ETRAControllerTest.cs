@@ -158,6 +158,70 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         }
 
         [Fact]
+        public async Task AddIssueResponse_NullId_ReturnsBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            const string id = null;
+
+            var actionResult = await etraController.AddIssueResponse(id, It.IsAny<ETRAIssueResponseRequest>());
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task AddIssueResponse_EmptyStringId_ReturnsBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            var id = string.Empty;
+
+            var actionResult = await etraController.AddIssueResponse(id, It.IsAny<ETRAIssueResponseRequest>());
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task AddIssueResponse_PopulatedIdAndRequestWithNotYetCompletedStatusAndNoProjectedCompletionDateSet_ReturnsBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            const string id = "test123";
+            var request = GetResponseRequest();
+            request.IssueStage = "Not Completed";
+
+            var actionResult = await etraController.AddIssueResponse(id, request);
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task AddIssueResponse_ValidIdAndRequest_ReturnsSuccessfulResponse()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            var id = Guid.NewGuid().ToString();
+            var request = GetResponseRequest();
+
+            var response = new ETRAUpdateResponse
+            {
+                Action = "Updated",
+                IncidentId = request.IssueIncidentId,
+                InteractionId = Guid.Parse(id),
+                AnnotationId = Guid.NewGuid()
+            };
+
+            etraMeetingActions.Setup(x => x.AddETRAIssueResponse(It.IsAny<string>(), It.IsAny<ETRAIssueResponseRequest>()))
+                .ReturnsAsync(response);
+
+            var actionResult = await etraController.AddIssueResponse(id, request);
+
+            var okResult = actionResult.Result as OkObjectResult;
+            Assert.NotNull(okResult);
+
+            var value = okResult.Value as ETRAUpdateResponse;
+            Assert.NotNull(value);
+
+            Assert.Equal(id, value.InteractionId.ToString());
+        }
+
+        [Fact]
         public async Task FinaliseMeeting_IncorrectMeetingId_ReturnsNotFound()
         {
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
@@ -220,7 +284,21 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
             await Assert.ThrowsAsync<ArgumentException>(act);
         }
 
-        public ETRAMeeting GetMeeting(bool isCompleted = true)
+        private ETRAIssueResponseRequest GetResponseRequest()
+        {
+            return new ETRAIssueResponseRequest
+            {
+                ServiceArea = "Repairs",
+                AnnotationSubjectId = Guid.NewGuid(),
+                IssueIncidentId = Guid.NewGuid(),
+                IssueStage = "Completed",
+                ProjectedCompletionDate = null,
+                ResponderName = "Testy Testerson",
+                ResponseText = "The repairs are done!"
+            };
+        }
+
+        private ETRAMeeting GetMeeting(bool isCompleted = true)
         {
             var meeting = new Dictionary<string,object> {
                 { "hackney_tenancymanagementinteractionsid", "686c2e06-e639-e911-a973-00224807251a" },

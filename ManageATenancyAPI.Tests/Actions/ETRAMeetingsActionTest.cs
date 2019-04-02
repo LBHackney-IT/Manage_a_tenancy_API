@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Bogus;
 using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Configuration;
+using ManageATenancyAPI.Helpers;
 using ManageATenancyAPI.Interfaces;
 using ManageATenancyAPI.Interfaces.Housing;
 using ManageATenancyAPI.Models;
@@ -519,10 +520,12 @@ namespace ManageATenancyAPI.Tests.Actions
             ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, _mockDateService.Object);
 
             var actualResponse = tmiActions.UpdateIssue(requestObject).Result;
-            var expectedResult = new JObject();
-            expectedResult.Add("interactionId", requestObject.issueInteractionId);
-            expectedResult.Add("incidentId", requestObject.issueIncidentId);
-            expectedResult.Add("action", "deleted");
+            var expectedResult = new ETRAUpdateResponse
+            {
+                InteractionId = requestObject.issueInteractionId,
+                IncidentId = requestObject.issueIncidentId,
+                Action = "Deleted"
+            };
             Assert.Equal(JsonConvert.SerializeObject(expectedResult),JsonConvert.SerializeObject(actualResponse));
         }
 
@@ -550,12 +553,12 @@ namespace ManageATenancyAPI.Tests.Actions
             ETRAMeetingsAction tmiActions = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, _mockDateService.Object);
 
             var actualResponse = tmiActions.UpdateIssue(requestObject).Result;
-            var expectedResult = new JObject();
-            expectedResult.Add("interactionId", requestObject.issueInteractionId);
-            expectedResult.Add("incidentId", requestObject.issueIncidentId);
-            expectedResult.Add("action", "updated");
+            var expectedResult = new ETRAUpdateResponse {
+                InteractionId = requestObject.issueInteractionId,
+                IncidentId = requestObject.issueIncidentId,
+                Action = "Updated"
+            };
             Assert.Equal(JsonConvert.SerializeObject(expectedResult), JsonConvert.SerializeObject(actualResponse));
-            Assert.Equal("updated", actualResponse["action"]);
         }
 
 

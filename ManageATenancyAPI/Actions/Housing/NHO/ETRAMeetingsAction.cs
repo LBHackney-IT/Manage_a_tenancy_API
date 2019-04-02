@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using LBH.Utils;
 using ManageATenancyAPI.Configuration;
+using ManageATenancyAPI.Helpers;
 using ManageATenancyAPI.Helpers.Housing;
 using ManageATenancyAPI.Interfaces;
 using ManageATenancyAPI.Interfaces.Housing;
@@ -29,8 +30,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
         private IHackneyHousingAPICall _ManageATenancyAPI;
         private IHackneyHousingAPICallBuilder _hackneyAccountApiBuilder;
         private IHackneyGetCRM365Token _crmAccessToken;
+        private readonly IDateService _dateService;
 
-        public ETRAMeetingsAction(ILoggerAdapter<ETRAMeetingsAction> logger, IHackneyHousingAPICallBuilder apiCallBuilder, IHackneyHousingAPICall apiCall, IHackneyGetCRM365Token accessToken, IOptions<AppConfiguration> config)
+        public ETRAMeetingsAction(ILoggerAdapter<ETRAMeetingsAction> logger, IHackneyHousingAPICallBuilder apiCallBuilder, IHackneyHousingAPICall apiCall, IHackneyGetCRM365Token accessToken, IOptions<AppConfiguration> config, IDateService dateService)
         {
             //set up client
             _client = new HttpClient();
@@ -42,6 +44,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             _logger = logger;
             _crmAccessToken = accessToken;
             _configuration = config?.Value;
+            _dateService = dateService;
 
         }
         public async Task<HackneyResult<JObject>> CreateETRAMeeting(ETRAIssue meetingInfo)
@@ -94,7 +97,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     if (!string.IsNullOrWhiteSpace(meetingInfo.ServiceRequest.Description))
                     {
                          annotationResult = await CreateAnnotation(meetingInfo.ServiceRequest.Description, meetingInfo.estateOfficerName,
-                            meetingInfo.ServiceRequest.Id);
+                            meetingInfo.ServiceRequest.Id, null);
                     }
                 }
                 catch (Exception ex)
@@ -150,6 +153,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 if (meetingInfo.processType == "3")
                 {
                     tmiJObject.Add("hackney_issuelocation", meetingInfo.issueLocation);
+                    var dueDate = await _dateService.GetIssueResponseDueDate(DateTime.Now, 3);
+                    tmiJObject.Add("hackney_issuedeadlinedate", dueDate);
                 }
 
                 tmiJObject.Add("hackney_processtype", meetingInfo.processType);
@@ -198,13 +203,13 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
         }
         
-        private async Task<string> CreateAnnotation(string notes, string estateOfficer, string serviceRequestId)
+        private async Task<string> CreateAnnotation(string notes, string estateOfficer, string serviceRequestId, string annotationSubjectId)
         {
             string descriptionText = $"{notes} logged on {DateTime.Now} by {estateOfficer}";
-            return await CreateAnnotation(descriptionText, serviceRequestId);
+            return await CreateAnnotation(descriptionText, serviceRequestId, annotationSubjectId);
         }
 
-        private async Task<string> CreateAnnotation(string notes, string serviceRequestId)
+        private async Task<string> CreateAnnotation(string notes, string serviceRequestId, string annotationSubjectId)
         {
             try
             {
@@ -213,6 +218,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 JObject note = new JObject();
                 note["notetext"] = notes;
                 note["objectid_incident@odata.bind"] = "/incidents(" + serviceRequestId + ")";
+                if (!string.IsNullOrEmpty(annotationSubjectId))
+                    note["subject"] = annotationSubjectId;
+
                 string requestUrl = "api/data/v8.2/annotations?$select=annotationid";
                 _client.DefaultRequestHeaders.Add("Prefer", "return=representation");
                 response = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Post, requestUrl, note);
@@ -409,23 +417,25 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
         }
 
 
-        public async Task<JObject> UpdateIssue(UpdateETRAIssue issueToBeUpdated)
+        public async Task<ETRAUpdateResponse> UpdateIssue(UpdateETRAIssue issueToBeUpdated)
         {
             try
             {
                 _logger.LogInformation($"Update for issue with id {issueToBeUpdated.issueInteractionId} is starting");
-                JObject result = new JObject();
-                var token = _crmAccessToken.getCRM365AccessToken().Result;
-                _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
+                var token = await _crmAccessToken.getCRM365AccessToken();
+                _client = await _hackneyAccountApiBuilder.CreateRequest(token);
+                var result = new ETRAUpdateResponse
+                {
+                    InteractionId = issueToBeUpdated.issueInteractionId,
+                    IncidentId = issueToBeUpdated.issueIncidentId
+                };
                 //delete issue scenario
                 if (issueToBeUpdated.issueIsToBeDeleted)
                 {
                     await CloseIncidentAndDeleteIssue(issueToBeUpdated.note,
                         issueToBeUpdated.issueIncidentId.ToString(), issueToBeUpdated.issueInteractionId.ToString());
 
-                    result.Add("interactionId", issueToBeUpdated.issueInteractionId);
-                    result.Add("incidentId", issueToBeUpdated.issueIncidentId);
-                    result.Add("action", "deleted");
+                    result.Action = "Deleted";
                     return result;
                 }
                 
@@ -450,7 +460,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 if (issueToBeUpdated.isNewNote)
                 {
                     var annotationid = await CreateAnnotation(issueToBeUpdated.note, issueToBeUpdated.estateOfficerName,
-                        issueToBeUpdated.issueIncidentId.ToString());
+                        issueToBeUpdated.issueIncidentId.ToString(), issueToBeUpdated.AnnotationSubjectId.ToString());
                 }
                 else
                 {
@@ -468,9 +478,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     throw new TenancyServiceException();
                 }
 
-                result.Add("interactionId", issueToBeUpdated.issueInteractionId);
-                result.Add("incidentId", issueToBeUpdated.issueIncidentId);
-                result.Add("action", "updated");
+                result.Action = "Updated";
                 return result;
             }
             catch (Exception ex)
@@ -478,6 +486,48 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 throw ex;
             }
 
+        }
+
+        public async Task<ETRAUpdateResponse> AddETRAIssueResponse(string id, ETRAIssueResponseRequest request)
+        {
+            var token = await _crmAccessToken.getCRM365AccessToken();
+            _client = await _hackneyAccountApiBuilder.CreateRequest(token);
+
+            var processStage = EnumHelper.GetValueFromDescription<HackneyProcessStage>(request.IssueStage.ToLower());
+            var serviceArea = EnumHelper.GetValueFromDescription<HackneyServiceArea>(request.ServiceArea.ToLower());
+
+            var issueUpdateObject = new JObject
+            {
+                { "hackney_servicearea", (int)serviceArea },
+                { "hackney_process_stage", (int)processStage }
+            };
+
+            var completionDateText = string.Empty;
+            if (request.ProjectedCompletionDate.HasValue)
+                completionDateText = $"Projected completion date: {request.ProjectedCompletionDate.Value.ToString("dddd dd MMMM yyyy")}\r\n\r\n";
+
+            var noteText = $"Response from: {request.ServiceArea}\r\n\r\n{request.ResponseText}\r\n\r\n{completionDateText}Responder: {request.ResponderName} on {DateTime.Now}";
+
+            var annotationId = await CreateAnnotation(noteText, request.IssueIncidentId.ToString(), request.AnnotationSubjectId.ToString());
+            
+            var updateIssueIntractionQuery = HousingAPIQueryBuilder.updateIssueQuery(id);
+
+            var updateIntractionResponse = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, updateIssueIntractionQuery, issueUpdateObject);
+
+            if (!updateIntractionResponse.IsSuccessStatusCode)
+            {
+                throw new TenancyServiceException();
+            }
+
+            var result = new ETRAUpdateResponse
+            {
+                Action = "Updated",
+                IncidentId = request.IssueIncidentId,
+                InteractionId = Guid.Parse(id),
+                AnnotationId = Guid.Parse(annotationId)
+            };
+
+            return result;
         }
 
         public async Task<ETRAMeeting> GetMeeting(string id)

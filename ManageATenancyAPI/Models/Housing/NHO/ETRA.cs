@@ -73,6 +73,7 @@ namespace ManageATenancyAPI.Models.Housing.NHO
         public bool isNewNote { get; set; } //true if note is new, false if note needs to be updated
         [Required]
         public bool issueIsToBeDeleted { get; set; }
+        public Guid AnnotationSubjectId { get; set; }
 
     }
 

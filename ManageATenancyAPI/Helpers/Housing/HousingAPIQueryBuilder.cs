@@ -998,6 +998,21 @@ namespace ManageATenancyAPI.Helpers.Housing
         {
             return $"/api/data/v8.2/hackney_estateofficers({id})?$select=hackney_estateofficerid";
         }
+        public static string GetETRAMeetingsByTRAId(string id)
+        {
+            var urlString = "/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=";
+            var fetchXml = $@"<fetch>
+	                            <entity name='hackney_tenancymanagementinteractions'>
+                                    <filter>
+                                        <condition attribute='hackney_traid' operator='eq' value='{id}'/>
+                                        <condition attribute='hackney_processtype' operator='eq' value='1'/>
+                                        <condition attribute='hackney_parent_interactionid' operator='null'/>
+                                    </filter>
+	                            </entity>
+                            </fetch>";
+
+            return urlString + fetchXml;
+        }
     }
 }
 

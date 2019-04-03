@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ManageATenancyAPI.Models;
 using ManageATenancyAPI.Models.Housing.NHO;
@@ -17,5 +15,6 @@ namespace ManageATenancyAPI.Interfaces.Housing
         Task<FinaliseETRAMeetingResponse> FinaliseMeeting(string id, FinaliseETRAMeetingRequest request);
         Task<RecordETRAMeetingAttendanceResponse> RecordETRAMeetingAttendance(string id, RecordETRAMeetingAttendanceRequest request);
         Task<ETRAUpdateResponse> AddETRAIssueResponse(string id, ETRAIssueResponseRequest request);
+        Task<IEnumerable<ETRAMeeting>> GetETRAMeetingsForTRAId(string id);
     }
 }

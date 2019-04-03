@@ -185,5 +185,17 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
                 return jsonResponse;
             }
         }
+
+        [Route("ETRAMeetingsByTRA/{id}")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ETRAMeeting>>> GetETRAMeetingsByTRA(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return BadRequest();
+
+            var meetings = await _etraMeetingsAction.GetETRAMeetingsForTRAId(id);
+
+            return Ok(meetings);
+        }
     }
 }

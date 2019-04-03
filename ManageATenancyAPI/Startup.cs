@@ -82,10 +82,6 @@ namespace ManageATenancyAPI
             app.UseMvc();
             app.UseDeveloperExceptionPage();
 
-
-            if (Environment.GetEnvironmentVariable("USE_OLD_VIRTUAL_DIRS") == "true")
-            {
-
                 //Legacy support for old servers
                 if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
                 {
@@ -121,17 +117,7 @@ namespace ManageATenancyAPI
                     });
 
                 }
-            }
-            else
-            {
-
-                app.UseSwagger();
-                app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "ManageATenancyAPI"); });
-                var option = new RewriteOptions();
-                option.AddRedirect("^$", "swagger");
-                app.UseRewriter(option);
-            }
-
+         
 
         }
     }

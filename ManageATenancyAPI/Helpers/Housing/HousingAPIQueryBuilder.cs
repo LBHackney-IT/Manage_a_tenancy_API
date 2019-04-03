@@ -172,7 +172,7 @@ namespace ManageATenancyAPI.Helpers.Housing
         public static string PostIncidentQuery()
         {
             return
-                "/api/data/v8.2/incidents()?$select=_customerid_value,description,_subjectid_value,ticketnumber,title";
+                "/api/data/v8.2/incidents()?$select=_customerid_value,description,_subjectid_value,ticketnumber,title,incidentid";
 
 
         }

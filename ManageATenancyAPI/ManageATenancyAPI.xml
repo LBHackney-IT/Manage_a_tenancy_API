@@ -44,6 +44,17 @@
             <returns>A JSON object for a successfully created ETRA meeting request</returns>
             <response code="201">A successfully created ETRA meeting request</response>
         </member>
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.FinaliseMeeting(System.String,ManageATenancyAPI.Models.Housing.NHO.FinaliseETRAMeetingRequest)">
+            <summary>
+            Finalises ETRA Meetings by meeting id, and optionally a signatory with their role.
+            </summary>
+            <param name="id">Interaction id.</param>
+            <param name="request">Object containing the guid reference of the signature and the string with the signatory's role.</param>
+            <returns>Whether the meeting has been successfully finalised</returns>
+            <response code="200">Successfully finalised meeting</response>
+            <response code="404">No meeting with the specified id found</response>
+            <response code="403">Meeting has already been finalised</response>
+        </member>
         <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.GetETRAISsues(System.String,System.Boolean)">
             <summary>
             Gets ETRA Issues by TRA ID or parent interaction. Used to retrieve issue for a TRA or for a specific ETRA meeting.

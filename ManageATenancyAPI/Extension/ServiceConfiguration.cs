@@ -50,7 +50,9 @@ namespace ManageATenancyAPI.Extension
             services.AddScoped<ITraAction, TraAction>();
             
             services.AddScoped<ITenancyService, TenancyService>();
-            services.AddScoped<IDateService, DateService>();
+
+            //must be singleton for internal caching to work
+            services.AddSingleton<IDateService, DateService>();
 
             services.AddTransient(typeof(ITRARepository), typeof(TRARepository));
             services.AddTransient(typeof(IUHWWarehouseRepository), typeof(UHWWarehouseRepository));

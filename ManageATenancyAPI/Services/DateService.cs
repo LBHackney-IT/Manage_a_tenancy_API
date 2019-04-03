@@ -18,6 +18,7 @@ namespace ManageATenancyAPI.Services
     {
         private readonly IHackneyHousingAPICall _apiCall;
         private readonly HttpClient _client;
+        private KeyValuePair<DateTime, IEnumerable<BankHoliday>> _bankHolidayCache;
 
         public DateService(IOptions<URLConfiguration> config, IHackneyHousingAPICall apiCall)
         {
@@ -29,14 +30,24 @@ namespace ManageATenancyAPI.Services
                 BaseAddress = new Uri(configVal.BankHolidaysUrl)
             };
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _bankHolidayCache = new KeyValuePair<DateTime, IEnumerable<BankHoliday>>();
         }
 
         public async Task<IEnumerable<BankHoliday>> GetEnglishBankHolidays(DateTime? from = null, DateTime? to = null)
         {
-            //should cache this
-            var response = await _apiCall.getHousingAPIResponse(_client, "", "");
-            var responseObject = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
-            var bankHolidays = responseObject["england-and-wales"]["events"].ToObject<IEnumerable<BankHoliday>>();
+            IEnumerable<BankHoliday> bankHolidays;
+            
+            //if the cached value is less than a day old use it
+            if (_bankHolidayCache.Key > DateTime.Now.AddDays(-1))
+                bankHolidays = _bankHolidayCache.Value;
+            else
+            {
+                //otherwise call the bank holiday api and cache the result
+                var response = await _apiCall.getHousingAPIResponse(_client, "", "");
+                var responseObject = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
+                bankHolidays = responseObject["england-and-wales"]["events"].ToObject<IEnumerable<BankHoliday>>();
+                _bankHolidayCache = new KeyValuePair<DateTime, IEnumerable<BankHoliday>>(DateTime.Now, bankHolidays);
+            }
 
             if (from.HasValue)
                 bankHolidays = bankHolidays.Where(x => x.Date >= from.Value);

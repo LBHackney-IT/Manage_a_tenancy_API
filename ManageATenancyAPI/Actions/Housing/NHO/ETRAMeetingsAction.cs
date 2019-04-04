@@ -417,7 +417,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     var result = meetings.Select(x => ETRAMeeting.Create(x));
                     return result;
                 }
-                return null;
+                return new List<ETRAMeeting>();
             }
             else
             {

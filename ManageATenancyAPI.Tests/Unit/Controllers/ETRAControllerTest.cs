@@ -284,6 +284,43 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
             await Assert.ThrowsAsync<ArgumentException>(act);
         }
 
+        [Fact]
+        public async Task GetETRAMeetingsByTRA_EmptyStringTRAId_ReturnsBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            const string id = "";
+
+            var actionResult = await etraController.GetETRAMeetingsByTRA(id);
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task GetETRAMeetingsByTRA_NullTRAId_ReturnsBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            const string id = null;
+
+            var actionResult = await etraController.GetETRAMeetingsByTRA(id);
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task GetETRAMeetingsByTRA_ValidTRAId_ReturnsListOfETRAMeetings()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            const string id = "tra123";
+            etraMeetingActions.Setup(x => x.GetETRAMeetingsForTRAId(It.IsAny<string>()))
+                .ReturnsAsync(new List<ETRAMeeting>());
+
+            var actionResult = await etraController.GetETRAMeetingsByTRA(id);
+
+            var okResult = actionResult.Result as OkObjectResult;
+            Assert.NotNull(okResult);
+            Assert.IsAssignableFrom<IEnumerable<ETRAMeeting>>(okResult.Value);
+        }
+
         private ETRAIssueResponseRequest GetResponseRequest()
         {
             return new ETRAIssueResponseRequest

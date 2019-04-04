@@ -1001,6 +1001,8 @@ namespace ManageATenancyAPI.Helpers.Housing
         public static string GetETRAMeetingsByTRAId(string id)
         {
             var urlString = "/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=";
+            //process type 1 is for ETRA Meetings
+            //Meetings do not have a parent id
             var fetchXml = $@"<fetch>
 	                            <entity name='hackney_tenancymanagementinteractions'>
                                     <filter>

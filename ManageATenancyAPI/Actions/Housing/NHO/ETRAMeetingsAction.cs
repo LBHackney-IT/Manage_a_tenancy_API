@@ -405,24 +405,20 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
             var meetingsResponse = await _ManageATenancyAPI.getHousingAPIResponse(_client, query, null);
 
-            if (meetingsResponse != null)
-            {
-                if (!meetingsResponse.IsSuccessStatusCode)
-                    throw new TenancyServiceException();
-
-                var responseObject = JsonConvert.DeserializeObject<JObject>(await meetingsResponse.Content.ReadAsStringAsync());
-                if (responseObject?["value"] != null && responseObject["value"].Any())
-                {
-                    var meetings = responseObject["value"].ToList();
-                    var result = meetings.Select(x => ETRAMeeting.Create(x));
-                    return result;
-                }
-                return new List<ETRAMeeting>();
-            }
-            else
-            {
+            if (meetingsResponse == null)
                 throw new NullResponseException();
-            }
+            
+            if (!meetingsResponse.IsSuccessStatusCode)
+                throw new TenancyServiceException();
+
+            var responseObject = JsonConvert.DeserializeObject<JObject>(await meetingsResponse.Content.ReadAsStringAsync());
+
+            if (responseObject?["value"] == null || !responseObject["value"].Any())
+                return new List<ETRAMeeting>();
+            
+            var meetings = responseObject["value"].ToList();
+            var result = meetings.Select(x => ETRAMeeting.Create(x));
+            return result;
         }
 
         public async Task<RecordETRAMeetingAttendanceResponse> RecordETRAMeetingAttendance(string id, RecordETRAMeetingAttendanceRequest request)

@@ -246,7 +246,7 @@ namespace ManageATenancyAPI.Tests.Actions
             {
                 { "value", new JArray() }
             };
-            var responseMessage = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
             mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
 
             var response = await service.GetETRAMeetingsForTRAId(fakeTRAId);
@@ -264,7 +264,7 @@ namespace ManageATenancyAPI.Tests.Actions
             {
                 { "value", new JArray{ GetRandomETRAMeeting(true) } }
             };
-            var responseMessage = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
             mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
 
             var response = await service.GetETRAMeetingsForTRAId(fakeTRAId);

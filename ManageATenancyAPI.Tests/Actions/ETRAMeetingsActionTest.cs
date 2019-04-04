@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Management.Automation.Language;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -208,6 +209,68 @@ namespace ManageATenancyAPI.Tests.Actions
             async Task act() => await service.FinaliseMeeting(fakeMeetingId, null);
 
             await Assert.ThrowsAsync<TenancyServiceException>(act);
+        }
+
+        [Fact]
+        public async Task GetETRAMeetingsForTRAId_HousingApiNullResponse_ThrowsNullResponseException()
+        {
+            const string fakeTRAId = "id123";
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, _mockDateService.Object);
+            HttpResponseMessage responseMessage = null;
+            mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
+
+            async Task act() => await service.GetETRAMeetingsForTRAId(fakeTRAId);
+
+            await Assert.ThrowsAsync<NullResponseException>(act);
+        }
+
+        [Fact]
+        public async Task GetETRAMeetingsForTRAId_HousingApiNonSuccessStatusCode_ThrowsTenancyServiceException()
+        {
+            const string fakeTRAId = "id123";
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, _mockDateService.Object);
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
+
+            async Task act() => await service.GetETRAMeetingsForTRAId(fakeTRAId);
+
+            await Assert.ThrowsAsync<TenancyServiceException>(act);
+        }
+
+        [Fact]
+        public async Task GetETRAMeetingsForTRAId_ValidTRAIdWithNoMeetings_ReturnsEmptyListOfMeetings()
+        {
+            const string fakeTRAId = "id123";
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, _mockDateService.Object);
+            var responseJObject = new JObject
+            {
+                { "value", new JArray() }
+            };
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
+            mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
+
+            var response = await service.GetETRAMeetingsForTRAId(fakeTRAId);
+
+            Assert.IsAssignableFrom<IEnumerable<ETRAMeeting>>(response);
+            Assert.True(!response.Any());
+        }
+
+        [Fact]
+        public async Task GetETRAMeetingsForTRAId_ValidTRAIdWithMeetings_ReturnsListOfMeetings()
+        {
+            const string fakeTRAId = "id123";
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, _mockDateService.Object);
+            var responseJObject = new JObject
+            {
+                { "value", new JArray{ GetRandomETRAMeeting(true) } }
+            };
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
+            mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
+
+            var response = await service.GetETRAMeetingsForTRAId(fakeTRAId);
+
+            Assert.IsAssignableFrom<IEnumerable<ETRAMeeting>>(response);
+            Assert.True(response.Any());
         }
 
         [Fact]

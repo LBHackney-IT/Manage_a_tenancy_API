@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using LBH.Utils;
@@ -204,220 +203,60 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 throw new MissingTenancyInteractionRequestException();
             }
         }
-        
-        private async Task<string> CreateAnnotation(string notes, string estateOfficer, string serviceRequestId, string annotationSubjectId)
-        {
-            string descriptionText = $"{notes} logged on {DateTime.Now} by {estateOfficer}";
-            return await CreateAnnotation(descriptionText, serviceRequestId, annotationSubjectId);
-        }
 
-        private async Task<string> CreateAnnotation(string notes, string serviceRequestId, string annotationSubjectId)
+        public async Task<object> GetETRAIssuesByTRAorETRAMeeting(string id, bool retrieveIssuesPerMeeting)
         {
+            HttpResponseMessage result = null;
             try
             {
-                HttpResponseMessage response;
-                string annotationId = string.Empty;
-                JObject note = new JObject();
-                note["notetext"] = notes;
-                note["objectid_incident@odata.bind"] = "/incidents(" + serviceRequestId + ")";
-                if (!string.IsNullOrEmpty(annotationSubjectId))
-                    note["subject"] = annotationSubjectId;
 
-                string requestUrl = "api/data/v8.2/annotations?$select=annotationid";
-                _client.DefaultRequestHeaders.Add("Prefer", "return=representation");
-                response = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Post, requestUrl, note);
-                if (response == null)
+                _logger.LogInformation($"Getting ETRA issues");
+                var token = _crmAccessToken.getCRM365AccessToken().Result;
+                _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
+                _client.DefaultRequestHeaders.Add("Prefer", "odata.include-annotations=\"OData.Community.Display.V1.FormattedValue\"");
+
+                var query = HousingAPIQueryBuilder.getETRAIssues(id, retrieveIssuesPerMeeting);
+
+                result = _ManageATenancyAPI.getHousingAPIResponse(_client, query, null).Result;
+                if (result != null)
                 {
-                    _logger.LogError($" Response is null  {serviceRequestId}");
-                    throw new NullResponseException();
-                }
-                else if (response.IsSuccessStatusCode)
-                {
-                    //Body should contain the requested annotation information.
-                    JObject createdannotation = JsonConvert.DeserializeObject<JObject>(
-                        await response.Content.ReadAsStringAsync());
-                    //Because 'OData-EntityId' header not returned in a 201 response, you must instead 
-                    // construct the URI.
-                    annotationId = createdannotation["annotationid"].ToString();
-                    return annotationId;
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        throw new TenancyServiceException();
+                    }
+
+                    var issuesRetrieveResponse = JsonConvert.DeserializeObject<JObject>(result.Content.ReadAsStringAsync().Result);
+                    if (issuesRetrieveResponse?["value"] != null && issuesRetrieveResponse?["value"].Count() > 0)
+                    {
+
+                        List<JToken> issuesRetrievedList = issuesRetrieveResponse["value"].ToList();
+
+                        return new
+                        {
+                            results = prepareIssuesResultObject(issuesRetrievedList)
+                        };
+                    }
+                    else
+                    {
+                        return new
+                        {
+                            result = new object()
+                        };
+                    }
                 }
                 else
                 {
-                    _logger.LogError($" Response is null  {serviceRequestId}");
-                    throw new TenancyServiceException();
+                    _logger.LogError($" ETRA issues missing for {id} ");
+                    throw new NullResponseException();
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($" Create Annotation Error with service reqest  {serviceRequestId}");
+                _logger.LogError($"Get ETRA issues Error " + ex.Message);
                 throw ex;
-            }
 
+            }
         }
-
-        public async Task<object> GetETRAIssuesByTRAorETRAMeeting(string id, bool retrieveIssuesPerMeeting)
-            {
-                HttpResponseMessage result = null;
-                try
-                {
-
-                    _logger.LogInformation($"Getting ETRA issues");
-                    var token = _crmAccessToken.getCRM365AccessToken().Result;
-                    _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
-                    _client.DefaultRequestHeaders.Add("Prefer", "odata.include-annotations=\"OData.Community.Display.V1.FormattedValue\"");
-
-                    var query = HousingAPIQueryBuilder.getETRAIssues(id, retrieveIssuesPerMeeting);
-
-                    result = _ManageATenancyAPI.getHousingAPIResponse(_client, query, null).Result;
-                    if (result != null)
-                    {
-                        if (!result.IsSuccessStatusCode)
-                        {
-                            throw new TenancyServiceException();
-                        }
-
-                        var issuesRetrieveResponse = JsonConvert.DeserializeObject<JObject>(result.Content.ReadAsStringAsync().Result);
-                        if (issuesRetrieveResponse?["value"] != null && issuesRetrieveResponse?["value"].Count() > 0)
-                        {
-
-                            List<JToken> issuesRetrievedList = issuesRetrieveResponse["value"].ToList();
-
-                            return new
-                            {
-                                results = prepareIssuesResultObject(issuesRetrievedList)
-                            };
-                        }
-                        else
-                        {
-                            return new
-                            {
-                                result = new object()
-                            };
-                        }
-                    }
-                    else
-                    {
-                        _logger.LogError($" ETRA issues missing for {id} ");
-                        throw new NullResponseException();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError($"Get ETRA issues Error " + ex.Message);
-                    throw ex;
-
-                }
-            }
-
-        private List<dynamic> prepareIssuesResultObject(List<JToken> responseList)
-        {
-            var groupIncident = (from response in responseList
-                                 group response by new
-                                 {
-                                     interactionId = response["hackney_tenancymanagementinteractionsid"],
-                                     isTransferred = response["hackney_transferred"],
-                                     ticketNumber = response["hackney_name"],
-                                     stateCode = response["statecode"],
-                                     processStage = response["hackney_process_stage"],
-                                     nccOfficersId = response["_hackney_estateofficer_createdbyid_value"],
-                                     nccOfficerName = response["_hackney_estateofficer_createdbyid_value@OData.Community.Display.V1.FormattedValue"],
-                                     createdon = response["createdon"],
-                                     nccOfficerUpdatedById = response["_hackney_estateofficer_updatedbyid_value"],
-                                     nccOfficerUpdatedByName = response["_hackney_estateofficer_updatedbyid_value@OData.Community.Display.V1.FormattedValue"],
-                                     natureOfEnquiryId = response["hackney_natureofenquiry"],
-                                     natureOfEnquiry = response["hackney_natureofenquiry@OData.Community.Display.V1.FormattedValue"],
-                                     enquirySubjectId = response["hackney_enquirysubject"],
-                                     enquirysubject = response["hackney_enquirysubject@OData.Community.Display.V1.FormattedValue"],
-                                     incidentId = response["_hackney_incidentid_value"],
-                                     areamanagerId = response["_hackney_managerpropertypatchid_value"],
-                                     areaManagerName = response["ManagerFirstName"] + " " + response["ManagerLastName"],
-                                     officerPatchId = response["_hackney_estateofficerpatchid_value"],
-                                     officerPatchName = response["OfficerFirstName"] + " " + response["OfficerLastName"],
-                                     areaName = response["hackney_areaname@OData.Community.Display.V1.FormattedValue"],
-                                     traId = response["hackney_traid"],
-                                     issueLocation = response["hackney_issuelocation"],
-                                     processType = response["hackney_processtype"],
-                                     serviceArea = response["hackney_servicearea"],
-                                     serviceAreaName = response["hackney_servicearea@OData.Community.Display.V1.FormattedValue"]
-
-
-                                 } into grp
-                                 select new
-                                 {
-                                     grp.Key.incidentId,
-                                     grp.Key.isTransferred,
-                                     grp.Key.ticketNumber,
-                                     grp.Key.stateCode,
-                                     grp.Key.processStage,
-                                     grp.Key.nccOfficersId,
-                                     grp.Key.nccOfficerName,
-                                     grp.Key.createdon,
-                                     grp.Key.nccOfficerUpdatedById,
-                                     grp.Key.nccOfficerUpdatedByName,
-                                     grp.Key.natureOfEnquiryId,
-                                     grp.Key.natureOfEnquiry,
-                                     grp.Key.enquirySubjectId,
-                                     grp.Key.enquirysubject,
-                                     grp.Key.interactionId,
-                                     grp.Key.areamanagerId,
-                                     grp.Key.areaManagerName,
-                                     grp.Key.officerPatchId,
-                                     grp.Key.officerPatchName,
-                                     grp.Key.areaName,
-                                     grp.Key.traId,
-                                     grp.Key.issueLocation,
-                                     grp.Key.processType,
-                                     grp.Key.serviceArea,
-                                     grp.Key.serviceAreaName,
-                                     Annotation = grp.ToList()
-
-                                 });
-
-            var tenancyList = new List<dynamic>();
-
-            foreach (dynamic response in groupIncident)
-            {
-                dynamic tenancyObj = new ExpandoObject();
-                tenancyObj.incidentId = response.incidentId;
-                tenancyObj.isTransferred = response.isTransferred;
-                tenancyObj.ticketNumber = response.ticketNumber;
-                tenancyObj.stateCode = response.stateCode;
-                tenancyObj.processStage = response.processStage;
-                tenancyObj.nccOfficersId = response.nccOfficersId;
-                tenancyObj.nccOfficerName = response.nccOfficerName;
-                tenancyObj.createdon = response.createdon.ToString("yyyy-MM-dd HH:mm:ss");
-                tenancyObj.nccOfficerUpdatedById = response.nccOfficerUpdatedById;
-                tenancyObj.nccOfficerUpdatedByName = response.nccOfficerUpdatedByName;
-                tenancyObj.natureOfEnquiryId = response.natureOfEnquiryId;
-                tenancyObj.natureOfEnquiry = response.natureOfEnquiry;
-                tenancyObj.enquirySubjectId = response.enquirySubjectId;
-                tenancyObj.enquirysubject = response.enquirysubject;
-                tenancyObj.interactionId = response.interactionId;
-                tenancyObj.areamanagerId = response.areamanagerId;
-                tenancyObj.areaManagerName = response.areaManagerName;
-                tenancyObj.officerPatchId = response.officerPatchId;
-                tenancyObj.officerPatchName = response.officerPatchName;
-                tenancyObj.areaName = response.areaName;
-                tenancyObj.traId = response.traId;
-                tenancyObj.issueLocation = response.issueLocation;
-                tenancyObj.processType = response.processType;
-                tenancyObj.serviceArea = response.serviceArea;
-                tenancyObj.serviceAreaName = response.serviceAreaName;
-                tenancyObj.AnnotationList = new List<ExpandoObject>();
-
-                foreach (var annotationResponse in response.Annotation)
-                {
-                    dynamic annotation = new ExpandoObject();
-                    annotation.noteText = annotationResponse["annotation2_x002e_notetext"] != null ? annotationResponse["annotation2_x002e_notetext"] : string.Empty;
-                    annotation.annotationId = annotationResponse["annotation2_x002e_annotationid"] != null ? annotationResponse["annotation2_x002e_annotationid"] : string.Empty;
-                    annotation.noteCreatedOn = annotationResponse["annotation2_x002e_createdon"] != null ? Utils.ConverDateTimeToLocal(annotationResponse["annotation2_x002e_createdon"].ToString()) : string.Empty;
-                    tenancyObj.AnnotationList.Add(annotation);
-                }
-                tenancyList.Add(tenancyObj);
-            }
-            return tenancyList;
-        }
-
 
         public async Task<ETRAUpdateResponse> UpdateIssue(UpdateETRAIssue issueToBeUpdated)
         {
@@ -558,6 +397,30 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
         }
 
+        public async Task<IEnumerable<ETRAMeeting>> GetETRAMeetingsForTRAId(string id)
+        {
+            var query = HousingAPIQueryBuilder.GetETRAMeetingsByTRAId(id);
+            var token = await _crmAccessToken.getCRM365AccessToken();
+            _client = await _hackneyAccountApiBuilder.CreateRequest(token);
+
+            var meetingsResponse = await _ManageATenancyAPI.getHousingAPIResponse(_client, query, null);
+
+            if (meetingsResponse == null)
+                throw new NullResponseException();
+            
+            if (!meetingsResponse.IsSuccessStatusCode)
+                throw new TenancyServiceException();
+
+            var responseObject = JsonConvert.DeserializeObject<JObject>(await meetingsResponse.Content.ReadAsStringAsync());
+
+            if (responseObject?["value"] == null || !responseObject["value"].Any())
+                return new List<ETRAMeeting>();
+            
+            var meetings = responseObject["value"].ToList();
+            var result = meetings.Select(x => ETRAMeeting.Create(x));
+            return result;
+        }
+
         public async Task<RecordETRAMeetingAttendanceResponse> RecordETRAMeetingAttendance(string id, RecordETRAMeetingAttendanceRequest request)
         {
             var attendance = new JObject
@@ -618,6 +481,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
             return new FinaliseETRAMeetingResponse { Id = id, IsFinalised = updateIntractionResponse.IsSuccessStatusCode };
         }
+
+        #region Private methods
 
         private async Task UpdateAnnotation(string notes, string estateOfficer, string annotationId)
         {
@@ -681,5 +546,165 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 throw new TenancyServiceException();
             }
         }
+
+        private List<dynamic> prepareIssuesResultObject(List<JToken> responseList)
+        {
+            var groupIncident = (from response in responseList
+                                 group response by new
+                                 {
+                                     interactionId = response["hackney_tenancymanagementinteractionsid"],
+                                     isTransferred = response["hackney_transferred"],
+                                     ticketNumber = response["hackney_name"],
+                                     stateCode = response["statecode"],
+                                     processStage = response["hackney_process_stage"],
+                                     nccOfficersId = response["_hackney_estateofficer_createdbyid_value"],
+                                     nccOfficerName = response["_hackney_estateofficer_createdbyid_value@OData.Community.Display.V1.FormattedValue"],
+                                     createdon = response["createdon"],
+                                     nccOfficerUpdatedById = response["_hackney_estateofficer_updatedbyid_value"],
+                                     nccOfficerUpdatedByName = response["_hackney_estateofficer_updatedbyid_value@OData.Community.Display.V1.FormattedValue"],
+                                     natureOfEnquiryId = response["hackney_natureofenquiry"],
+                                     natureOfEnquiry = response["hackney_natureofenquiry@OData.Community.Display.V1.FormattedValue"],
+                                     enquirySubjectId = response["hackney_enquirysubject"],
+                                     enquirysubject = response["hackney_enquirysubject@OData.Community.Display.V1.FormattedValue"],
+                                     incidentId = response["_hackney_incidentid_value"],
+                                     areamanagerId = response["_hackney_managerpropertypatchid_value"],
+                                     areaManagerName = response["ManagerFirstName"] + " " + response["ManagerLastName"],
+                                     officerPatchId = response["_hackney_estateofficerpatchid_value"],
+                                     officerPatchName = response["OfficerFirstName"] + " " + response["OfficerLastName"],
+                                     areaName = response["hackney_areaname@OData.Community.Display.V1.FormattedValue"],
+                                     traId = response["hackney_traid"],
+                                     issueLocation = response["hackney_issuelocation"],
+                                     processType = response["hackney_processtype"],
+                                     serviceArea = response["hackney_servicearea"],
+                                     serviceAreaName = response["hackney_servicearea@OData.Community.Display.V1.FormattedValue"]
+
+
+                                 } into grp
+                                 select new
+                                 {
+                                     grp.Key.incidentId,
+                                     grp.Key.isTransferred,
+                                     grp.Key.ticketNumber,
+                                     grp.Key.stateCode,
+                                     grp.Key.processStage,
+                                     grp.Key.nccOfficersId,
+                                     grp.Key.nccOfficerName,
+                                     grp.Key.createdon,
+                                     grp.Key.nccOfficerUpdatedById,
+                                     grp.Key.nccOfficerUpdatedByName,
+                                     grp.Key.natureOfEnquiryId,
+                                     grp.Key.natureOfEnquiry,
+                                     grp.Key.enquirySubjectId,
+                                     grp.Key.enquirysubject,
+                                     grp.Key.interactionId,
+                                     grp.Key.areamanagerId,
+                                     grp.Key.areaManagerName,
+                                     grp.Key.officerPatchId,
+                                     grp.Key.officerPatchName,
+                                     grp.Key.areaName,
+                                     grp.Key.traId,
+                                     grp.Key.issueLocation,
+                                     grp.Key.processType,
+                                     grp.Key.serviceArea,
+                                     grp.Key.serviceAreaName,
+                                     Annotation = grp.ToList()
+
+                                 });
+
+            var tenancyList = new List<dynamic>();
+
+            foreach (dynamic response in groupIncident)
+            {
+                dynamic tenancyObj = new ExpandoObject();
+                tenancyObj.incidentId = response.incidentId;
+                tenancyObj.isTransferred = response.isTransferred;
+                tenancyObj.ticketNumber = response.ticketNumber;
+                tenancyObj.stateCode = response.stateCode;
+                tenancyObj.processStage = response.processStage;
+                tenancyObj.nccOfficersId = response.nccOfficersId;
+                tenancyObj.nccOfficerName = response.nccOfficerName;
+                tenancyObj.createdon = response.createdon.ToString("yyyy-MM-dd HH:mm:ss");
+                tenancyObj.nccOfficerUpdatedById = response.nccOfficerUpdatedById;
+                tenancyObj.nccOfficerUpdatedByName = response.nccOfficerUpdatedByName;
+                tenancyObj.natureOfEnquiryId = response.natureOfEnquiryId;
+                tenancyObj.natureOfEnquiry = response.natureOfEnquiry;
+                tenancyObj.enquirySubjectId = response.enquirySubjectId;
+                tenancyObj.enquirysubject = response.enquirysubject;
+                tenancyObj.interactionId = response.interactionId;
+                tenancyObj.areamanagerId = response.areamanagerId;
+                tenancyObj.areaManagerName = response.areaManagerName;
+                tenancyObj.officerPatchId = response.officerPatchId;
+                tenancyObj.officerPatchName = response.officerPatchName;
+                tenancyObj.areaName = response.areaName;
+                tenancyObj.traId = response.traId;
+                tenancyObj.issueLocation = response.issueLocation;
+                tenancyObj.processType = response.processType;
+                tenancyObj.serviceArea = response.serviceArea;
+                tenancyObj.serviceAreaName = response.serviceAreaName;
+                tenancyObj.AnnotationList = new List<ExpandoObject>();
+
+                foreach (var annotationResponse in response.Annotation)
+                {
+                    dynamic annotation = new ExpandoObject();
+                    annotation.noteText = annotationResponse["annotation2_x002e_notetext"] != null ? annotationResponse["annotation2_x002e_notetext"] : string.Empty;
+                    annotation.annotationId = annotationResponse["annotation2_x002e_annotationid"] != null ? annotationResponse["annotation2_x002e_annotationid"] : string.Empty;
+                    annotation.noteCreatedOn = annotationResponse["annotation2_x002e_createdon"] != null ? Utils.ConverDateTimeToLocal(annotationResponse["annotation2_x002e_createdon"].ToString()) : string.Empty;
+                    tenancyObj.AnnotationList.Add(annotation);
+                }
+                tenancyList.Add(tenancyObj);
+            }
+            return tenancyList;
+        }
+
+        private async Task<string> CreateAnnotation(string notes, string estateOfficer, string serviceRequestId, string annotationSubjectId)
+        {
+            string descriptionText = $"{notes} logged on {DateTime.Now} by {estateOfficer}";
+            return await CreateAnnotation(descriptionText, serviceRequestId, annotationSubjectId);
+        }
+
+        private async Task<string> CreateAnnotation(string notes, string serviceRequestId, string annotationSubjectId)
+        {
+            try
+            {
+                HttpResponseMessage response;
+                string annotationId = string.Empty;
+                JObject note = new JObject();
+                note["notetext"] = notes;
+                note["objectid_incident@odata.bind"] = "/incidents(" + serviceRequestId + ")";
+                if (!string.IsNullOrEmpty(annotationSubjectId))
+                    note["subject"] = annotationSubjectId;
+
+                string requestUrl = "api/data/v8.2/annotations?$select=annotationid";
+                _client.DefaultRequestHeaders.Add("Prefer", "return=representation");
+                response = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Post, requestUrl, note);
+                if (response == null)
+                {
+                    _logger.LogError($" Response is null  {serviceRequestId}");
+                    throw new NullResponseException();
+                }
+                else if (response.IsSuccessStatusCode)
+                {
+                    //Body should contain the requested annotation information.
+                    JObject createdannotation = JsonConvert.DeserializeObject<JObject>(
+                        await response.Content.ReadAsStringAsync());
+                    //Because 'OData-EntityId' header not returned in a 201 response, you must instead 
+                    // construct the URI.
+                    annotationId = createdannotation["annotationid"].ToString();
+                    return annotationId;
+                }
+                else
+                {
+                    _logger.LogError($" Response is null  {serviceRequestId}");
+                    throw new TenancyServiceException();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($" Create Annotation Error with service reqest  {serviceRequestId}");
+                throw ex;
+            }
+
+        }
+        #endregion
     }
 }

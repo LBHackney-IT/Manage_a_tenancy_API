@@ -186,7 +186,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             }
         }
 
-        [Route("ETRAMeetingsByTRA/{id}")]
+        [Route("etra-meetings-by-tra/{id}")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ETRAMeeting>>> GetETRAMeetingsByTRA(string id)
         {

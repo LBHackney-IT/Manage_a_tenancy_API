@@ -294,14 +294,24 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     issueUpdateObject.Add("hackney_process_stage", issueToBeUpdated.issueStage);
                 }
 
+                if (!string.IsNullOrEmpty(issueToBeUpdated.EnquirySubject))
+                    issueUpdateObject.Add("hackney_enquirysubject", issueToBeUpdated.EnquirySubject);
+
+                if (!string.IsNullOrEmpty(issueToBeUpdated.IssueLocation))
+                    issueUpdateObject.Add("hackney_issuelocation", issueToBeUpdated.IssueLocation);
+
                 issueUpdateObject.Add("hackney_estateofficer_updatedbyid@odata.bind",
                     $"/hackney_estateofficers({issueToBeUpdated.estateOfficerId})");
 
                 //adding new notes scenario (could be when issue is updated by officer or when response is added by service
                 if (issueToBeUpdated.isNewNote)
                 {
+                    var subjId = issueToBeUpdated.AnnotationSubjectId.HasValue
+                        ? issueToBeUpdated.AnnotationSubjectId.Value.ToString()
+                        : null;
+
                     var annotationid = await CreateAnnotation(issueToBeUpdated.note, issueToBeUpdated.estateOfficerName,
-                        issueToBeUpdated.issueIncidentId.ToString(), issueToBeUpdated.AnnotationSubjectId.ToString());
+                        issueToBeUpdated.issueIncidentId.ToString(), subjId);
                 }
                 else
                 {

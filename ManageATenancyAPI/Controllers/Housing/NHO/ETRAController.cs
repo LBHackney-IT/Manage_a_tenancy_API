@@ -197,5 +197,17 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
 
             return Ok(meetings);
         }
+
+        [Route("reject-response/{issueId}")]
+        [HttpPatch]
+        public async Task<ActionResult<bool>> RejectResponse(string issueId)
+        {
+            if (string.IsNullOrEmpty(issueId))
+                return BadRequest();
+
+
+
+            return Ok(true);
+        }
     }
 }

@@ -125,6 +125,18 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             return Ok(response);
         }
 
+        [Route("reject-response/{issueId}")]
+        [HttpPatch]
+        public async Task<ActionResult<ETRAUpdateResponse>> RejectResponse(string issueId, [FromBody]ETRAIssueRejectResponseRequest request)
+        {
+            if (string.IsNullOrEmpty(issueId) ||
+                request == null)
+                return BadRequest();
+
+            var response = await _etraMeetingsAction.RejectETRAIssueResponse(issueId, request);
+            return Ok(response);
+        }
+
         /// <summary>
         /// Finalises ETRA Meetings by meeting id, and optionally a signatory with their role.
         /// </summary>

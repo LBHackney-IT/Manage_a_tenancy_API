@@ -180,6 +180,17 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         }
 
         [Fact]
+        public async Task AddIssueResponse_PopulatedIdAndNullRequestObject_ReturnsBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            var id = "test123";
+
+            var actionResult = await etraController.AddIssueResponse(id, null);
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
         public async Task AddIssueResponse_PopulatedIdAndRequestWithNotYetCompletedStatusAndNoProjectedCompletionDateSet_ReturnsBadRequest()
         {
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
@@ -211,6 +222,74 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
                 .ReturnsAsync(response);
 
             var actionResult = await etraController.AddIssueResponse(id, request);
+
+            var okResult = actionResult.Result as OkObjectResult;
+            Assert.NotNull(okResult);
+
+            var value = okResult.Value as ETRAUpdateResponse;
+            Assert.NotNull(value);
+
+            Assert.Equal(id, value.InteractionId.ToString());
+        }
+
+        [Fact]
+        public async Task RejectResponse_NullId_ReturnsBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            const string id = null;
+
+            var actionResult = await etraController.RejectResponse(id, It.IsAny<ETRAIssueRejectResponseRequest>());
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task RejectResponse_EmptyStringId_ReturnsBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            var id = string.Empty;
+
+            var actionResult = await etraController.RejectResponse(id, It.IsAny<ETRAIssueRejectResponseRequest>());
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task RejectResponse_PopulatedIdAndNullRequestObject_ReturnsBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            var id = "test123";
+
+            var actionResult = await etraController.RejectResponse(id, null);
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task RejectResponse_ValidIdAndRequest_ReturnsSuccessfulResponse()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            var id = Guid.NewGuid().ToString();
+            var request = new ETRAIssueRejectResponseRequest
+            {
+                AnnotationSubjectId = Guid.NewGuid(),
+                IssueIncidentId = Guid.NewGuid(),
+                ResponderName = "Testy Testerson",
+                ResponseText = "The repairs were not done!"
+            };
+
+            var response = new ETRAUpdateResponse
+            {
+                Action = "Updated",
+                IncidentId = request.IssueIncidentId,
+                InteractionId = Guid.Parse(id),
+                AnnotationId = Guid.NewGuid()
+            };
+
+            etraMeetingActions.Setup(x => x.RejectETRAIssueResponse(It.IsAny<string>(), It.IsAny<ETRAIssueRejectResponseRequest>()))
+                .ReturnsAsync(response);
+
+            var actionResult = await etraController.RejectResponse(id, request);
 
             var okResult = actionResult.Result as OkObjectResult;
             Assert.NotNull(okResult);

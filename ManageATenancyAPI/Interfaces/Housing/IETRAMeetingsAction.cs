@@ -15,6 +15,7 @@ namespace ManageATenancyAPI.Interfaces.Housing
         Task<FinaliseETRAMeetingResponse> FinaliseMeeting(string id, FinaliseETRAMeetingRequest request);
         Task<RecordETRAMeetingAttendanceResponse> RecordETRAMeetingAttendance(string id, RecordETRAMeetingAttendanceRequest request);
         Task<ETRAUpdateResponse> AddETRAIssueResponse(string id, ETRAIssueResponseRequest request);
+        Task<ETRAUpdateResponse> RejectETRAIssueResponse(string id, ETRAIssueRejectResponseRequest request);
         Task<IEnumerable<ETRAMeeting>> GetETRAMeetingsForTRAId(string id);
     }
 }

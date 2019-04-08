@@ -381,6 +381,41 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             return result;
         }
 
+        public async Task<ETRAUpdateResponse> RejectETRAIssueResponse(string id, ETRAIssueRejectResponseRequest request)
+        {
+            var token = await _crmAccessToken.getCRM365AccessToken();
+            _client = await _hackneyAccountApiBuilder.CreateRequest(token);
+
+            //set the process stage to null, i.e. awaiting response
+            var issueUpdateObject = new JObject
+            {
+                { "hackney_process_stage", null }
+            };
+
+            var noteText = $"Response rejected\r\n\r\n{request.ResponseText}Responder: {request.ResponderName} on {DateTime.Now}";
+
+            var annotationId = await CreateAnnotation(noteText, request.IssueIncidentId.ToString(), request.AnnotationSubjectId.ToString());
+
+            var updateIssueIntractionQuery = HousingAPIQueryBuilder.updateIssueQuery(id);
+
+            var updateIntractionResponse = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, updateIssueIntractionQuery, issueUpdateObject);
+
+            if (!updateIntractionResponse.IsSuccessStatusCode)
+            {
+                throw new TenancyServiceException();
+            }
+
+            var result = new ETRAUpdateResponse
+            {
+                Action = "Updated",
+                IncidentId = request.IssueIncidentId,
+                InteractionId = Guid.Parse(id),
+                AnnotationId = Guid.Parse(annotationId)
+            };
+
+            return result;
+        }
+
         public async Task<ETRAMeeting> GetMeeting(string id)
         {
             var token = await _crmAccessToken.getCRM365AccessToken();

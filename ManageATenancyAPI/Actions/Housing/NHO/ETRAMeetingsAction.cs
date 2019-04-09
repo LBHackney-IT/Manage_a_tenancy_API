@@ -300,6 +300,12 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 if (!string.IsNullOrEmpty(issueToBeUpdated.IssueLocation))
                     issueUpdateObject.Add("hackney_issuelocation", issueToBeUpdated.IssueLocation);
 
+                if (issueToBeUpdated.PDFId.HasValue && issueToBeUpdated.PDFId.Value != Guid.Empty)
+                    issueUpdateObject.Add("hackney_pdfreference", issueToBeUpdated.PDFId.Value);
+
+                if (issueToBeUpdated.SignatureId.HasValue && issueToBeUpdated.SignatureId.Value != Guid.Empty)
+                    issueUpdateObject.Add("hackney_signaturereference", issueToBeUpdated.SignatureId.Value);
+
                 issueUpdateObject.Add("hackney_estateofficer_updatedbyid@odata.bind",
                     $"/hackney_estateofficers({issueToBeUpdated.estateOfficerId})");
 

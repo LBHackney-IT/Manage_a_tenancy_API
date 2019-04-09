@@ -76,7 +76,8 @@ namespace ManageATenancyAPI.Models.Housing.NHO
         public string IssueLocation { get; set; }
         public string EnquirySubject { get; set; }
         public Guid? AnnotationSubjectId { get; set; }
-
+        public Guid? PDFId { get; set; }
+        public Guid? SignatureId { get; set; }
     }
 
     public class FinaliseETRAMeetingRequest

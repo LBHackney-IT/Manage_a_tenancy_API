@@ -176,6 +176,18 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             return Ok(HackneyResult<FinaliseETRAMeetingResponse>.Create(response));
         }
 
+        [Route("get-meeting-details/{id}")]
+        [HttpGet]
+        public async Task<ActionResult<ETRAMeeting>> GetMeetingDetails(Guid id)
+        {
+            if (id == Guid.Empty)
+                return BadRequest();
+
+            var meeting = await _etraMeetingsAction.GetMeeting(id.ToString());
+
+            return Ok(meeting);
+        }
+
         /// <summary>
         /// Gets ETRA Issues by TRA ID or parent interaction. Used to retrieve issue for a TRA or for a specific ETRA meeting.
         /// </summary>

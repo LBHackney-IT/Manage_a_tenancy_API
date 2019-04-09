@@ -274,6 +274,33 @@ namespace ManageATenancyAPI.Tests.Actions
         }
 
         [Fact]
+        public async Task CloseIncident_HousingApiUnsuccessfulResponse_ThrowsTenancyServiceException()
+        {
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, _mockDateService.Object);
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responseMessage);
+
+            async Task act() => await service.CloseIncident(It.IsAny<string>(), It.IsAny<Guid>());
+
+            await Assert.ThrowsAsync<TenancyServiceException>(act);
+        }
+
+        [Fact]
+        public async Task CloseIncident_HousingApiSuccessStatusCode_ReturnsIncidentClosedResponse()
+        {
+            var id = Guid.NewGuid();
+            var service = new ETRAMeetingsAction(mockILoggerAdapter.Object, mocktmiCallBuilder.Object, mockingApiCall.Object, mockAccessToken.Object, mockConfig.Object, _mockDateService.Object);
+            var responseMessage = new HttpResponseMessage(HttpStatusCode.OK);
+            mockingApiCall.Setup(x => x.SendAsJsonAsync(It.IsAny<HttpClient>(), It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<JObject>())).ReturnsAsync(responseMessage);
+
+            var response = await service.CloseIncident(It.IsAny<string>(), id);
+
+            Assert.IsAssignableFrom<IncidentClosedResponse>(response);
+            Assert.Equal(id, response.IncidentId);
+            Assert.Equal("Closed", response.Status);
+        }
+
+        [Fact]
         public async Task GetMeeting_HousingApiNullResponse_ThrowsNullResponseException()
         {
             const string fakeMeetingId = "id123";

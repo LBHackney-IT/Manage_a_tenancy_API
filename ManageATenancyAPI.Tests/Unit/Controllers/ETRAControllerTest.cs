@@ -301,6 +301,43 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         }
 
         [Fact]
+        public async Task CloseIncident_EmptyId_ReturnsBadRequest()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            var id = Guid.Empty;
+
+            var actionResult = await etraController.CloseIncident(id, It.IsAny<string>());
+
+            Assert.IsType<BadRequestResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task CloseIncident_ValidIdAndRequest_ReturnsSuccessfulResponse()
+        {
+            var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
+            var id = Guid.NewGuid();
+
+            var response = new IncidentClosedResponse
+            {
+                Status = "Closed",
+                IncidentId = id
+            };
+
+            etraMeetingActions.Setup(x => x.CloseIncident(It.IsAny<string>(), It.IsAny<Guid>()))
+                .ReturnsAsync(response);
+
+            var actionResult = await etraController.CloseIncident(id, "Resolved");
+
+            var okResult = actionResult.Result as OkObjectResult;
+            Assert.NotNull(okResult);
+
+            var value = okResult.Value as dynamic;
+            Assert.NotNull(value);
+
+            Assert.Equal(id, value.IncidentId);
+        }
+
+        [Fact]
         public async Task FinaliseMeeting_IncorrectMeetingId_ReturnsNotFound()
         {
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);

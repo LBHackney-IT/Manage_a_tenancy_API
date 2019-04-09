@@ -137,6 +137,17 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             return Ok(response);
         }
 
+        [Route("close-incident/{id}")]
+        [HttpPatch]
+        public async Task<ActionResult<dynamic>> CloseIncident(Guid id, [FromBody]string note)
+        {
+            if (id == Guid.Empty)
+                return BadRequest();
+
+            var response = await _etraMeetingsAction.CloseIncident(note, id);
+            return Ok(response);
+        }
+
         /// <summary>
         /// Finalises ETRA Meetings by meeting id, and optionally a signatory with their role.
         /// </summary>

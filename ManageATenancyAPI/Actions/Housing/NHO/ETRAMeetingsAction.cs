@@ -274,7 +274,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 if (issueToBeUpdated.issueIsToBeDeleted)
                 {
                     await CloseIncidentAndDeleteIssue(issueToBeUpdated.note,
-                        issueToBeUpdated.issueIncidentId.ToString(), issueToBeUpdated.issueInteractionId.ToString());
+                        issueToBeUpdated.issueIncidentId, issueToBeUpdated.issueInteractionId);
 
                     result.Action = "Deleted";
                     return result;
@@ -527,6 +527,32 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             return new FinaliseETRAMeetingResponse { Id = id, IsFinalised = updateIntractionResponse.IsSuccessStatusCode };
         }
 
+        public async Task<IncidentClosedResponse> CloseIncident(string closingNotes, Guid incidentId)
+        {
+            string requestUrl = "/api/data/v8.2/CloseIncident";
+            var srClose = new JObject
+            {
+                { "incidentid@odata.bind", $"/incidents({incidentId})" },
+                { "description", closingNotes }
+            };
+            var resolution = new JObject
+            {
+                ["IncidentResolution"] = srClose,
+                ["Status"] = _configuration.CompletedClosureType //closing incident
+            };
+
+            var response = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Post, requestUrl, resolution);
+
+            if (!response.IsSuccessStatusCode)
+                throw new TenancyServiceException();
+
+            return new IncidentClosedResponse
+            {
+                IncidentId = incidentId,
+                Status = "Closed"
+            };
+        }
+
         #region Private methods
 
         private async Task UpdateAnnotation(string notes, string estateOfficer, string annotationId)
@@ -560,24 +586,12 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
         }
 
-        private async Task CloseIncidentAndDeleteIssue(string closingNotes, string incidentId,string interactionId)
+        private async Task CloseIncidentAndDeleteIssue(string closingNotes, Guid incidentId, Guid interactionId)
         {
             try
             {
-                string requestUrl = "/api/data/v8.2/CloseIncident";
-                JObject srClose = new JObject();
-                srClose["incidentid@odata.bind"] = $"/incidents({incidentId})";
-                srClose.Add("description", closingNotes);
-                JObject resolution = new JObject();
-                resolution["IncidentResolution"] = srClose; 
-                resolution["Status"] = _configuration.CompletedClosureType; //closing incident
+                await CloseIncident(closingNotes, incidentId);
 
-                HttpResponseMessage response = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Post, requestUrl, resolution);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new TenancyServiceException();
-                }
                 string deleteUrl = $"/api/data/v8.2/hackney_tenancymanagementinteractionses({interactionId})";
                 var deleteIneraction = await _ManageATenancyAPI.deleteObjectAPIResponse(_client, deleteUrl);
                 if (!deleteIneraction.IsSuccessStatusCode)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ManageATenancyAPI.Models;
 using ManageATenancyAPI.Models.Housing.NHO;
@@ -17,5 +18,6 @@ namespace ManageATenancyAPI.Interfaces.Housing
         Task<ETRAUpdateResponse> AddETRAIssueResponse(string id, ETRAIssueResponseRequest request);
         Task<ETRAUpdateResponse> RejectETRAIssueResponse(string id, ETRAIssueRejectResponseRequest request);
         Task<IEnumerable<ETRAMeeting>> GetETRAMeetingsForTRAId(string id);
+        Task<IncidentClosedResponse> CloseIncident(string closingNotes, Guid incidentId);
     }
 }

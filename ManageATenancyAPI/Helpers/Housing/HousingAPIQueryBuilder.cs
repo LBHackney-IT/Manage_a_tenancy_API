@@ -925,6 +925,8 @@ namespace ManageATenancyAPI.Helpers.Housing
                 <attribute name='hackney_estateofficerpatchid' />
                 <attribute name='hackney_natureofenquiry' />
                 <attribute name='createdon' />
+                <attribute name='hackney_parent_interactionid' />
+                <attribute name='hackney_issuedeadlinedate' />
                 <attribute name='hackney_estateofficer_createdbyid' />
                 <attribute name='hackney_estateofficer_updatedbyid' />
                 <attribute name='hackney_tenancymanagementinteractionsid' />

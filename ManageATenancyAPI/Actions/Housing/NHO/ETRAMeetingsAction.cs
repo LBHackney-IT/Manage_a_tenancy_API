@@ -625,6 +625,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      nccOfficerName = response["_hackney_estateofficer_createdbyid_value@OData.Community.Display.V1.FormattedValue"],
                                      createdon = response["createdon"],
                                      deadlineDate = response["hackney_issuedeadlinedate"],
+                                     parentInteractionId = response["_hackney_parent_interactionid_value"],
                                      nccOfficerUpdatedById = response["_hackney_estateofficer_updatedbyid_value"],
                                      nccOfficerUpdatedByName = response["_hackney_estateofficer_updatedbyid_value@OData.Community.Display.V1.FormattedValue"],
                                      natureOfEnquiryId = response["hackney_natureofenquiry"],
@@ -656,6 +657,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      grp.Key.nccOfficerName,
                                      grp.Key.createdon,
                                      grp.Key.deadlineDate,
+                                     grp.Key.parentInteractionId,
                                      grp.Key.nccOfficerUpdatedById,
                                      grp.Key.nccOfficerUpdatedByName,
                                      grp.Key.natureOfEnquiryId,
@@ -691,6 +693,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 tenancyObj.nccOfficerName = response.nccOfficerName;
                 tenancyObj.createdon = response.createdon.ToString("yyyy-MM-dd HH:mm:ss");
                 tenancyObj.deadlineDate = response.deadlineDate;
+                tenancyObj.parentInteractionId = response.parentInteractionId;
                 tenancyObj.nccOfficerUpdatedById = response.nccOfficerUpdatedById;
                 tenancyObj.nccOfficerUpdatedByName = response.nccOfficerUpdatedByName;
                 tenancyObj.natureOfEnquiryId = response.natureOfEnquiryId;

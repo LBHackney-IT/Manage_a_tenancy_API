@@ -10,7 +10,9 @@ namespace ManageATenancyAPI.Models.Housing.NHO
         [Required]
         public string ResponseText { get; set; }
         [Required]
-        public string ServiceArea { get; set; }
+        public string ServiceAreaName { get; set; }
+        [Required]
+        public int ServiceAreaId { get; set; }
         [Required]
         public string IssueStage { get; set; }
         [Required]

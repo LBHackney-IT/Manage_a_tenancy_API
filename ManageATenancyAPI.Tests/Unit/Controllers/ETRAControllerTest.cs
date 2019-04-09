@@ -441,7 +441,8 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         {
             return new ETRAIssueResponseRequest
             {
-                ServiceArea = "Repairs",
+                ServiceAreaId = 1,
+                ServiceAreaName = "Repairs",
                 AnnotationSubjectId = Guid.NewGuid(),
                 IssueIncidentId = Guid.NewGuid(),
                 IssueStage = "Completed",

@@ -345,11 +345,10 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             _client = await _hackneyAccountApiBuilder.CreateRequest(token);
 
             var processStage = EnumHelper.GetValueFromDescription<HackneyProcessStage>(request.IssueStage.ToLower());
-            var serviceArea = EnumHelper.GetValueFromDescription<HackneyServiceArea>(request.ServiceArea.ToLower());
 
             var issueUpdateObject = new JObject
             {
-                { "hackney_servicearea", (int)serviceArea },
+                { "hackney_servicearea", request.ServiceAreaId },
                 { "hackney_process_stage", (int)processStage }
             };
 
@@ -357,7 +356,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             if (request.ProjectedCompletionDate.HasValue)
                 completionDateText = $"Projected completion date: {request.ProjectedCompletionDate.Value.ToString("dddd dd MMMM yyyy")}\r\n\r\n";
 
-            var noteText = $"Response from: {request.ServiceArea}\r\n\r\n{request.ResponseText}\r\n\r\n{completionDateText}Responder: {request.ResponderName} on {DateTime.Now}";
+            var noteText = $"Response from: {request.ServiceAreaName}\r\n\r\n{request.ResponseText}\r\n\r\n{completionDateText}Responder: {request.ResponderName} on {DateTime.Now}";
 
             var annotationId = await CreateAnnotation(noteText, request.IssueIncidentId.ToString(), request.AnnotationSubjectId.ToString());
             

@@ -21,12 +21,4 @@ namespace ManageATenancyAPI.Helpers
         [Description("completed")]
         Completed = 8
     }
-
-    public enum HackneyServiceArea
-    {
-        [Description("area 1")]
-        Area1 = 1,
-        [Description("area 2")]
-        Area2 = 2
-    }
 }

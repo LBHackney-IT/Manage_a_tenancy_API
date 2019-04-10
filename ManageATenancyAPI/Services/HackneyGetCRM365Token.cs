@@ -34,7 +34,7 @@ namespace ManageATenancyAPI.Services
             var token = "";
             try
             {
-                response = httpClient.GetAsync("hackneyapi/GetCRM365AccessToken").Result;
+                response = httpClient.GetAsync("/GetCRM365AccessToken").Result;
                 if (!response.IsSuccessStatusCode)
                 {
                     throw new GetCRM365TokenServiceException();

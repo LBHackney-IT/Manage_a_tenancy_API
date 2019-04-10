@@ -27,7 +27,7 @@ namespace ManageATenancyAPI.Services
 
         public async Task<IEnumerable<NewTenancyResponse>> GetNewTenancies()
         {
-            var dateFrom = DateTime.Now.AddDays(-1);
+            var dateFrom = DateTime.Today.AddDays(-1);
             var query = HousingAPIQueryBuilder.GetNewTenanciesSinceDate(dateFrom);
 
             var result = await _manageATenancyAPI.getHousingAPIResponse(_client, query, null);
@@ -62,14 +62,20 @@ namespace ManageATenancyAPI.Services
                         if (existingNewTenancy.Contacts.FirstOrDefault(x => x.ContactId == entry["contact1_x002e_contactid"].ToString()) != null)
                             continue;
 
-                        existingNewTenancy.Contacts.Add(new NewTenancyContact
+                        var newContact = new NewTenancyContact
                         {
                             FirstName = entry["contact1_x002e_firstname"],
                             LastName = entry["contact1_x002e_lastname"],
                             Responsible = entry["contact1_x002e_hackney_responsible"],
                             Title = entry["contact1_x002e_hackney_title"],
                             ContactId = entry["contact1_x002e_contactid"]
-                        });
+                        };
+
+                        //ensure that a responsible contact is always first in the list
+                        if (newContact.Responsible)
+                            existingNewTenancy.Contacts.Insert(0, newContact);
+                        else
+                            existingNewTenancy.Contacts.Add(newContact);
                     }
                     else
                     {

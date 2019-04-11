@@ -46,7 +46,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
         }
 
         [Fact]
-        public async Task GetNewTenanciesForHousingOfficer_ThereAreNoNewTenancies_ReturnsEmptyList()
+        public async Task GetNewTenancies_ThereAreNoNewTenancies_ReturnsEmptyList()
         {
             var dict = new Dictionary<string, object>
             {

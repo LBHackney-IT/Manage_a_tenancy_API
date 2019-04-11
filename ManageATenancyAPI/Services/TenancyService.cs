@@ -94,7 +94,7 @@ namespace ManageATenancyAPI.Services
                             OfficerId = entry["estateOfficerId"],
                             OfficerName = entry["OfficerFullName"],
                             HouseholdId = entry["_hackney_household_accountid_value"],
-                            PatchId = entry["hackney_estateofficerpatch3_x002e_hackney_patchid"],
+                            PatchId = entry["hackney_estateofficerpatch3_x002e_hackney_estateofficerpatchid"],
                             TagReference = entry["housing_tag_ref"],
                             AreaId = entry["hackney_propertyareapatch2_x002e_hackney_areaname"],
                             ManagerId = entry["hackney_propertyareapatch2_x002e_hackney_managerpropertypatchid"],

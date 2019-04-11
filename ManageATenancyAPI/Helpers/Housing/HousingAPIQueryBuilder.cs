@@ -897,7 +897,7 @@ namespace ManageATenancyAPI.Helpers.Housing
                                             <attribute name='hackney_areaname' />
                                             <attribute name='hackney_managerpropertypatchid' />
                                             <link-entity name='hackney_estateofficerpatch' from='hackney_estateofficerpatchid' to='hackney_estateofficerpropertypatchid' link-type='inner' >
-                                                <attribute name='hackney_patchid' />
+                                                <attribute name='hackney_estateofficerpatchid' />
                                                 <link-entity name='hackney_estateofficer' from='hackney_estateofficerid' to='hackney_patchid' link-type='inner' >
                                                     <attribute name='hackney_estateofficerid' alias='estateOfficerId' />
                                                     <attribute name='hackney_name' alias='OfficerFullName' />

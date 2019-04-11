@@ -185,8 +185,8 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         /// <summary>
         /// Finalises ETRA Meetings by meeting id, and optionally a signatory with their role.
         /// </summary>
-        /// <param name="id">Interaction id.</param>
-        /// <param name="request">Object containing the guid reference of the signature and the string with the signatory's role.</param>
+        /// <param name="id">Meeting id.</param>
+        /// <param name="request">(Optional) Object containing the guid reference of the signature and the string with the signatory's role.</param>
         /// <returns>Whether the meeting has been successfully finalised</returns>
         /// <response code="200">Successfully finalised meeting</response>
         /// <response code="404">No meeting with the specified id found</response>

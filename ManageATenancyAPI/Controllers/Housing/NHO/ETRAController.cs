@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.Factories.Housing;
+using ManageATenancyAPI.Helpers;
 using ManageATenancyAPI.Interfaces;
 using ManageATenancyAPI.Interfaces.Housing;
 using ManageATenancyAPI.Models;
@@ -118,7 +119,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         {
             if (string.IsNullOrEmpty(id) ||
                 request == null ||
-                (request.IssueStage.ToLower() == "not completed" && !request.ProjectedCompletionDate.HasValue))
+                (request.IssueStage == HackneyProcessStage.NotCompleted && !request.ProjectedCompletionDate.HasValue))
                 return BadRequest();
             
             var response = await _etraMeetingsAction.AddETRAIssueResponse(id, request);

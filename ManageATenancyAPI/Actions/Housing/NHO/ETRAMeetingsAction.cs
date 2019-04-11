@@ -350,12 +350,10 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             var token = await _crmAccessToken.getCRM365AccessToken();
             _client = await _hackneyAccountApiBuilder.CreateRequest(token);
 
-            var processStage = EnumHelper.GetValueFromDescription<HackneyProcessStage>(request.IssueStage.ToLower());
-
             var issueUpdateObject = new JObject
             {
                 { "hackney_servicearea", request.ServiceAreaId },
-                { "hackney_process_stage", (int)processStage }
+                { "hackney_process_stage", (int)request.IssueStage }
             };
 
             var completionDateText = string.Empty;

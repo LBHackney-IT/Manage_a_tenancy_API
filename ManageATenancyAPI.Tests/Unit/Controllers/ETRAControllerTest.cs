@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.Controllers.Housing.NHO;
+using ManageATenancyAPI.Helpers;
 using ManageATenancyAPI.Interfaces;
 using ManageATenancyAPI.Interfaces.Housing;
 using ManageATenancyAPI.Models;
@@ -196,7 +197,7 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
             const string id = "test123";
             var request = GetResponseRequest();
-            request.IssueStage = "Not Completed";
+            request.IssueStage = HackneyProcessStage.NotCompleted;
 
             var actionResult = await etraController.AddIssueResponse(id, request);
 
@@ -445,7 +446,7 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
                 ServiceAreaName = "Repairs",
                 AnnotationSubjectId = Guid.NewGuid(),
                 IssueIncidentId = Guid.NewGuid(),
-                IssueStage = "Completed",
+                IssueStage = HackneyProcessStage.Completed,
                 ProjectedCompletionDate = null,
                 ResponderName = "Testy Testerson",
                 ResponseText = "The repairs are done!"

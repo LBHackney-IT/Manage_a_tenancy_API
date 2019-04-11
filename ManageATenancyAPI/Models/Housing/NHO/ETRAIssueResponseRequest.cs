@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ManageATenancyAPI.Helpers;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ManageATenancyAPI.Models.Housing.NHO
@@ -14,7 +15,7 @@ namespace ManageATenancyAPI.Models.Housing.NHO
         [Required]
         public int ServiceAreaId { get; set; }
         [Required]
-        public string IssueStage { get; set; }
+        public HackneyProcessStage IssueStage { get; set; }
         [Required]
         public Guid IssueIncidentId { get; set; } //CRM incident Guid
         [Required]

@@ -18,6 +18,11 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             _tenancyService = tenancyService;
         }
 
+        /// <summary>
+        /// Gets new tenancies recorded in the CRM in the last day.
+        /// </summary>
+        /// <returns>A list of new tenancies. This could be an empty list.</returns>
+        /// <response code="200">Successfully returned any new tenancies</response>
         [Route("new")]
         [HttpGet]
         public async Task<ActionResult<HackneyResult<IList<NewTenancyResponse>>>> GetNewTenancies()

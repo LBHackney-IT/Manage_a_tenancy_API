@@ -97,6 +97,15 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             }
         }
 
+        /// <summary>
+        /// Records the people who attended an ETRA meeting.
+        /// </summary>
+        /// <param name="id">Meeting id.</param>
+        /// <param name="request">Object containing the councillors, other staff and total attendance of the meeting.</param>
+        /// <returns>Whether the meeting attendance has been successfully recorded</returns>
+        /// <response code="200">Successfully recorded meeting attendance</response>
+        /// <response code="404">No meeting with the specified id found</response>
+        /// <response code="400">Null or empty id or null request</response>
         [Route("record-attendance/{id}")]
         [HttpPatch]
         public async Task<ActionResult<RecordETRAMeetingAttendanceResponse>> RecordAttendance(string id, [FromBody] RecordETRAMeetingAttendanceRequest request)
@@ -113,6 +122,14 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             return Ok(response);
         }
 
+        /// <summary>
+        /// Records a response from a service area to an ETRA issue.
+        /// </summary>
+        /// <param name="id">Issue id.</param>
+        /// <param name="request">Object containing the required data to record the response.</param>
+        /// <returns>Whether the issue response has been successfully recorded</returns>
+        /// <response code="200">Successfully recorded issue response</response>
+        /// <response code="400">Null or empty id or null request</response>
         [Route("add-issue-response/{id}")]
         [HttpPatch]
         public async Task<ActionResult<ETRAUpdateResponse>> AddIssueResponse(string id, [FromBody]ETRAIssueResponseRequest request)
@@ -126,6 +143,14 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             return Ok(response);
         }
 
+        /// <summary>
+        /// Rejects the response to an issue from a service area.
+        /// </summary>
+        /// <param name="issueId">Issue id.</param>
+        /// <param name="request">Object containing the required data to reject the response.</param>
+        /// <returns>Whether the issue response has been successfully rejected</returns>
+        /// <response code="200">Successfully recorded issue response</response>
+        /// <response code="400">Null or empty id or null request</response>
         [Route("reject-response/{issueId}")]
         [HttpPatch]
         public async Task<ActionResult<ETRAUpdateResponse>> RejectResponse(string issueId, [FromBody]ETRAIssueRejectResponseRequest request)
@@ -138,6 +163,14 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             return Ok(response);
         }
 
+        /// <summary>
+        /// Closes an incident in the CRM.
+        /// </summary>
+        /// <param name="id">The incident id.</param>
+        /// <param name="note">An optional note to store when closing the incident.</param>
+        /// <returns>Whether the incident has been successfully closed</returns>
+        /// <response code="200">Successfully closed the incident</response>
+        /// <response code="400">Empty id</response>
         [Route("close-incident/{id}")]
         [HttpPatch]
         public async Task<ActionResult<dynamic>> CloseIncident(Guid id, [FromBody]string note)
@@ -177,6 +210,14 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             return Ok(HackneyResult<FinaliseETRAMeetingResponse>.Create(response));
         }
 
+        /// <summary>
+        /// Gets the details of an ETRA meeting.
+        /// </summary>
+        /// <param name="id">Meeting id.</param>
+        /// <returns>The details of the meeting</returns>
+        /// <response code="200">Successfully recorded issue response</response>
+        /// <response code="400">Empty id</response>
+        /// <response code="404">No such meeting exists</response>
         [Route("get-meeting-details/{id}")]
         [HttpGet]
         public async Task<ActionResult<ETRAMeeting>> GetMeetingDetails(Guid id)
@@ -185,6 +226,9 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
                 return BadRequest();
 
             var meeting = await _etraMeetingsAction.GetMeeting(id.ToString());
+
+            if (meeting == null)
+                return NotFound();
 
             return Ok(meeting);
         }
@@ -222,6 +266,13 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             }
         }
 
+        /// <summary>
+        /// Gets all meetings for a specified TRA.
+        /// </summary>
+        /// <param name="id">TRA id.</param>
+        /// <returns>A list of ETRA meetings</returns>
+        /// <response code="200">Successfully returned meetings</response>
+        /// <response code="400">Null or empty id</response>
         [Route("etra-meetings-by-tra/{id}")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ETRAMeeting>>> GetETRAMeetingsByTRA(string id)

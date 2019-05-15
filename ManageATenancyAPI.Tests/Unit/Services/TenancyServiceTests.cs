@@ -64,7 +64,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             
             SetupHousingApiResponse(new Dictionary<string, object>());
             _mockLastRetrieved.Setup(m => m.UpdateLastRetrieved(It.IsAny<DateTime>())).Verifiable();
-            _mockClock.Setup(m => m.Now()).Returns(dateTime);
+            _mockClock.Setup(m => m.Now).Returns(dateTime);
 
             await _service.GetNewTenancies();
             
@@ -78,7 +78,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             var lastRunTime = new DateTime(1995, 03, 15, 22, 55, 33, 21);
             
             SetupHousingApiResponse(new Dictionary<string, object>());
-            _mockClock.Setup(m => m.Now()).Returns(now);
+            _mockClock.Setup(m => m.Now).Returns(now);
             _mockLastRetrieved.Setup(m => m.GetLastRetrieved()).Returns(lastRunTime);
 
             await _service.GetNewTenancies();
@@ -123,7 +123,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
                 currentLastRuntime = date; 
             });
             _mockLastRetrieved.Setup(m => m.GetLastRetrieved()).Returns(() => currentLastRuntime);
-            _mockClock.Setup(m => m.Now()).Returns(newLastRunTime);
+            _mockClock.Setup(m => m.Now).Returns(newLastRunTime);
             
             await _service.GetNewTenancies();
 

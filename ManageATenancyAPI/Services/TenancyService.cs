@@ -33,9 +33,9 @@ namespace ManageATenancyAPI.Services
 
         public async Task<IEnumerable<NewTenancyResponse>> GetNewTenancies()
         {
-            var lastRun = _newTenancyService.GetLastRun();
+            var lastRun = _newTenancyService.GetLastRetrieved();
             var query = HousingAPIQueryBuilder.GetNewTenanciesSinceDate(lastRun);
-            _newTenancyService.UpdateLastRun(_clock.Now());
+            _newTenancyService.UpdateLastRetrieved(_clock.Now);
             
             var result = await _manageATenancyAPI.getHousingAPIResponse(_client, query, null);
 

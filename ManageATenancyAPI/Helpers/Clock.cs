@@ -5,9 +5,6 @@ namespace ManageATenancyAPI.Helpers
 {
     public class Clock : IClock
     {
-        public DateTime Now()
-        {
-            return DateTime.Now;
-        }
+        public DateTime Now => DateTime.Now;
     }
 }

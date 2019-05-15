@@ -4,6 +4,6 @@ namespace ManageATenancyAPI.Interfaces
 {
     public interface IClock
     {
-        DateTime Now();
+        DateTime Now { get; }
     }
 }

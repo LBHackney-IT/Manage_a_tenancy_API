@@ -9,7 +9,7 @@ namespace ManageATenancyAPI.Database
         public TenancyContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<TenancyContext>();
-            builder.UseSqlServer("Server=localhost;Database=ManageATenancy;Trusted_Connection=True;MultipleActiveResultSets=true");
+            builder.UseSqlServer("Server=localhost,1433;Database=ManageATenancy;MultipleActiveResultSets=true;User ID=SA;Password=Rooty-Tooty");
             return new TenancyContext(builder.Options);
         }
     }

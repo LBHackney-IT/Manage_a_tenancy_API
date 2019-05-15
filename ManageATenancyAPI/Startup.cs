@@ -43,7 +43,7 @@ namespace ManageATenancyAPI
             services.AddDbContext<UHWWarehouseDbContext>(options =>
                 options.UseSqlServer(uhCon));
             
-            var tenancyConnection = "Server=localhost;Database=ManageATenancy;Trusted_Connection=True;ConnectRetryCount=0";
+            var tenancyConnection = Configuration.GetSection("ConnectionStrings").GetValue<string>("TenancyDBConnection");
             services.AddDbContext<TenancyContext>(options => 
                 options.UseSqlServer(tenancyConnection));
             

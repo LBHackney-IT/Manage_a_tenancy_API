@@ -17,14 +17,14 @@ namespace ManageATenancyAPI.Services
     {
         private readonly HttpClient _client;
         private readonly IHackneyHousingAPICall _manageATenancyAPI;
-        private readonly ILastRetrieved _lastRetrieved;
+        private readonly INewTenancyService _newTenancyService;
         private readonly IClock _clock;
 
         public TenancyService(IHackneyHousingAPICallBuilder apiCallBuilder, IHackneyHousingAPICall apiCall,
-            IHackneyGetCRM365Token accessToken, ILastRetrieved lastRetrieved, IClock clock)
+            IHackneyGetCRM365Token accessToken, INewTenancyService newTenancyService, IClock clock)
         {
             _manageATenancyAPI = apiCall;
-            _lastRetrieved = lastRetrieved;
+            _newTenancyService = newTenancyService;
             _clock = clock;
 
             var token = accessToken.getCRM365AccessToken().Result;
@@ -33,9 +33,9 @@ namespace ManageATenancyAPI.Services
 
         public async Task<IEnumerable<NewTenancyResponse>> GetNewTenancies()
         {
-            var lastRun = _lastRetrieved.GetLastRun();
+            var lastRun = _newTenancyService.GetLastRun();
             var query = HousingAPIQueryBuilder.GetNewTenanciesSinceDate(lastRun);
-            _lastRetrieved.UpdateLastRun(_clock.Now());
+            _newTenancyService.UpdateLastRun(_clock.Now());
             
             var result = await _manageATenancyAPI.getHousingAPIResponse(_client, query, null);
 

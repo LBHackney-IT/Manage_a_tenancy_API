@@ -20,14 +20,14 @@ namespace ManageATenancyAPI.Tests.Unit.Services
     {
         private readonly Mock<IClock> _mockClock;
         private readonly Mock<IHackneyHousingAPICall> _mockHousingApiCall;
-        private readonly Mock<ILastRetrieved> _mockLastRetrieved;
+        private readonly Mock<INewTenancyService> _mockLastRetrieved;
         private readonly TenancyService _service;
 
         public TenancyServiceTests()
         {
             _mockClock = new Mock<IClock>();
             _mockHousingApiCall = new Mock<IHackneyHousingAPICall>();
-            _mockLastRetrieved = new Mock<ILastRetrieved>();
+            _mockLastRetrieved = new Mock<INewTenancyService>();
             var mockHousingApiCallBuilder = new Mock<IHackneyHousingAPICallBuilder>();
             var mockCrmToken = new Mock<IHackneyGetCRM365Token>();
             _service = new TenancyService(mockHousingApiCallBuilder.Object, _mockHousingApiCall.Object, mockCrmToken.Object, _mockLastRetrieved.Object, _mockClock.Object);
@@ -50,11 +50,11 @@ namespace ManageATenancyAPI.Tests.Unit.Services
         public async Task GetNewTenancies_UpdateLastRunDate()
         {
             SetupHousingApiResponse(new Dictionary<string, object>());
-            _mockLastRetrieved.Setup(m => m.UpdateLastRun(It.IsAny<DateTime>())).Verifiable();
+            _mockLastRetrieved.Setup(m => m.UpdateLastRetrieved(It.IsAny<DateTime>())).Verifiable();
 
             await _service.GetNewTenancies();
             
-            _mockLastRetrieved.Verify(m => m.UpdateLastRun(It.IsAny<DateTime>()), Times.Once);
+            _mockLastRetrieved.Verify(m => m.UpdateLastRetrieved(It.IsAny<DateTime>()), Times.Once);
         }
 
         [Fact]
@@ -63,12 +63,12 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             var dateTime = new DateTime(2003, 08, 27, 14, 24, 52, 33);
             
             SetupHousingApiResponse(new Dictionary<string, object>());
-            _mockLastRetrieved.Setup(m => m.UpdateLastRun(It.IsAny<DateTime>())).Verifiable();
+            _mockLastRetrieved.Setup(m => m.UpdateLastRetrieved(It.IsAny<DateTime>())).Verifiable();
             _mockClock.Setup(m => m.Now()).Returns(dateTime);
 
             await _service.GetNewTenancies();
             
-            _mockLastRetrieved.Verify(m => m.UpdateLastRun(dateTime), Times.Once);
+            _mockLastRetrieved.Verify(m => m.UpdateLastRetrieved(dateTime), Times.Once);
         }
 
         [Fact]
@@ -79,11 +79,11 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             
             SetupHousingApiResponse(new Dictionary<string, object>());
             _mockClock.Setup(m => m.Now()).Returns(now);
-            _mockLastRetrieved.Setup(m => m.GetLastRun()).Returns(lastRunTime);
+            _mockLastRetrieved.Setup(m => m.GetLastRetrieved()).Returns(lastRunTime);
 
             await _service.GetNewTenancies();
             
-            _mockLastRetrieved.Verify(m => m.GetLastRun(), Times.Once);
+            _mockLastRetrieved.Verify(m => m.GetLastRetrieved(), Times.Once);
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
                 .Callback((HttpClient client, string query, string parameter) => { calledQuery = query; })
                 .ReturnsAsync(CreateResponseMessage(new Dictionary<string, object>()));
             
-            _mockLastRetrieved.Setup(m => m.GetLastRun()).Returns(lastRunTime);
+            _mockLastRetrieved.Setup(m => m.GetLastRetrieved()).Returns(lastRunTime);
 
             await _service.GetNewTenancies();
 
@@ -118,11 +118,11 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             var oldLastRunTime = new DateTime(2018, 06, 10);
 
             var currentLastRuntime = oldLastRunTime;
-            _mockLastRetrieved.Setup(m => m.UpdateLastRun(It.IsAny<DateTime>())).Callback((DateTime date) =>
+            _mockLastRetrieved.Setup(m => m.UpdateLastRetrieved(It.IsAny<DateTime>())).Callback((DateTime date) =>
             {
                 currentLastRuntime = date; 
             });
-            _mockLastRetrieved.Setup(m => m.GetLastRun()).Returns(() => currentLastRuntime);
+            _mockLastRetrieved.Setup(m => m.GetLastRetrieved()).Returns(() => currentLastRuntime);
             _mockClock.Setup(m => m.Now()).Returns(newLastRunTime);
             
             await _service.GetNewTenancies();

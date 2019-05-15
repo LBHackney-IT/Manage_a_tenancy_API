@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using ManageATenancyAPI.Helpers.Housing;
+using ManageATenancyAPI.Services.Interfaces;
 using Xunit;
 
 namespace ManageATenancyAPI.Tests.Unit.Services

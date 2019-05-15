@@ -9,15 +9,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ManageATenancyAPI.Services.Interfaces;
 
 namespace ManageATenancyAPI.Services
 {   
-    public interface ILastRetrieved
-    {
-        void UpdateLastRun(DateTime timestamp);
-        DateTime GetLastRun();
-    }
-    
     public class TenancyService : ITenancyService
     {
         private readonly HttpClient _client;

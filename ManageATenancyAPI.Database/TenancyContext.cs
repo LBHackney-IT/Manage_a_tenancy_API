@@ -14,7 +14,7 @@ namespace ManageATenancyAPI.Database
         }
     }
     
-    public class TenancyContext : DbContext
+    public class TenancyContext : DbContext, ITenancyContext
     {
         public TenancyContext(DbContextOptions options)
             : base(options)

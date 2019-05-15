@@ -35,7 +35,6 @@ namespace ManageATenancyAPI.Services
         {
             var lastRun = _newTenancyService.GetLastRetrieved();
             var query = HousingAPIQueryBuilder.GetNewTenanciesSinceDate(lastRun);
-            _newTenancyService.UpdateLastRetrieved(_clock.Now);
             
             var result = await _manageATenancyAPI.getHousingAPIResponse(_client, query, null);
 
@@ -48,7 +47,8 @@ namespace ManageATenancyAPI.Services
             {
                 throw new TenancyServiceException();
             }
-
+            _newTenancyService.UpdateLastRetrieved(_clock.Now);
+            
             var response = JsonConvert.DeserializeObject<dynamic>(await result.Content.ReadAsStringAsync());
 
             if (response == null || response["value"] == null)

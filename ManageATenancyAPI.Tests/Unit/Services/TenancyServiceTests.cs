@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Helpers.Housing;
 using ManageATenancyAPI.Services.Interfaces;
 using Xunit;
@@ -128,6 +129,29 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             await _service.GetNewTenancies();
 
             Assert.Contains(oldLastRunTime.ToCrmQueryFormat(), calledQuery);
+        }
+        
+        [Fact]
+        public async Task GetNewTenancies_HousingApiCallFails_DoesntUpdateLastRun()
+        {
+            _mockHousingApiCall.Setup(x =>
+                    x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.InternalServerError));
+            
+            var newLastRunTime = new DateTime(2018, 07, 5);
+            var oldLastRunTime = new DateTime(2018, 06, 10);
+
+            var currentLastRuntime = oldLastRunTime;
+            _mockLastRetrieved.Setup(m => m.UpdateLastRetrieved(It.IsAny<DateTime>())).Callback((DateTime date) =>
+            {
+                currentLastRuntime = date; 
+            });
+            _mockLastRetrieved.Setup(m => m.GetLastRetrieved()).Returns(() => currentLastRuntime);
+
+            await Assert.ThrowsAsync<TenancyServiceException>(() => _service.GetNewTenancies());
+            
+            Assert.Equal(oldLastRunTime, currentLastRuntime);
+            _mockLastRetrieved.Verify(m => m.UpdateLastRetrieved(It.IsAny<DateTime>()), Times.Never());
         }
         
         [Fact]

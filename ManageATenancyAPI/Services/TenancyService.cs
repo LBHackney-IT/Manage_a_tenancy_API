@@ -11,12 +11,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace ManageATenancyAPI.Services
-{
-    public interface IClock
-    {
-        DateTime Now();
-    }
-    
+{   
     public interface ILastRetrieved
     {
         void UpdateLastRun(DateTime timestamp);

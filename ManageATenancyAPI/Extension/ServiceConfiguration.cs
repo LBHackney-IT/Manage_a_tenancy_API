@@ -8,6 +8,7 @@ using ManageATenancyAPI.Services.Housing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using ManageATenancyAPI.Actions.Housing.NHO;
+using ManageATenancyAPI.Helpers;
 using ManageATenancyAPI.Tests;
 
 namespace ManageATenancyAPI.Extension
@@ -25,6 +26,8 @@ namespace ManageATenancyAPI.Extension
             {
                 services.AddTransient(typeof(IHackneyHousingAPICall), typeof(FakeHousingAPICall));
             }
+
+            services.AddSingleton<IClock, Clock>();
                                                 
             services.AddScoped(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
 

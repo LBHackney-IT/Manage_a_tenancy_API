@@ -147,6 +147,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
                 currentLastRuntime = date; 
             });
             _mockLastRetrieved.Setup(m => m.GetLastRetrieved()).Returns(() => currentLastRuntime);
+            _mockClock.Setup(m => m.Now).Returns(newLastRunTime);
 
             await Assert.ThrowsAsync<TenancyServiceException>(() => _service.GetNewTenancies());
             

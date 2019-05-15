@@ -21,5 +21,10 @@ namespace ManageATenancyAPI.Database
         { }
         
         public DbSet<NewTenancyLastRun> NewTenancyLastRun { get; set; }
+        
+        public new void SaveChanges()
+        {
+            base.SaveChanges();
+        }
     }
 }

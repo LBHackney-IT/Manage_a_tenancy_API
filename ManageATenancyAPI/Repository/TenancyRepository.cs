@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using ManageATenancyAPI.Database;
 using ManageATenancyAPI.Database.DTO;
+using ManageATenancyAPI.Database.Models;
 using ManageATenancyAPI.Repository.Interfaces;
 
 namespace ManageATenancyAPI.Repository
@@ -16,12 +18,18 @@ namespace ManageATenancyAPI.Repository
         
         public NewTenancyLastRunDto GetLastRun()
         {
-            throw new System.NotImplementedException();
+            var lastRun = _tenancyContext.NewTenancyLastRun.FirstOrDefault();
+            return lastRun == null ? null : new NewTenancyLastRunDto(lastRun);
         }
 
         public void UpdateLastRun(DateTime dateTime)
         {
-            throw new NotImplementedException();
+            _tenancyContext.NewTenancyLastRun.RemoveRange(_tenancyContext.NewTenancyLastRun);
+
+            var newTenancyLastRunTime = new NewTenancyLastRun() {LastRun = dateTime};
+            _tenancyContext.NewTenancyLastRun.Add(newTenancyLastRunTime);
+            
+            _tenancyContext.SaveChanges();
         }
     }
 }

@@ -18,15 +18,13 @@ namespace ManageATenancyAPI.Repository
         
         public NewTenancyLastRunDto GetLastRun()
         {
-            var lastRun = _tenancyContext.NewTenancyLastRun.FirstOrDefault();
+            var lastRun = _tenancyContext.NewTenancyLastRun.OrderBy(x => x.LastRun).LastOrDefault();
             return lastRun == null ? null : new NewTenancyLastRunDto(lastRun);
         }
 
         public void UpdateLastRun(DateTime dateTime)
         {
-            _tenancyContext.NewTenancyLastRun.RemoveRange(_tenancyContext.NewTenancyLastRun);
-
-            var newTenancyLastRunTime = new NewTenancyLastRun() {LastRun = dateTime};
+            var newTenancyLastRunTime = new NewTenancyLastRun {LastRun = dateTime};
             _tenancyContext.NewTenancyLastRun.Add(newTenancyLastRunTime);
             
             _tenancyContext.SaveChanges();

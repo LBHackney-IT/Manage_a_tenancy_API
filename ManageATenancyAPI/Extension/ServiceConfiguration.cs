@@ -8,7 +8,10 @@ using ManageATenancyAPI.Services.Housing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using ManageATenancyAPI.Actions.Housing.NHO;
+using ManageATenancyAPI.Database;
 using ManageATenancyAPI.Helpers;
+using ManageATenancyAPI.Repository.Interfaces;
+using ManageATenancyAPI.Services.Interfaces;
 using ManageATenancyAPI.Tests;
 
 namespace ManageATenancyAPI.Extension
@@ -42,7 +45,8 @@ namespace ManageATenancyAPI.Extension
             services.AddScoped<ITraEstateRepository, TraEstateRepository>();
             services.AddScoped<ITraRoleAssignmentRepository, TraRoleAssignmentRepository>();
             services.AddScoped<ITraRoleRepository, TraRoleRepository>();
-
+            services.AddScoped<ITenancyRepository, TenancyRepository>();
+            services.AddScoped<ITenancyContext, TenancyContext>();
 
             services.AddScoped<IBlockAction, BlockAction>();
             services.AddScoped<IETRAMeetingsAction, ETRAMeetingsAction>();
@@ -53,6 +57,7 @@ namespace ManageATenancyAPI.Extension
             services.AddScoped<ITraAction, TraAction>();
             
             services.AddScoped<ITenancyService, TenancyService>();
+            services.AddScoped<INewTenancyService, NewTenancyService>();
 
             //must be singleton for internal caching to work
             services.AddSingleton<IDateService, DateService>();

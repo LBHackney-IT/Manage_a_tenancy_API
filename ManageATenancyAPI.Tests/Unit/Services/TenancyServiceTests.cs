@@ -19,6 +19,8 @@ namespace ManageATenancyAPI.Tests.Unit.Services
 {
     public class TenancyServiceTests
     {
+        private string _dynamics365Query;
+        
         private readonly Mock<IClock> _mockClock;
         private readonly Mock<IHackneyHousingAPICall> _mockHousingApiCall;
         private readonly Mock<INewTenancyService> _mockLastRetrieved;
@@ -45,6 +47,14 @@ namespace ManageATenancyAPI.Tests.Unit.Services
         {
             _mockHousingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(CreateResponseMessage(response));
+        }
+
+        private void SetupHousingApiQueryCallback()
+        {
+            _mockHousingApiCall.Setup(x =>
+                    x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Callback((HttpClient client, string query, string parameter) => { _dynamics365Query = query; })
+                .ReturnsAsync(CreateResponseMessage(new Dictionary<string, object>()));
         }
 
         [Fact]
@@ -90,30 +100,22 @@ namespace ManageATenancyAPI.Tests.Unit.Services
         [Fact]
         public async Task GetNewTenancies_UsesLastRunDate()
         {
+            SetupHousingApiQueryCallback();
+
             var lastRunTime = new DateTime(1995, 03, 15, 22, 55, 33, 21);
             var queryDate = lastRunTime.ToCrmQueryFormat();
 
-            var calledQuery = "";
-            _mockHousingApiCall.Setup(x =>
-                    x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Callback((HttpClient client, string query, string parameter) => { calledQuery = query; })
-                .ReturnsAsync(CreateResponseMessage(new Dictionary<string, object>()));
-            
             _mockLastRetrieved.Setup(m => m.GetLastRetrieved()).Returns(lastRunTime);
 
             await _service.GetNewTenancies();
 
-            Assert.Contains(queryDate, calledQuery);
+            Assert.Contains(queryDate, _dynamics365Query);
         }
 
         [Fact]
         public async Task GetNewTenancies_UpdatesLastRun_AfterQuery()
         {
-            var calledQuery = "";
-            _mockHousingApiCall.Setup(x =>
-                    x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Callback((HttpClient client, string query, string parameter) => { calledQuery = query; })
-                .ReturnsAsync(CreateResponseMessage(new Dictionary<string, object>()));
+            SetupHousingApiQueryCallback();
             
             var newLastRunTime = new DateTime(2018, 07, 5);
             var oldLastRunTime = new DateTime(2018, 06, 10);
@@ -128,7 +130,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             
             await _service.GetNewTenancies();
 
-            Assert.Contains(oldLastRunTime.ToCrmQueryFormat(), calledQuery);
+            Assert.Contains(oldLastRunTime.ToCrmQueryFormat(), _dynamics365Query);
         }
         
         [Fact]
@@ -182,7 +184,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             var newTenancies = await _service.GetNewTenancies();
 
             Assert.IsAssignableFrom<IEnumerable<NewTenancyResponse>>(newTenancies);
-            Assert.True(newTenancies.Count() == 0);
+            Assert.True(!newTenancies.Any());
         }
 
         private static IList<dynamic> GetNewTenanciesResponse()

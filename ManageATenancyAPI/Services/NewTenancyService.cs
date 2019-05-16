@@ -26,7 +26,7 @@ namespace ManageATenancyAPI.Services
             var lastRun = _tenancyRepository.GetLastRun();
             if (lastRun == null)
             {
-                return _clock.Now.AddDays(-1);
+                return _clock.UtcNow.AddDays(-1);
             }
             return lastRun.LastRun;
         }

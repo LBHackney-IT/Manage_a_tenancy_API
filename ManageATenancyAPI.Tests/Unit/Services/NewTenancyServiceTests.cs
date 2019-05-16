@@ -20,7 +20,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
         {
             _tenancyRepository = new Mock<ITenancyRepository>();
             _clock = new Mock<IClock>();
-            _clock.Setup(m => m.Now).Returns(DateTime.Now);
+            _clock.Setup(m => m.UtcNow).Returns(DateTime.Now);
             _service = new NewTenancyService(_tenancyRepository.Object, _clock.Object);
         }
 
@@ -51,7 +51,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             var today = new DateTime(2015, 10, 5, 12, 30, 25);
             var yesterday = new DateTime(2015, 10, 4, 12, 30, 25);
 
-            _clock.Setup(m => m.Now).Returns(today);
+            _clock.Setup(m => m.UtcNow).Returns(today);
             
             var result = _service.GetLastRetrieved();
             

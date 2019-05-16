@@ -48,7 +48,7 @@ namespace ManageATenancyAPI.Services
                 throw new TenancyServiceException();
             }
             
-            _newTenancyService.UpdateLastRetrieved(_clock.Now);
+            _newTenancyService.UpdateLastRetrieved(_clock.UtcNow);
             
             var response = JsonConvert.DeserializeObject<dynamic>(await result.Content.ReadAsStringAsync());
 

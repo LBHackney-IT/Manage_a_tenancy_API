@@ -69,7 +69,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
         }
         
         [Fact]
-        public void UpdateLastRetrieved_()
+        public void UpdateLastRetrieved_UpdatesRepository_WithCorrectValue()
         {
             var expected = new DateTime(2019, 06, 10);
             _tenancyRepository.Setup(m => m.UpdateLastRun(It.IsAny<DateTime>())).Verifiable();

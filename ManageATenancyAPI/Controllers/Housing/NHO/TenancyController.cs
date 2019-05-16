@@ -19,7 +19,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         }
 
         /// <summary>
-        /// Gets new tenancies recorded in the CRM in the last day.
+        /// Gets new tenancies recorded in the CRM since the last run, or in the last day where it hasn't been run before.
         /// </summary>
         /// <returns>A list of new tenancies. This could be an empty list.</returns>
         /// <response code="200">Successfully returned any new tenancies</response>

@@ -864,13 +864,18 @@ namespace ManageATenancyAPI.Helpers.Housing
             return "/api/data/v8.2/contacts(" + contactID + ")?$select=hackney_nextofkinname, hackney_nextofkinaddress,hackney_nextofkinrelationship,hackney_nextofkinotherphone,hackney_nextofkinemail,hackney_nextofkinmobile";
         }
 
+        public static string ToCrmQueryFormat(this DateTime dateTime)
+        {
+            return dateTime.ToString("yyyy-MM-ddTHH:mm:ssZ");
+        }
+        
         public static string GetNewTenanciesSinceDate(DateTime date)
         {
             var urlString = "/api/data/v8.2/accounts?fetchXml=";
             var fetchXml = $@"<fetch>
 	                            <entity name='account'>
                                     <filter>
-                                        <condition attribute='createdon' operator='gt' value='{date.ToString("yyyy-MM-ddTHH:mm:ssZ")}'/>
+                                        <condition attribute='createdon' operator='gt' value='{date.ToCrmQueryFormat()}'/>
                                     </filter>
 		                            <attribute name='accountid' />
 		                            <attribute name='createdon' />

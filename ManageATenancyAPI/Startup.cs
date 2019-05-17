@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,11 +11,11 @@ using System;
 using System.IO;
 using Hackney.InterfaceStubs;
 using ManageATenancyAPI.Configuration;
+using ManageATenancyAPI.Database;
 using ManageATenancyAPI.DbContext;
 using ManageATenancyAPI.Extension;
 using ManageATenancyAPI.Filters;
 using ManageATenancyAPI.Tests;
-using Microsoft.AspNetCore.Rewrite;
 using MyPropertyAccountAPI.Configuration;
 
 
@@ -43,6 +42,11 @@ namespace ManageATenancyAPI
             var uhCon = Configuration.GetSection("ConnectionStrings").GetValue<string>("UHWReportingWarehouse");
             services.AddDbContext<UHWWarehouseDbContext>(options =>
                 options.UseSqlServer(uhCon));
+            
+            var tenancyConnection = Configuration.GetSection("ConnectionStrings").GetValue<string>("TenancyDBConnection");
+            services.AddDbContext<TenancyContext>(options => 
+                options.UseSqlServer(tenancyConnection));
+            
             services.Configure<URLConfiguration>(Configuration.GetSection("URLs"));
             services.Configure<ConnStringConfiguration>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<AppConfiguration>(Configuration.GetSection("appConfigurations"));

@@ -17,10 +17,7 @@ namespace ManageATenancyAPI.Services
         public HackneyGetCRM365Token(IOptions<URLConfiguration> config)
         {
             configuration = config?.Value;
-            httpClient = new HttpClient
-            {
-                BaseAddress = new Uri(configuration.ManageATenancyAPIURL)
-            };
+            httpClient = new HttpClient();
         }
 
 
@@ -29,7 +26,7 @@ namespace ManageATenancyAPI.Services
             var response = new HttpResponseMessage();
             try
             {
-                response = await httpClient.GetAsync("/GetCRM365AccessToken");
+                response = await httpClient.GetAsync($"{configuration.HackneyAPIUrl}/GetCRM365AccessToken");
                 if (!response.IsSuccessStatusCode)
                     throw new GetCRM365TokenServiceException();
 
@@ -37,7 +34,7 @@ namespace ManageATenancyAPI.Services
                 var token = tokenJsonResponse["result"].ToString();
                 return token;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 response.StatusCode = HttpStatusCode.BadRequest;
                 throw new GetCRM365TokenServiceException();

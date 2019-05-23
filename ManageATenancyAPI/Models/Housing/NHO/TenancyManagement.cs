@@ -30,6 +30,5 @@ namespace ManageATenancyAPI.Models.Housing.NHO
         public string householdId { get; set; }
         public int processStage { get; set; }
         public int? reasonForStartingProcess { get; set; }
-        public DateTime? AccountCreatedOn { get; set; }
     }
 }

@@ -188,13 +188,6 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 {
                     tmiJObject.Add("hackney_household_Interactionid@odata.bind", " /hackney_households(" + interaction.householdId + ")");
                 }
-
-                // householdId This is require for TM process or TM post Visit Action
-                if (interaction.AccountCreatedOn.HasValue)
-                {
-                    tmiJObject.Add("createdon", $"{interaction.AccountCreatedOn}");
-                }
-
                 try
                 {
                     _logger.LogInformation($"Create Tenancy Management Interaction");

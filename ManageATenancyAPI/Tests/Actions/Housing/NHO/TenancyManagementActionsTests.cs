@@ -895,6 +895,7 @@ namespace ManageATenancyAPI.Tests.Actions.Housing.NHO
             tenancyObj.contactLarn = "LARN834210";
             tenancyObj.contactUPRN = null;
             tenancyObj.householdID = null;
+            tenancyObj.accountCreatedOn = null;
             tenancyObj.AnnotationList = new List<ExpandoObject>();
             dynamic annotation = new ExpandoObject();
             annotation.noteText = "Testing closure  at 21/12/2017 13:37:18 by  Test dev";

@@ -449,7 +449,7 @@ namespace ManageATenancyAPI.Helpers.Housing
                 {
                     queryParams += "and contains(address1_name, '" + address + "')";
                 }
-                else if (address.Length == 1 && !fliter && !string.IsNullOrEmpty(address[0]))
+                else if (address.Length == 1 && !fliter && !string.IsNullOrEmpty(address[0])) 
                 {
                     queryParams += "contains(address1_name, '" + address + "')";
                 }

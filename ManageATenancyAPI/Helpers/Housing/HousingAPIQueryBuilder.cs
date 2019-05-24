@@ -252,7 +252,10 @@ namespace ManageATenancyAPI.Helpers.Housing
                         <attribute name='hackney_larn' />
                         <attribute name='hackney_uprn' />
                         <attribute name='address1_line2' />
-                    </link-entity>
+                         <link-entity name='account' from='accountid' to='accountid' link-type='outer'>
+                        <attribute name='createdon' alias='accountCreatedOn' />
+                         </link-entity>
+                          </link-entity>
                     <link-entity name='hackney_estateofficerpatch' from='hackney_estateofficerpatchid' to='hackney_estateofficerpatchid' link-type='outer'>
                       <link-entity name='hackney_estateofficer' from='hackney_estateofficerid' to='hackney_patchid' link-type='outer'>
                         <attribute name='hackney_name' alias='OfficerFullName' />

@@ -707,8 +707,10 @@ namespace ManageATenancyAPI.Tests.Integration
             json.Append("null,");
             json.Append("\"householdID\":");
             json.Append("null,");
+            json.Append("\"accountCreatedOn\":");
+            json.Append("null,");
             json.Append("\"AnnotationList\":");
-            json.Append("["); json.Append("{");
+            json.Append("["); json.Append("{"); 
 
             json.Append("\"noteText\":"); json.Append("\"Testing closure  at 21/12/2017 13:37:18 by  Test dev\",");
             json.Append("\"annotationId\":"); json.Append("\"b6521622-54e6-e711-8111-7010bbbbbbbb\",");

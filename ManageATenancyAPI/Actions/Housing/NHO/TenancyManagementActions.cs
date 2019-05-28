@@ -778,7 +778,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      contactPropertyCautionaryAlert = response["contact3_x002e_hackney_propertycautionaryalert"],
                                      contactLarn = response["contact3_x002e_hackney_larn"],
                                      contactUPRN = response["contact3_x002e_hackney_uprn"],
-                                     householdID = response["_hackney_household_interactionid_value"]
+                                     householdID = response["_hackney_household_interactionid_value"],
+                                     accountCreatedOn=response["accountCreatedOn"]
 
                                  } into grp
                                  select new
@@ -821,6 +822,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      grp.Key.contactLarn,
                                      grp.Key.contactUPRN,
                                      grp.Key.householdID,
+                                     grp.Key.accountCreatedOn,
                                      Annotation = grp.ToList()
 
                                  });
@@ -868,6 +870,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 tenancyObj.contactLarn = response.contactLarn;
                 tenancyObj.contactUPRN = response.contactUPRN;
                 tenancyObj.householdID = response.householdID;
+                tenancyObj.accountCreatedOn = response.accountCreatedOn!=null? response.accountCreatedOn.ToString("yyyy-MM-dd HH:mm:ss") : null;
                 tenancyObj.AnnotationList = new List<ExpandoObject>();
 
                 foreach (var annotationResponse in response.Annotation)

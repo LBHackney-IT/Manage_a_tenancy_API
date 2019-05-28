@@ -767,6 +767,7 @@ namespace ManageATenancyAPI.Services.Housing
             value["contact3_x002e_birthdate"] = "01/01/1950";
             value["contact3_x002e_emailaddress1"] = "test@test.com";
             value["contact3_x002e_hackney_larn"] = "LARN834210";
+            value["contact3_x002e_createdon"] = "null";
 
 
             listJObject.Add(value);
@@ -819,7 +820,7 @@ namespace ManageATenancyAPI.Services.Housing
             value["contact3_x002e_birthdate"] = "01/01/1950";
             value["contact3_x002e_emailaddress1"] = "test@test.com";
             value["contact3_x002e_hackney_larn"] = "LARN834210";
-
+            value["accountCreatedOn"] = null;
             listJObject.Add(value);
             TenancyManagement.Add("value", listJObject);
 

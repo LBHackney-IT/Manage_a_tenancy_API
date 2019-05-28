@@ -257,17 +257,16 @@ namespace ManageATenancyAPI.Helpers.Housing
                         <attribute name='hackney_larn' />
                         <attribute name='hackney_uprn' />
                         <attribute name='address1_line2' />
-<<<<<<< HEAD
+
                         <attribute name='hackney_title' />
                         <attribute name='hackney_cautionaryalert' />
                         <attribute name='hackney_propertycautionaryalert' />
-                    </link-entity>
-=======
-                         <link-entity name='account' from='accountid' to='accountid' link-type='outer'>
+                   
+                    <link-entity name='account' from='accountid' to='accountid' link-type='outer'>
                         <attribute name='createdon' alias='accountCreatedOn' />
                          </link-entity>
-                          </link-entity>
->>>>>>> d8eddd7... added createdon date for ITV as account createdOn date for the customers
+                       </link-entity>
+
                     <link-entity name='hackney_estateofficerpatch' from='hackney_estateofficerpatchid' to='hackney_estateofficerpatchid' link-type='outer'>
                       <link-entity name='hackney_estateofficer' from='hackney_estateofficerid' to='hackney_patchid' link-type='outer'>
                         <attribute name='hackney_name' alias='OfficerFullName' />

@@ -99,6 +99,7 @@ workflows:
   build-and-deploy:
       jobs:
       - check
+      - test
       - aws-ecr/build_and_push_image:
           name: build_and_push_api
           dockerfile: ./Dockerfile

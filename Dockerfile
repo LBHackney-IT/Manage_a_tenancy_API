@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-sdk as builder
+FROM mcr.microsoft.com/dotnet/core/sdk:2.1 as builder
 
 WORKDIR /src
 COPY *.sln ./
@@ -13,7 +13,7 @@ COPY . .
 RUN dotnet publish ./ManageATenancyAPI/ManageATenancyAPI.csproj -c Release -o out
 
 # swap to a smallar image to reduce file size
-FROM microsoft/dotnet:2.1-runtime
+FROM mcr.microsoft.com/dotnet/core/sdk:2.1
 
 # set required envs for New Relic
 ENV CORECLR_ENABLE_PROFILING=1 \

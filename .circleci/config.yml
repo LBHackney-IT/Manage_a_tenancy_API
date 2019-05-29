@@ -49,14 +49,24 @@ jobs:
       - run:
           name: build api
           command: docker build ./
+  test:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - aws-cli/install
+      - aws-cli/configure:
+          aws-access-key-id: AWS_ID_KEY
+          aws-secret-access-key: AWS_SECRET_KEY
+          aws-region: AWS_REGION
+      - aws-ecr/ecr-login
+      - setup_remote_docker
       - run:
           name: build tests
           command: docker-compose build manage-a-tenancy-api-test
-
       - run:
           name: Run tests
           command: docker-compose up manage-a-tenancy-api-test
-
   deploy-to-development:
     docker:
       - image: circleci/python:3.7

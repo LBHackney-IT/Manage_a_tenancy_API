@@ -18,7 +18,7 @@ services:
         ports:
             - "1433:1433"
     uh-simulator-db:
-        image: 775052747630.dkr.ecr.eu-west-2.amazonaws.com/hackney/universal-housing-simulator-loaded:latest
+        image: 775052747630.dkr.ecr.eu-west-2.amazonaws.com/hackney/universal-housing-simulator-loaded:d50c34f60732767684365c5934ce10170b3fa5ad
         ports:
             - "1533:1433"
     manage-a-tenancy-api-test:

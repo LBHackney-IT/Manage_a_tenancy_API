@@ -22,7 +22,10 @@ services:
         ports:
             - "1533:1433"
     manage-a-tenancy-api-test:
-        image: uh-simulator
+        image: manage-a-tenancy-api-test
+        build:
+            context: .
+            dockerfile: ./ManageATenancyAPI.Tests/Dockerfile
         environment:
             - ConnectionStrings__ManageATenancyDatabase=Server=localhost,1433;Database=TMProcess;MultipleActiveResultSets=true;User ID=sa;Password=Rooty-Tooty"
             - ConnectionStrings__UHWReportingWarehouse=Server=localhost,1533;Database=uhsimulator;MultipleActiveResultSets=true;User ID=sa;Password=Rooty-Tooty"

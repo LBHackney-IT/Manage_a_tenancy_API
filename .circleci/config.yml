@@ -73,7 +73,7 @@ jobs:
     steps:
       - deploy-env:
           cluster-name: 'hackney-apps-development'
-          service-name: 'manage-a-tenancy-development'
+          service-name: 'manage-a-tenancy-api-development'
           image-tag: "$CIRCLE_SHA1"
 
   deploy-to-staging:
@@ -91,7 +91,7 @@ jobs:
     steps:
       - deploy-env:
           cluster-name: 'ecs-hackney-apps'
-          service-name:  'manage-a-tenancy-production'
+          service-name:  'manage-a-tenancy-api-production'
           image-tag: "$CIRCLE_SHA1"
 
 workflows:
@@ -112,15 +112,15 @@ workflows:
           tag: "${CIRCLE_SHA1}"
           requires:
             - check
-          filters:
-            branches:
-              only: develop
+          # filters:
+          #   branches:
+          #     only: develop
       - deploy-to-development:
           requires:
             - build_and_push_api
-          filters:
-            branches:
-              only: develop
+          # filters:
+          #   branches:
+          #     only: develop
       - permit-staging-release:
           type: approval
           requires:

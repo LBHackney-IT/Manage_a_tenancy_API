@@ -73,7 +73,7 @@ jobs:
     steps:
       - deploy-env:
           cluster-name: 'hackney-apps-development'
-          service-name: 'man-a-tenancy-api-development'
+          service-name: 'man-a-tenancy-development'
           image-tag: "$CIRCLE_SHA1"
 
   deploy-to-staging:
@@ -82,7 +82,7 @@ jobs:
     steps:
       - deploy-env:
           cluster-name: 'hackney-apps-staging'
-          service-name:  'man-a-tenancy-api-staging'
+          service-name:  'man-a-tenancy-staging'
           image-tag: "$CIRCLE_SHA1"
 
   deploy-to-production:
@@ -91,7 +91,7 @@ jobs:
     steps:
       - deploy-env:
           cluster-name: 'ecs-hackney-apps'
-          service-name:  'man-a-tenancy-api-production'
+          service-name:  'man-a-tenancy-production'
           image-tag: "$CIRCLE_SHA1"
 
 workflows:

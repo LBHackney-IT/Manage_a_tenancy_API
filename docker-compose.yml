@@ -11,16 +11,16 @@ services:
             - tm-process-db
             - uh-simulator-db
         environment:
-            - ConnectionStrings__ManageATenancyDatabase=Server=localhost,1433;Database=TMProcess;MultipleActiveResultSets=true;User ID=sa;Password=Rooty-Tooty"
-            - ConnectionStrings__UHWReportingWarehouse=Server=localhost,1533;Database=uhsimulator;MultipleActiveResultSets=true;User ID=sa;Password=Rooty-Tooty"
+            - ConnectionStrings__ManageATenancyDatabase=Server=localhost,1533;Database=TMProcess;MultipleActiveResultSets=true;User ID=sa;Password=Rooty-Tooty"
+            - ConnectionStrings__UHWReportingWarehouse=Server=localhost,1433;Database=uhsimulator;MultipleActiveResultSets=true;User ID=sa;Password=Rooty-Tooty"
     tm-process-db:
         image: 775052747630.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/tm-process-db:mssql-2017-loaded
         ports:
-            - "1433:1433"
+            - "1533:1433"
     uh-simulator-db:
         image: 775052747630.dkr.ecr.eu-west-2.amazonaws.com/hackney/universal-housing-simulator-loaded:d50c34f60732767684365c5934ce10170b3fa5ad
         ports:
-            - "1533:1433"
+            - "1433:1433"
     manage-a-tenancy-api-test:
         image: manage-a-tenancy-api-test
         build:

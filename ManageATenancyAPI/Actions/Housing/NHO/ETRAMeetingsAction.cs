@@ -80,8 +80,19 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     var incidentquery = HousingAPIQueryBuilder.PostIncidentQuery();
                     _client.DefaultRequestHeaders.Add("Prefer", "return=representation");
 
+
+                    ///
+                    ///
+                    ///
+                    /// SUBMIT SERVICE REQUEST
+                    ///
+                    ///
+                    ///
+                    ///
                     var createResponseIncident =
                         await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Post, incidentquery, sr);
+
+
                     if (createResponseIncident.IsSuccessStatusCode)
                     {
                         JObject createdServiceRequest = JsonConvert.DeserializeObject<JObject>(

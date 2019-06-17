@@ -6,50 +6,86 @@ using System.Threading.Tasks;
 
 namespace ManageATenancyAPI.Models.Housing.NHO
 {
-    public class ETRA
+    public interface IETRAMeeting
     {
      
         [Required]
-        public string estateOfficerId { get; set; }
-        public string subject { get; set; }
+        string estateOfficerId { get; set; }
+        string subject { get; set; }
         [Required]
-        public string estateOfficerName { get; set; }
+        string estateOfficerName { get; set; }
         [Required]
-        public string officerPatchId { get; set; }
+        string officerPatchId { get; set; }
         [Required]
-        public string areaName { get; set; }
+        string areaName { get; set; }
         [Required]
-        public string managerId { get; set; }
-        public CRMServiceRequest ServiceRequest { get; set; }
-        public string processType { get; set; }
+        string managerId { get; set; }
+        CRMServiceRequest ServiceRequest { get; set; }
+        /// <summary>
+        /// 0 - ManageTenancy Interaction - requests that aren't process
+        /// 1 - ETRA Meeting
+        /// 2 - Post Visit action
+        /// 3 - ETRA Issue
+        /// </summary>
+        string processType { get; set; }
         [Required]
-        public string TRAId { get; set; }
+        string TRAId { get; set; }
     }
 
-    public class ETRAIssue
+    public class ETRAIssue: IETRAMeeting
     {
+        //ETRA MEETING
         [Required]
         public string estateOfficerId { get; set; }
+        /// <summary>
+        /// CRM ENtity Subjects.subjectid 72873b3e-5255-e911-a97a-002248072cc3
+        /// Generic subject id is used to Creating Meeting = c1f72d01-28dc-e711-8115-70106faa6a11" (dev)
+        /// </summary>
         public string subject { get; set; }
         [Required]
         public string estateOfficerName { get; set; }
+        /// <summary>
+        /// Patch - ID - Can be swapped , still links to AREA ID
+        /// </summary>
         [Required]
         public string officerPatchId { get; set; }
+        /// <summary>
+        /// AreaId - AREA ID Taken from Login information
+        /// </summary>
         [Required]
         public string areaName { get; set; }
         [Required]
         public string managerId { get; set; }
         public CRMServiceRequest ServiceRequest { get; set; }
+
+        /// <summary>
+        /// ALWAYS 3
+        /// </summary>
         [Required]
         public string processType { get; set; }
+
         [Required]
         public string TRAId { get; set; }
-       
+
+        //ETRA ISSUE
+        /// <summary>
+        /// Name of TRA block within an estate or the estate itself
+        /// </summary>
         public string issueLocation { get; set; }
        
+
+        /// <summary>
+        /// Tenancy Management Interaction Id for Meeting
+        /// </summary>
         public string parentInteractionId { get; set; }
+
+        /// <summary>
+        /// ALWAYS 28 - ETRA
+        /// </summary>
         [Required]
         public string natureOfEnquiry { get; set; }
+
+        /// Issue Type Id - 10000111 - NOT NAME
         [Required]
         public string enquirySubject { get; set; }
     }

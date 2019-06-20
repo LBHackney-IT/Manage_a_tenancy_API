@@ -6,6 +6,30 @@ using System.Threading.Tasks;
 
 namespace ManageATenancyAPI.Models.Housing.NHO
 {
+    public interface IMeetingAttendees
+    {
+        string Councillors { get; set; }
+        string HackneyStaff { get; set; }
+
+    }
+    public interface IMeetingIssue
+    {
+        string IssueTypeId { get; set; }
+        string IssueLocationName { get; set; }
+        string IssueNote { get; set; }
+    }
+
+    public interface ICreateETRAMeeting
+    {
+        int TRAId { get; set; }
+        IMeetingAttendees MeetingAttendance { get; set; }
+
+        IList<IMeetingIssue> Issues { get; set; }
+
+
+        bool IsConfirmed { get; set; }
+    }
+
     public interface IETRAMeeting
     {
      

@@ -120,64 +120,13 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
             if (Utils.NullToString(incidentid) != "" && Utils.NullToString(ticketnumber) != "")
             {
-                var tmiJObject = new JObject();
-
-                //incidentid
-                if (Utils.NullToString(incidentid) != "")
-                {
-                    tmiJObject["hackney_incidentId@odata.bind"] = "/incidents(" + incidentid + ")";
-                }
-                //Ticket number
-                if (Utils.NullToString(ticketnumber) != "")
-                {
-                    tmiJObject.Add("hackney_name", ticketnumber);
-                }
-                // Parent Interaction (This is self referencing with TM Interactions when we need to create an issue, which needs to link to a parent ETRA meeting
-                if (!string.IsNullOrEmpty(meetingInfo.parentInteractionId))
-                {
-                    tmiJObject.Add("hackney_parent_interactionid@odata.bind", " /hackney_tenancymanagementinteractionses(" + meetingInfo.parentInteractionId + ")");
-                }
-                if (Utils.NullToString(meetingInfo.subject) != "")
-                {
-                    tmiJObject["hackney_subjectId@odata.bind"] = "/subjects(" + meetingInfo.subject + ")";
-                }
-                if (Utils.NullToString(meetingInfo.estateOfficerId) != "")
-                {
-                    tmiJObject["hackney_estateofficer_createdbyid@odata.bind"] = "/hackney_estateofficers(" + meetingInfo.estateOfficerId + ")";
-                }
-                if (!string.IsNullOrEmpty(meetingInfo.officerPatchId))
-                {
-                    tmiJObject["hackney_estateofficerpatchid@odata.bind"] = "/hackney_estateofficerpatchs(" + meetingInfo.officerPatchId + ")";
-                }
-                if (!string.IsNullOrEmpty(meetingInfo.managerId))
-                {
-                    tmiJObject["hackney_managerpropertypatchid@odata.bind"] = "/hackney_estatemanagerareas(" + meetingInfo.managerId + ")";
-                }
-                if (!string.IsNullOrEmpty(meetingInfo.areaName))
-                {
-                    tmiJObject["hackney_areaname"] = meetingInfo.areaName;
-                }
-                    //add nature of enquiry
-                tmiJObject.Add("hackney_natureofenquiry", meetingInfo.natureOfEnquiry);
-                //add subject
-                tmiJObject.Add("hackney_enquirysubject", meetingInfo.enquirySubject);
-                // Process Type :- 0 Interaction , 1 TM Process , 2 Post Visit Action, 3 ETRA meeting issue
-                if (meetingInfo.processType == "3")
-                {
-                    tmiJObject.Add("hackney_issuelocation", meetingInfo.issueLocation);
-                    var dueDate = await _dateService.GetIssueResponseDueDate(DateTime.Now, 3);
-                    tmiJObject.Add("hackney_issuedeadlinedate", dueDate);
-                }
-
-                tmiJObject.Add("hackney_processtype", meetingInfo.processType);
-                tmiJObject.Add("hackney_process_stage", meetingInfo.processType);
-                tmiJObject.Add("hackney_traid", meetingInfo.TRAId);
+                JObject tmiJObject = await CreateTenancyManagementInteractionJObject(meetingInfo, incidentid, ticketnumber);
 
                 try
                 {
                     _logger.LogInformation($"Create Tenancy Management Interaction");
                     var incidentquery = HousingAPIQueryBuilder.PostETRAMeetingQuery();
-                    var createResponseInteraction = await _ManageATenancyAPI.postHousingAPI(_client,incidentquery, tmiJObject);
+                    var createResponseInteraction = await _ManageATenancyAPI.postHousingAPI(_client, incidentquery, tmiJObject);
 
                     if (createResponseInteraction != null)
                     {
@@ -213,6 +162,63 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 _logger.LogError($" Service Request could not be created");
                 throw new MissingTenancyInteractionRequestException();
             }
+        }
+
+        private async Task<JObject> CreateTenancyManagementInteractionJObject(ETRAIssue meetingInfo, string incidentid, string ticketnumber)
+        {
+            var tmiJObject = new JObject();
+
+            //incidentid
+            if (Utils.NullToString(incidentid) != "")
+            {
+                tmiJObject["hackney_incidentId@odata.bind"] = "/incidents(" + incidentid + ")";
+            }
+            //Ticket number
+            if (Utils.NullToString(ticketnumber) != "")
+            {
+                tmiJObject.Add("hackney_name", ticketnumber);
+            }
+            // Parent Interaction (This is self referencing with TM Interactions when we need to create an issue, which needs to link to a parent ETRA meeting
+            if (!string.IsNullOrEmpty(meetingInfo.parentInteractionId))
+            {
+                tmiJObject.Add("hackney_parent_interactionid@odata.bind", " /hackney_tenancymanagementinteractionses(" + meetingInfo.parentInteractionId + ")");
+            }
+            if (Utils.NullToString(meetingInfo.subject) != "")
+            {
+                tmiJObject["hackney_subjectId@odata.bind"] = "/subjects(" + meetingInfo.subject + ")";
+            }
+            if (Utils.NullToString(meetingInfo.estateOfficerId) != "")
+            {
+                tmiJObject["hackney_estateofficer_createdbyid@odata.bind"] = "/hackney_estateofficers(" + meetingInfo.estateOfficerId + ")";
+            }
+            if (!string.IsNullOrEmpty(meetingInfo.officerPatchId))
+            {
+                tmiJObject["hackney_estateofficerpatchid@odata.bind"] = "/hackney_estateofficerpatchs(" + meetingInfo.officerPatchId + ")";
+            }
+            if (!string.IsNullOrEmpty(meetingInfo.managerId))
+            {
+                tmiJObject["hackney_managerpropertypatchid@odata.bind"] = "/hackney_estatemanagerareas(" + meetingInfo.managerId + ")";
+            }
+            if (!string.IsNullOrEmpty(meetingInfo.areaName))
+            {
+                tmiJObject["hackney_areaname"] = meetingInfo.areaName;
+            }
+            //add nature of enquiry
+            tmiJObject.Add("hackney_natureofenquiry", meetingInfo.natureOfEnquiry);
+            //add subject
+            tmiJObject.Add("hackney_enquirysubject", meetingInfo.enquirySubject);
+            // Process Type :- 0 Interaction , 1 TM Process , 2 Post Visit Action, 3 ETRA meeting issue
+            if (meetingInfo.processType == "3")
+            {
+                tmiJObject.Add("hackney_issuelocation", meetingInfo.issueLocation);
+                var dueDate = await _dateService.GetIssueResponseDueDate(DateTime.Now, 3);
+                tmiJObject.Add("hackney_issuedeadlinedate", dueDate);
+            }
+
+            tmiJObject.Add("hackney_processtype", meetingInfo.processType);
+            tmiJObject.Add("hackney_process_stage", meetingInfo.processType);
+            tmiJObject.Add("hackney_traid", meetingInfo.TRAId);
+            return tmiJObject;
         }
 
         public async Task<object> GetETRAIssuesByTRAorETRAMeeting(string id, bool retrieveIssuesPerMeeting)
@@ -363,7 +369,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
             var issueUpdateObject = new JObject
             {
-                { "hackney_servicearea", request.ServiceAreaId },
+                { "hackney_servicearea", request.ServiceAreaId }, ///Repairs Team // Cleaning Team, CRM Entity Service Areas
                 { "hackney_process_stage", (int)request.IssueStage }
             };
 

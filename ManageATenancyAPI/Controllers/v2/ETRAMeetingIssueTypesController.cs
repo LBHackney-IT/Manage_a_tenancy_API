@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using ManageATenancyAPI.UseCases.IssueType.GetAllIssueTypes;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +10,11 @@ namespace ManageATenancyAPI.Controllers.v2
     [Route("v1/etra/meeting/issue-types")]
     public class ETRAMeetingIssueTypesController : Controller
     {
-        private readonly IGetEtraMeetingIssueTypesUseCase _getEtraMeetingIssueTypesUseCase;
+        private readonly IGetAllIssueTypesUseCase _getAllIssueTypesUse;
 
-        public ETRAMeetingIssueTypesController(IGetEtraMeetingIssueTypesUseCase getEtraMeetingIssueTypesUseCase)
+        public ETRAMeetingIssueTypesController(IGetAllIssueTypesUseCase getAllIssueTypesUse)
         {
-            _getEtraMeetingIssueTypesUseCase = getEtraMeetingIssueTypesUseCase;
+            _getAllIssueTypesUse = getAllIssueTypesUse;
         }
 
         /// <summary>
@@ -24,6 +26,17 @@ namespace ManageATenancyAPI.Controllers.v2
         public async Task Get()
         {
             
+        }
+
+        public class GetAllIssueTypesOutputModel
+        {
+            public IList<MeetingIssueType> Issues { get; set; }
+        }
+
+        public class MeetingIssueType
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
         }
     }
 }

@@ -7,13 +7,6 @@ using ManageATenancyAPI.Database.Models;
 
 namespace ManageATenancyAPI.Gateways.GetAllTRAs
 {
-
-
-    public interface IGetAllTRAsGateway
-    {
-        Task<IList<TRA>> GetAllTRAsAsync(CancellationToken cancellationToken);
-    }
-
     public class GetAllTRAsGateway: IGetAllTRAsGateway
     {
         public async Task<IList<TRA>> GetAllTRAsAsync(CancellationToken cancellationToken)

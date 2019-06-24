@@ -19,8 +19,11 @@ namespace ManageATenancyAPI.UseCases.TRA.GetAllTRAs
 
         public async Task<GetAllTRAsOutputModel> ExecuteAsync(CancellationToken cancellationToken)
         { 
-            await _gateway.GetAllTRAs(cancellationToken).ConfigureAwait(false);
-            return new GetAllTRAsOutputModel();
+            var tras = await _gateway.GetAllTRAsAsync(cancellationToken).ConfigureAwait(false);
+            return new GetAllTRAsOutputModel
+            {
+                TRAs = tras
+            };
         }
     }
 }

@@ -11,12 +11,12 @@ namespace ManageATenancyAPI.Gateways.GetAllTRAs
 
     public interface IGetAllTRAsGateway
     {
-        Task<IList<TRA>> GetAllTRAs(CancellationToken cancellationToken);
+        Task<IList<TRA>> GetAllTRAsAsync(CancellationToken cancellationToken);
     }
 
     public class GetAllTRAsGateway: IGetAllTRAsGateway
     {
-        public async Task<IList<TRA>> GetAllTRAs(CancellationToken cancellationToken)
+        public async Task<IList<TRA>> GetAllTRAsAsync(CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

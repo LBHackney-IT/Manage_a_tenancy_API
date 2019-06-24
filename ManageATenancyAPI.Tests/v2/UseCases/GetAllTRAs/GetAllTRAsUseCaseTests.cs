@@ -26,19 +26,19 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.GetAllTRAs
         public async Task calls_gateway()
         {
             //arrange
-            _mockGateway.Setup(s => s.GetAllTRAs(It.IsAny<CancellationToken>())).ReturnsAsync(new List<TRA>());
+            _mockGateway.Setup(s => s.GetAllTRAsAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<TRA>());
             //act
             var outputModel = await _classUnderTest.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
             //assert
             
-            _mockGateway.Verify(s=> s.GetAllTRAs(It.IsAny<CancellationToken>()), Times.Once);
+            _mockGateway.Verify(s=> s.GetAllTRAsAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
         public async Task creates_output_model()
         {
             //arrange
-            _mockGateway.Setup(s => s.GetAllTRAs(It.IsAny<CancellationToken>())).ReturnsAsync(new List<TRA>());
+            _mockGateway.Setup(s => s.GetAllTRAsAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<TRA>());
             //act
             var outputModel = await _classUnderTest.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
             //assert
@@ -50,7 +50,10 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.GetAllTRAs
         public async Task data_from_gateway_gets_returned()
         {
             //arrange
-            _mockGateway.Setup(s => s.GetAllTRAs(It.IsAny<CancellationToken>())).ReturnsAsync(new List<TRA>());
+            _mockGateway.Setup(s => s.GetAllTRAsAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<TRA>
+            {
+                new TRA()
+            });
             //act
             var outputModel = await _classUnderTest.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
             //assert

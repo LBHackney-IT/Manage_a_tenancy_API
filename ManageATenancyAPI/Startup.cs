@@ -16,6 +16,7 @@ using ManageATenancyAPI.DbContext;
 using ManageATenancyAPI.Extension;
 using ManageATenancyAPI.Filters;
 using ManageATenancyAPI.Tests;
+using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using MyPropertyAccountAPI.Configuration;
 
 
@@ -70,6 +71,8 @@ namespace ManageATenancyAPI
 
             services.AddScoped<ICryptoMethods, Hackney.Plugin.Crypto.CryptoMethods>();
             services.AddScoped<AdminEnabledFilter>();
+            var context = new TenancyContext(null);
+            context.Database.Migrate();
 
         }
 

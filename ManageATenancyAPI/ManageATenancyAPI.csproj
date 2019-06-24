@@ -18,7 +18,6 @@
     <Folder Include="Plugins\" />
     <Folder Include="Tests\Controllers\" />
     <Folder Include="UseCases\IssueType\" />
-    <Folder Include="UseCases\TRA\GetAllTRAs\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

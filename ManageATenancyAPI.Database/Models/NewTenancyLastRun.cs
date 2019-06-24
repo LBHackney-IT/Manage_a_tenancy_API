@@ -35,7 +35,8 @@ namespace ManageATenancyAPI.Database.Models
 
     public class BaseEntity : IBaseEntity
     {
-        [Key] public int Id { get; set; }
+        [Key]
+        public int Id { get; set; }
         
 
         public DateTime LastModified { get; set; }
@@ -69,6 +70,7 @@ namespace ManageATenancyAPI.Database.Models
 
     public class HousingAreaPatch : NamedBaseEntity
     {
+        public string CrmId { get; set; }
         public ICollection<TRA> TRAs { get; set; }
     }
 }

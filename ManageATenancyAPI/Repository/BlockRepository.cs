@@ -29,5 +29,10 @@ namespace ManageATenancyAPI.Repository
                 return fullResults.ToList();
             }
         }
+
+        public async Task<Video> GetAllVideos()
+        {
+
+        }
     }
 }

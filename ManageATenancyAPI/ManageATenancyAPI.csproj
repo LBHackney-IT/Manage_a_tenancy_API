@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -17,6 +17,8 @@
   <ItemGroup>
     <Folder Include="Plugins\" />
     <Folder Include="Tests\Controllers\" />
+    <Folder Include="UseCases\IssueType\" />
+    <Folder Include="UseCases\TRA\GetAllTRAs\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

@@ -287,26 +287,4 @@ private readonly ILoggerAdapter<ETRAMeetingsAction> _actionsLogger;
             return Ok(meetings);
         }
     }
-
-    [Produces("application/json")]
-    [Route("v1/etra/meeting")]
-    public class ETRAMeetingController : Controller
-    {
-        public ETRAMeetingController()
-        {
-
-        }
-
-        /// <summary>
-        /// Creates an ETRA meeting
-        /// </summary>
-        /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
-        /// <response code="201">A successfully created ETRA meeting request</response>
-        [Route("Save")]
-        [HttpPost]
-        public async Task<JsonResult> Post([FromBody] ETRAIssue etraMeeting)
-        {
-            return null;
-        }
-    }
 }

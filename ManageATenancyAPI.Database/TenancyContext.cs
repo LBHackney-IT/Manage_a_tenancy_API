@@ -19,9 +19,15 @@ namespace ManageATenancyAPI.Database
         public TenancyContext(DbContextOptions options)
             : base(options)
         { }
-        
+
+        public DbSet<HousingArea> HousingAreas { get; set; }
+        public DbSet<HousingAreaPatch> HousingAreaPatches { get; set; }
+
         public DbSet<NewTenancyLastRun> NewTenancyLastRun { get; set; }
+        public DbSet<TRA> TRAs { get; set; }
         
+
+
         public new void SaveChanges()
         {
             base.SaveChanges();

@@ -52,6 +52,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.1.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.9.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
@@ -71,10 +72,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ManageATenancyAPI\ManageATenancyAPI.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="v2\UseCases\" />
   </ItemGroup>
 
 </Project>

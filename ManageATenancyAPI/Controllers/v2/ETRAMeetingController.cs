@@ -5,7 +5,7 @@ using ManageATenancyAPI.Models.Housing.NHO;
 using ManageATenancyAPI.UseCases;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using Microsoft.AspNetCore.Mvc;
-using
+
 
 namespace ManageATenancyAPI.Controllers.v2
 {
@@ -13,11 +13,11 @@ namespace ManageATenancyAPI.Controllers.v2
     [Route("v1/etra/meeting")]
     public class ETRAMeetingController : Controller
     {
-        private readonly IEtraSaveMeetingUseCase _etraSaveMeetingUseCase;
+        
 
-        public ETRAMeetingController(IEtraSaveMeetingUseCase etraSaveMeetingUseCase)
+        public ETRAMeetingController()
         {
-            _etraSaveMeetingUseCase = etraSaveMeetingUseCase;
+            
         }
 
         ///// <summary>

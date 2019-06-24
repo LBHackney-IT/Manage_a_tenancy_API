@@ -1,0 +1,27 @@
+﻿<ProjectConfiguration>
+  <Settings>
+    <IgnoredTests>
+      <FixtureTestSelector>
+        <FixtureName>ManageATenancyAPI.Tests.Actions.ETRAMeetingsActionTest</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>ManageATenancyAPI.Tests.Integration.Repositories.BlockRepositoryTests</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>ManageATenancyAPI.Tests.Integration.Repositories.EstateRepositoryTests</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>ManageATenancyAPI.Tests.Integration.Repositories.TraEstateRepositoryTests</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>ManageATenancyAPI.Tests.Integration.Repositories.TraRepositoryTests</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>ManageATenancyAPI.Tests.Integration.Repositories.TraRoleAssignmentRepositoryTests</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>ManageATenancyAPI.Tests.Integration.Repositories.TraRoleRepositoryTests</FixtureName>
+      </FixtureTestSelector>
+    </IgnoredTests>
+  </Settings>
+</ProjectConfiguration>

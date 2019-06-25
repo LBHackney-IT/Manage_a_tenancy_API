@@ -23,6 +23,19 @@ namespace ManageATenancyAPI
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseSetting("detailedErrors", "true")
                 .UseIISIntegration()
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    //order of heirarchy for overwriting
+                    config.SetBasePath(Directory.GetCurrentDirectory());
+
+                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+                    config.AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
+                    config.AddEnvironmentVariables();
+
+                    config.AddCommandLine(args);
+                })
                 .UseStartup<Startup>()
                 .Build();
     }

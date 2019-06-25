@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hackney.InterfaceStubs;
 using ManageATenancyAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols;
 using MyPropertyAccountAPI.Configuration;
@@ -19,6 +20,7 @@ using MyPropertyAccountAPI.Configuration;
 
 namespace ManageATenancyAPI.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/[controller]")]
     public class OfficerAccountsController : Controller

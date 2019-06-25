@@ -1,12 +1,14 @@
 ﻿using System;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MyPropertyAccountAPI.Configuration;
 
 namespace ManageATenancyAPI.Controllers
 {
+    [Authorize]
     [ServiceFilter(typeof(AdminEnabledFilter))]
     [Route("api/config")]
     public class ConfigController : Controller

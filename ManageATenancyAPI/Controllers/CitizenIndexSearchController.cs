@@ -15,12 +15,14 @@ using ManageATenancyAPI.Models;
 using ManageATenancyAPI.Services;
 using ManageATenancyAPI.Services.Housing;
 using ManageATenancyAPI.Validators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MyPropertyAccountAPI.Configuration;
 
 namespace ManageATenancyAPI.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/[controller]")]
     public class CitizenIndexSearchController : Controller

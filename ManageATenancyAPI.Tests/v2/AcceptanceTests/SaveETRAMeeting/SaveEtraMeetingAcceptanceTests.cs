@@ -5,6 +5,7 @@ using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using Xunit;
 using FluentAssertions;
+using ManageATenancyAPI.Tests.v2.Helper;
 
 namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
 {
@@ -54,8 +55,9 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             //act
             var response = await _controller.Post(inputModel).ConfigureAwait(false);
             //assert
-            response.Should().NotBeNull();
-            response.MeetingId.Should().NotBeEmpty();
+            var outputModel = response.GetResponseType<SaveETRAMeetingOutputModel>();
+            outputModel.Should().NotBeNull();
+            outputModel.MeetingId.Should().NotBeEmpty();
         }
     }
 }

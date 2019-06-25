@@ -111,11 +111,9 @@ namespace ManageATenancyAPI
             env.ConfigureNLog("NLog.config");
             app.UseCors("AllowAny");
 
-
             app.UseAuthentication();
 
             app.UseMvc();
-
             app.UseDeveloperExceptionPage();
 
                 //Legacy support for old servers

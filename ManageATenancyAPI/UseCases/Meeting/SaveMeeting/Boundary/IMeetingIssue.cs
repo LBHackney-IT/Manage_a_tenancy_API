@@ -3,13 +3,13 @@
     /// <summary>
     /// Interface representing a meeting issue
     /// </summary>
-    public interface IMeetingIssue
+    public class MeetingIssue
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        string IssueTypeId { get; set; }
-        string IssueLocationName { get; set; }
-        string IssueNote { get; set; }
+        public string IssueTypeId { get; set; }
+        public string IssueLocationName { get; set; }
+        public string IssueNote { get; set; }
     }
 }

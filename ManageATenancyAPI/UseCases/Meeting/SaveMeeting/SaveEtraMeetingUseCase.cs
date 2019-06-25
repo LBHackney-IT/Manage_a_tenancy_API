@@ -13,10 +13,9 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
 
         }
 
-        public async Task<EtraSaveMeetingsResponse> ExecuteAsync(EtraSaveMeetingsRequest request, CancellationToken cancellationToken)
+        public Task<SaveETRAMeetingOutputModel> ExecuteAsync(SaveETRAMeetingInputModel request, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
-            //var createEtraMeeting = _etraMeetingsAction.CreateETRAMeeting(etraMeeting).Result;
         }
     }
 }

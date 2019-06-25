@@ -20,7 +20,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.GetAllTRAs
         {
             _gateway = new GetAllTRAsGateway();
             _useCase = new GetAllTRAsUseCase(_gateway);
-            _classUnderTest = new TRAController(_useCase);
+            _classUnderTest = new TRAController(_useCase, null);
         }
 
         [Fact]

@@ -18,7 +18,7 @@ namespace ManageATenancyAPI.Tests.v2.Controllers
         public TRAControllerTests()
         {
             _mockUseCase = new Mock<IGetAllTRAsUseCase>();
-            _classUnderTest = new TRAController(_mockUseCase.Object);
+            _classUnderTest = new TRAController(_mockUseCase.Object, null);
         }
 
         [Fact]

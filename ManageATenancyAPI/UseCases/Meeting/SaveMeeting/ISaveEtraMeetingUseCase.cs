@@ -2,7 +2,7 @@
 
 namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
 {
-    public interface ISaveEtraMeetingUseCase : IUseCaseWithRequestResponse<EtraSaveMeetingsRequest, EtraSaveMeetingsResponse>
+    public interface ISaveEtraMeetingUseCase : IUseCaseWithRequestResponse<SaveETRAMeetingInputModel, SaveETRAMeetingOutputModel>
     {
 
     }

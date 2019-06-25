@@ -8,6 +8,6 @@
         /// <summary>
         /// 
         /// </summary>
-        public ISaveETRAMeeting EtraMeeting { get; set; }
+        public SaveETRAMeetingInputModel EtraMeetingInputModel { get; set; }
     }
 }

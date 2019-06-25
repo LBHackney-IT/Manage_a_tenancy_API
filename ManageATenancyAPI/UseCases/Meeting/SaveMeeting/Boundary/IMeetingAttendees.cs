@@ -5,24 +5,24 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
     /// <summary>
     /// Interface describing attendees of a meeting
     /// </summary>
-    public interface IMeetingAttendees
+    public class MeetingAttendees
     {
         /// <summary>
         /// Optional ideally comma separated list of Councillors as a record of who attended
         /// </summary>
-        string Councillors { get; set; }
+        public string Councillors { get; set; }
 
         /// <summary>
         /// Optional ideally comma seperated list of Hackney staff as a record of who attended 
         /// </summary>
-        string HackneyStaff { get; set; }
+        public string HackneyStaff { get; set; }
 
         /// <summary>
         /// Number of attendees to the meeting that aren't Councillors or Hackney staff, must be greater than 1
         /// </summary>
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Please enter a value bigger than {1}")]
-        int Attendees { get; set; }
+        public int Attendees { get; set; }
 
     }
 }

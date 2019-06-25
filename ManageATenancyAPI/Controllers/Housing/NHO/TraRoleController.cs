@@ -6,10 +6,12 @@ using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Models;
 using ManageATenancyAPI.Models.Housing.NHO;
 using ManageATenancyAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ManageATenancyAPI.Controllers.Housing.NHO
 {
+    [Authorize]
     [Route("v1/[controller]")]
     public class TraRoleController : Controller
     {

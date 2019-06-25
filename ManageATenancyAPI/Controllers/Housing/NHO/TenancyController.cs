@@ -4,9 +4,11 @@ using ManageATenancyAPI.Models.Housing.NHO;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ManageATenancyAPI.Controllers.Housing.NHO
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/[controller]")]
     public class TenancyController : Controller

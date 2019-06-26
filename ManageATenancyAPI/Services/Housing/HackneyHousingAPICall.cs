@@ -69,9 +69,8 @@ namespace ManageATenancyAPI.Services.Housing
             var response = new HttpResponseMessage();
             try
             {
-                
                 var content = new StringContent(jObject.ToString(), Encoding.UTF8, "application/json");
-                response = client.PostAsync(query, content).Result;
+                response = await client.PostAsync(query, content).ConfigureAwait(false) ;
                
                 if (!response.IsSuccessStatusCode)
                 {

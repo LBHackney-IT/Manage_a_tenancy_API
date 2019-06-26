@@ -10,6 +10,7 @@ using System.Configuration;
 using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Database;
 using ManageATenancyAPI.Gateways.SaveEtraMeeting;
+using ManageATenancyAPI.Gateways.SaveEtraMeetingIssue;
 using ManageATenancyAPI.Helpers;
 using ManageATenancyAPI.Repository.Interfaces;
 using ManageATenancyAPI.Services.Interfaces;
@@ -74,6 +75,8 @@ namespace ManageATenancyAPI.Extension
 
             services.AddScoped<ISaveEtraMeetingUseCase, SaveEtraMeetingUseCase>();
             services.AddScoped<ISaveEtraMeetingGateway, SaveEtraMeetingGateway>();
+
+            services.AddScoped<ISaveEtraMeetingIssueGateway, SaveEtraMeetingIssueGateway>();
 
             services.AddScoped<IGetAllTRAsUseCase, GetAllTRAsUseCase>();
 

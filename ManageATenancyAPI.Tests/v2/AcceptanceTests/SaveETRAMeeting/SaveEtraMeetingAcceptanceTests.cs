@@ -25,9 +25,8 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
     {
         private TRAController _classUnderTest;
         private ISaveEtraMeetingUseCase _useCase;
-        private ISaveEtraMeetingGateway _saveMeetingGateway;
         private IJWTService _jwtService;
-        private IETRAMeetingsAction _etraMeetingsAction;
+
         public SaveEtraMeetingAcceptanceTests()
         {
             var serviceProvider = BuildServiceProvider();
@@ -65,10 +64,8 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             //arrange
             var inputModel = new SaveETRAMeetingInputModel
             {
-                MeetingAttendance = new MeetingAttendees
-                {
-                    Attendees = 1
-                },
+                TRAId = 3,
+                MeetingName = "New ETRA meeting",
                 Issues = new List<MeetingIssue>
                 {
                     new MeetingIssue
@@ -100,12 +97,16 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             outputModel.MeetingId.Should().NotBeEmpty();
         }
 
-        [Fact]
-        public async Task can_save_etra_meeting_with_issues()
+        [Theory]
+        [InlineData(1, "100000501", "De Beauvoir Estate  1 - 126 Fermain Court", "Bad things have happened please fix")]
+        [InlineData(2, "100000501", "De Beauvoir Estate  127 -256 Fermain Court", "Bad things have happened please fix")]
+        public async Task can_save_etra_meeting_with_issues(int attendees, string issueTypeId, string issueLocationName, string note)
         {
             //arrange
             var inputModel = new SaveETRAMeetingInputModel
             {
+                TRAId = 3,
+                MeetingName = "New ETRA meeting",
                 MeetingAttendance = new MeetingAttendees
                 {
                     Attendees = 1
@@ -114,15 +115,15 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
                 {
                     new MeetingIssue
                     {
-                        IssueTypeId = "100000501",
-                        IssueLocationName = "De Beauvoir Estate  1-126 Fermain Court",
-                        IssueNote = "Bad things have happened please fix"
+                        IssueTypeId = issueTypeId,
+                        IssueLocationName = issueLocationName,
+                        IssueNote = note
                     },
                     new MeetingIssue
                     {
-                        IssueTypeId = "100000501",
-                        IssueLocationName = "De Beauvoir Estate  1-126 Fermain Court",
-                        IssueNote = "Bad things have happened please fix 2"
+                        IssueTypeId = issueTypeId,
+                        IssueLocationName = $"{issueLocationName} 2",
+                        IssueNote = $"{note} 2"
                     }
                 },
                 SignOff = new SignOff

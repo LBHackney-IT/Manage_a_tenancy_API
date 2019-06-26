@@ -14,5 +14,6 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
         public Guid MeetingId { get; set; }
 
         public IList<MeetingIssueOutputModel> Issues { get; set; }
+
     }
 }

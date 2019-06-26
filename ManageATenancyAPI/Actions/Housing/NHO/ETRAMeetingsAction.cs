@@ -46,7 +46,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             _dateService = dateService;
 
         }
-        public async Task<HackneyResult<JObject>> CreateETRAMeeting(ETRAIssue meetingInfo)
+        public async Task<CreateETRAMeetingActionResponse> CreateETRAMeeting(ETRAIssue meetingInfo)
         {
             _logger.LogInformation($"Create Service Request");
 
@@ -138,13 +138,15 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                         JObject apiResponse =
                             JsonConvert.DeserializeObject<JObject>(await createResponseInteraction.Content.ReadAsStringAsync());
 
-                        JObject response = new JObject();
-                        response.Add("interactionid", apiResponse["hackney_tenancymanagementinteractionsid"]);
-                        response.Add("incidentId", incidentid);
-                        response.Add("ticketnumber", ticketnumber);
-                        response.Add("annotationId", annotationResult);
+                        var response = new CreateETRAMeetingActionResponse
+                        {
+                            IncidentId = Guid.Parse(incidentid),
+                            InteractionId =  Guid.Parse(apiResponse["hackney_tenancymanagementinteractionsid"].ToString()),
+                            TicketNumber = ticketnumber,
+                            AnnotationId = annotationResult
+                        };
 
-                        return HackneyResult<JObject>.Create(response);
+                        return response;
                     }
                     else
                     {

@@ -51,7 +51,7 @@ namespace ManageATenancyAPI.Gateways.SaveEtraMeeting
                 processType = "1"
             };
             var response = await _etraMeetingsAction.CreateETRAMeeting(etraIssue).ConfigureAwait(false);
-            return Guid.Empty;
+            return response.IncidentId.GetValueOrDefault();
         }
     }
 

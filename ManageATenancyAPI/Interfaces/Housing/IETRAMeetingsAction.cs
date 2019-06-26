@@ -10,7 +10,7 @@ namespace ManageATenancyAPI.Interfaces.Housing
     public interface IETRAMeetingsAction
     {
         Task<ETRAMeeting> GetMeeting(string id);
-        Task<HackneyResult<JObject>> CreateETRAMeeting(ETRAIssue meetingInfo);
+        Task<CreateETRAMeetingActionResponse> CreateETRAMeeting(ETRAIssue meetingInfo);
         Task<object> GetETRAIssuesByTRAorETRAMeeting(string id, bool retrieveIssuesPerMeeting);
         Task<ETRAUpdateResponse> UpdateIssue(UpdateETRAIssue etraIssueToBeUpdated);
         Task<FinaliseETRAMeetingResponse> FinaliseMeeting(string id, FinaliseETRAMeetingRequest request);

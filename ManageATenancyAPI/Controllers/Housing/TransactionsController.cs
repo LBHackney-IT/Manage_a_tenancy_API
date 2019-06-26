@@ -14,11 +14,13 @@ using ManageATenancyAPI.Services.Housing;
 using Microsoft.AspNetCore.Mvc;
 using ManageATenancyAPI.Actions.Housing;
 using ManageATenancyAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using MyPropertyAccountAPI.Configuration;
 
 namespace ManageATenancyAPI.Controllers.Housing
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/[controller]")]
     public class TransactionsController : Controller

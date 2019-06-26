@@ -15,11 +15,13 @@ using ManageATenancyAPI.Models.Housing.NHO;
 using ManageATenancyAPI.Services;
 using ManageATenancyAPI.Services.Housing;
 using ManageATenancyAPI.Validators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using MyPropertyAccountAPI.Configuration;
 
 namespace ManageATenancyAPI.Controllers.Housing.NHO
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/[controller]")]
     public class TenancyManagementInteractionsController : Controller

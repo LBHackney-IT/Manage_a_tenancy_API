@@ -17,6 +17,7 @@ using ManageATenancyAPI.Repository;
 using ManageATenancyAPI.Services;
 using ManageATenancyAPI.Services.Housing;
 using ManageATenancyAPI.Validators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MyPropertyAccountAPI.Configuration;
@@ -25,6 +26,7 @@ using Newtonsoft.Json.Linq;
 
 namespace ManageATenancyAPI.Controllers.Housing.NHO
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/[controller]")]
     public class TRAController : Controller

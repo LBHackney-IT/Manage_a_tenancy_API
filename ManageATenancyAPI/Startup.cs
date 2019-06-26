@@ -9,6 +9,7 @@ using NLog.Web;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
+using System.Text;
 using Hackney.InterfaceStubs;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.Database;
@@ -17,7 +18,10 @@ using ManageATenancyAPI.Extension;
 using ManageATenancyAPI.Filters;
 using ManageATenancyAPI.Tests;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using MyPropertyAccountAPI.Configuration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 namespace ManageATenancyAPI
@@ -74,6 +78,29 @@ namespace ManageATenancyAPI
             var context = new TenancyContext(null);
             context.Database.Migrate();
 
+            services.AddAuthentication(x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    var secret = Configuration["HmacSecret"];
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = key,
+                        RequireExpirationTime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = false,
+                        ValidateLifetime = true,
+                        ValidateAudience = false
+                    };
+            });
+
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,6 +113,9 @@ namespace ManageATenancyAPI
             app.AddNLogWeb();
             env.ConfigureNLog("NLog.config");
             app.UseCors("AllowAny");
+
+            app.UseAuthentication();
+
             app.UseMvc();
             app.UseDeveloperExceptionPage();
 

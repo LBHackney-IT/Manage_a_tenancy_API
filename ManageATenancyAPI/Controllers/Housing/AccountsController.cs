@@ -13,11 +13,13 @@ using ManageATenancyAPI.Services.Housing;
 using ManageATenancyAPI.Services;
 using ManageATenancyAPI.Factories;
 using ManageATenancyAPI.Validators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using MyPropertyAccountAPI.Configuration;
 
 namespace ManageATenancyAPI.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/[controller]")]
     public class AccountsController : Controller

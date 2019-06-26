@@ -15,6 +15,7 @@ using ManageATenancyAPI.Services;
 using System.Configuration;
 using ManageATenancyAPI.Models;
 using Hackney.InterfaceStubs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols;
 using MyPropertyAccountAPI.Configuration;
@@ -23,6 +24,7 @@ using MyPropertyAccountAPI.Configuration;
 
 namespace ManageATenancyAPI.Controllers.Housing.NHO
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/[controller]")]
     public class LoginController : Controller

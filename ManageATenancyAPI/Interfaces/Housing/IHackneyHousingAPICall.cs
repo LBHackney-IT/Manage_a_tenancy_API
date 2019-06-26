@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ManageATenancyAPI.Models;
+﻿using System.Threading.Tasks;
 using System.Net.Http;
-using ManageATenancyAPI.Models;
-using ManageATenancyAPI.Models.Housing.NHO;
 using Newtonsoft.Json.Linq;
 
 namespace ManageATenancyAPI.Interfaces.Housing

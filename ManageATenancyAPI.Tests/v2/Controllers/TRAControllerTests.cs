@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using ManageATenancyAPI.Controllers.v2;
 using ManageATenancyAPI.Database.Models;
+using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.UseCases.TRA.GetAllTRAs;
 using Xunit;
 using Moq;
@@ -14,11 +15,13 @@ namespace ManageATenancyAPI.Tests.v2.Controllers
     {
         private readonly TRAController _classUnderTest;
         private readonly Mock<IGetAllTRAsUseCase> _mockUseCase;
+        private readonly Mock<IJWTService> _mockJWTService;
 
         public TRAControllerTests()
         {
             _mockUseCase = new Mock<IGetAllTRAsUseCase>();
-            _classUnderTest = new TRAController(_mockUseCase.Object, null);
+            _mockJWTService = new Mock<IJWTService>();
+            _classUnderTest = new TRAController(_mockJWTService.Object, _mockUseCase.Object, null);
         }
 
         [Fact]

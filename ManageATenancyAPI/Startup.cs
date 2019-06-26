@@ -75,8 +75,6 @@ namespace ManageATenancyAPI
 
             services.AddScoped<ICryptoMethods, Hackney.Plugin.Crypto.CryptoMethods>();
             services.AddScoped<AdminEnabledFilter>();
-            var context = new TenancyContext(null);
-            context.Database.Migrate();
 
             services.AddAuthentication(x =>
                 {

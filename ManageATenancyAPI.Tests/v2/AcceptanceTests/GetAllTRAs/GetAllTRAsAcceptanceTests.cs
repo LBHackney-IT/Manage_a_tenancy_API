@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using ManageATenancyAPI.Controllers.v2;
 using ManageATenancyAPI.Gateways.GetAllTRAs;
+using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.UseCases.TRA.GetAllTRAs;
 using Xunit;
 
@@ -15,12 +16,14 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.GetAllTRAs
         private TRAController _classUnderTest;
         private IGetAllTRAsUseCase _useCase;
         private IGetAllTRAsGateway _gateway;
+        private IJWTService _jwtService;
         
         public GetAllTRAsAcceptanceTests()
         {
             _gateway = new GetAllTRAsGateway();
             _useCase = new GetAllTRAsUseCase(_gateway);
-            _classUnderTest = new TRAController(_useCase, null);
+            _jwtService = new JWTService();
+            _classUnderTest = new TRAController(_jwtService, _useCase, null);
         }
 
         [Fact]

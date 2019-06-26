@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ManageATenancyAPI.Gateways.SaveEtraMeeting;
+using ManageATenancyAPI.Services.JWT.Models;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 
 namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
@@ -15,9 +16,19 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
             _saveEtraMeetingGateway = saveEtraMeetingGateway;
         }
 
-        public Task<SaveETRAMeetingOutputModel> ExecuteAsync(SaveETRAMeetingInputModel request, CancellationToken cancellationToken)
+        public async Task<SaveETRAMeetingOutputModel> ExecuteAsync(SaveETRAMeetingInputModel request, IManageATenancyClaims claims, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var etraMeeting = new ETRAMeeting
+            {
+                MeetingName = request.MeetingName,
+                TraId = request.TRAId,
+            };
+            var meetingId = await _saveEtraMeetingGateway.CreateEtraMeeting(etraMeeting, claims, cancellationToken).ConfigureAwait(false);
+
+            return new SaveETRAMeetingOutputModel
+            {
+                MeetingId = meetingId
+            };
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
 {
@@ -11,5 +12,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
         /// Refers to the TenancyInteractionId in Dynamics 365
         /// </summary>
         public Guid MeetingId { get; set; }
+
+        
     }
 }

@@ -6,11 +6,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using ManageATenancyAPI.Controllers.v2;
+using ManageATenancyAPI.Services.JWT;
+using ManageATenancyAPI.Services.JWT.Models;
 using ManageATenancyAPI.Tests.v2.Helper;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Moq;
 using Xunit;
 
@@ -20,16 +23,23 @@ namespace ManageATenancyAPI.Tests.v2.Controllers
     {
         private readonly TRAController _classUnderTest;
         private readonly Mock<ISaveEtraMeetingUseCase> _mockUseCase;
+        private readonly IJWTService _jwtService;
         
 
         public TRAControllerSaveMeetingTests()
         {
             _mockUseCase = new Mock<ISaveEtraMeetingUseCase>();
-            _classUnderTest = new TRAController(null, _mockUseCase.Object);
+            _jwtService = new JWTService();
+            _classUnderTest = new TRAController(_jwtService, null, _mockUseCase.Object);
+
+            var headers = new KeyValuePair<string, StringValues>("Authorization",
+                "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IkhTMjU2IiwidHlwIjoiSldUIn0.eyJzdWIiOiJtaG9sZGVuIiwianRpIjoiIiwiQ3JlYXRlIG1lZXRpbmciOiJ7XCJlc3RhdGVPZmZpY2VyTG9naW5JZFwiOlwiMWYxYmI3MjctY2UxYi1lODExLTgxMTgtNzAxMDZmYWE2YTMxXCIsXCJvZmZpY2VySWRcIjpcIjFmMWJiNzI3LWNlMWItZTgxMS04MTE4LTcwMTA2ZmFhNmEzMVwiLFwidXNlcm5hbWVcIjpcIm1ob2xkZW5cIixcImZ1bGxOYW1lXCI6XCJNZWdhbiBIb2xkZW5cIixcImFyZWFNYW5hZ2VySWRcIjpcIjU1MTJjNDczLTk5NTMtZTgxMS04MTI2LTcwMTA2ZmFhZjhjMVwiLFwib2ZmaWNlclBhdGNoSWRcIjpcIjhlOTU4YTM3LTg2NTMtZTgxMS04MTI2LTcwMTA2ZmFhZjhjMVwiLFwiYXJlYUlkXCI6XCI2XCJ9IiwibmJmIjowLCJleHAiOjE1OTMwNzY2MjYsImlhdCI6MTU2MTQ1NDIyNiwiaXNzIjoiT3V0c3lzdGVtcyIsImF1ZCI6Ik1hbmFnZUFUZW5hbmN5In0.d7e_bDz1JnZdXjDASng67HWmC7s466lfQEDK-weyXCQ");
+
             _classUnderTest.ControllerContext = new ControllerContext
             {
                 HttpContext = new DefaultHttpContext()
             };
+            _classUnderTest.Request.Headers.Add(headers);
         }
 
         [Fact]
@@ -38,7 +48,7 @@ namespace ManageATenancyAPI.Tests.v2.Controllers
             //arrange
             var inputModel = SaveMeetingInputModelHelper.Create();
 
-            _mockUseCase.Setup(s => s.ExecuteAsync(inputModel, It.IsAny<CancellationToken>())).ReturnsAsync(new SaveETRAMeetingOutputModel
+            _mockUseCase.Setup(s => s.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SaveETRAMeetingOutputModel
             {
                 MeetingId = Guid.NewGuid()
             });
@@ -46,7 +56,7 @@ namespace ManageATenancyAPI.Tests.v2.Controllers
             var outputModel = await _classUnderTest.Post(inputModel);
 
             //assert
-            _mockUseCase.Verify(s => s.ExecuteAsync(It.Is<SaveETRAMeetingInputModel>(m=> m == inputModel),It.IsAny<CancellationToken>()), Times.Once);
+            _mockUseCase.Verify(s => s.ExecuteAsync(It.Is<SaveETRAMeetingInputModel>(m=> m == inputModel),It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -54,7 +64,7 @@ namespace ManageATenancyAPI.Tests.v2.Controllers
         {
             var inputModel = SaveMeetingInputModelHelper.Create();
 
-            _mockUseCase.Setup(s => s.ExecuteAsync(inputModel, It.IsAny<CancellationToken>())).ReturnsAsync(new SaveETRAMeetingOutputModel
+            _mockUseCase.Setup(s => s.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SaveETRAMeetingOutputModel
             {
                 MeetingId = Guid.NewGuid()
             });

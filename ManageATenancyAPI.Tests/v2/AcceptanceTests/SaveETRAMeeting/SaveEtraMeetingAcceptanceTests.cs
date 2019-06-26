@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ManageATenancyAPI.Controllers.v2;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using Xunit;
 using FluentAssertions;
-using ManageATenancyAPI.Actions.Housing.NHO;
-using ManageATenancyAPI.Gateways.SaveEtraMeeting;
-using ManageATenancyAPI.Interfaces.Housing;
-using ManageATenancyAPI.Logging;
 using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.Tests.v2.Helper;
 using Microsoft.AspNetCore.Hosting.Internal;

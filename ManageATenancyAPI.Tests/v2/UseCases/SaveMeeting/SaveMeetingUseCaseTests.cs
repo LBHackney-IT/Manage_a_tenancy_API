@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using ManageATenancyAPI.Gateways.SaveEtraMeeting;
-using ManageATenancyAPI.Gateways.SaveEtraMeetingIssue;
+using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting;
+using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingAttendance;
+using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue;
 using ManageATenancyAPI.Services.JWT.Models;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
@@ -18,11 +19,15 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
         private ISaveEtraMeetingUseCase _classUnderTest;
         private Mock<ISaveEtraMeetingGateway> _mockSaveMeetingGateway;
         private Mock<ISaveEtraMeetingIssueGateway> _mockSaveMeetingIssueGateway;
+        private Mock<ISaveEtraMeetingAttendanceGateway> _mockSaveMeetingAttendanceGateway;
+        private Mock<ISaveEtraMeetingFinaliseMeetingGateway> _mockSaveMeetingFinaliseMeetingGateway;
         public SaveMeetingUseCaseTests()
         {
             _mockSaveMeetingGateway = new Mock<ISaveEtraMeetingGateway>();
             _mockSaveMeetingIssueGateway = new Mock<ISaveEtraMeetingIssueGateway>();
-            _classUnderTest = new SaveEtraMeetingUseCase(_mockSaveMeetingGateway.Object, _mockSaveMeetingIssueGateway.Object);
+            _mockSaveMeetingAttendanceGateway = new Mock<ISaveEtraMeetingAttendanceGateway>();
+            _mockSaveMeetingFinaliseMeetingGateway = new Mock<ISaveEtraMeetingFinaliseMeetingGateway>();
+            _classUnderTest = new SaveEtraMeetingUseCase(_mockSaveMeetingGateway.Object, _mockSaveMeetingIssueGateway.Object, _mockSaveMeetingAttendanceGateway.Object, _mockSaveMeetingFinaliseMeetingGateway.Object);
         }
 
         [Theory]
@@ -64,9 +69,9 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
         }
 
         [Theory]
-        [InlineData(1, "100000501", "De Beauvoir Estate  1 - 126 Fermain Court", "Bad things have happened please fix")]
-        [InlineData(2, "100000501", "De Beauvoir Estate  127 -256 Fermain Court", "Bad things have happened please fix")]
-        public async Task calls_save_meeting_issue_gateway(int attendees, string issueTypeId, string issueLocationName, string note)
+        [InlineData( "100000501", "De Beauvoir Estate  1 - 126 Fermain Court", "Bad things have happened please fix")]
+        [InlineData( "100000501", "De Beauvoir Estate  127 -256 Fermain Court", "Bad things have happened please fix")]
+        public async Task calls_save_meeting_issue_gateway(string issueTypeId, string issueLocationName, string note)
         {
             //arrange
             var inputModel = new SaveETRAMeetingInputModel
@@ -105,9 +110,9 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
         }
 
         [Theory]
-        [InlineData(1, "100000501", "De Beauvoir Estate  1 - 126 Fermain Court", "Bad things have happened please fix")]
-        [InlineData(2, "100000501", "De Beauvoir Estate  127 -256 Fermain Court", "Bad things have happened please fix")]
-        public async Task returns_issues_with_id(int attendees, string issueTypeId, string issueLocationName, string note)
+        [InlineData( "100000501", "De Beauvoir Estate  1 - 126 Fermain Court", "Bad things have happened please fix")]
+        [InlineData( "100000501", "De Beauvoir Estate  127 -256 Fermain Court", "Bad things have happened please fix")]
+        public async Task returns_issues_with_id(string issueTypeId, string issueLocationName, string note)
         {
             //arrange
             var inputModel = new SaveETRAMeetingInputModel
@@ -181,5 +186,50 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
                 issue.IssueNote.Should().Be(expectedIssue.IssueNote);
             }
         }
+
+        [Theory]
+        [InlineData(1, "Jeff JohnJeff", "Person b ")]
+        [InlineData(2, "Jeff NotJohnJeff", "Person A")]
+        public async Task calls_record_attendance_gateway(int attendees, string councillors, string hackneyStaff)
+        {
+            //arrange
+            var inputModel = new SaveETRAMeetingInputModel
+            {
+
+                MeetingAttendance = new MeetingAttendees
+                {
+                    Attendees = attendees,
+                    Councillors = councillors,
+                    HackneyStaff = hackneyStaff
+                },
+            };
+            //act
+            await _classUnderTest.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), CancellationToken.None).ConfigureAwait(false);
+            //assert
+            _mockSaveMeetingAttendanceGateway.Verify(s => s.CreateEtraAttendance(It.IsAny<ETRAMeeting>(), It.Is<MeetingAttendees>(m => m == inputModel.MeetingAttendance), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Theory]
+        [InlineData("chair", "Jeff JohnJeff")]
+        [InlineData("secretary", "Jeff NotJohnJeff")]
+        public async Task calls_finalise_meeting_gateway(string role, string name)
+        {
+            //arrange
+            var inputModel = new SaveETRAMeetingInputModel
+            {
+
+                SignOff = new SignOff
+                {
+                    Role = role,
+                    Signature = "",
+                    Name = name
+                }
+            };
+            //act
+            await _classUnderTest.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), CancellationToken.None).ConfigureAwait(false);
+            //assert
+            _mockSaveMeetingFinaliseMeetingGateway.Verify(s => s.FinaliseMeeting(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
     }
 }

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ManageATenancyAPI.Gateways.SaveEtraMeeting;
-using ManageATenancyAPI.Gateways.SaveEtraMeetingIssue;
+using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting;
+using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingAttendance;
+using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue;
 using ManageATenancyAPI.Services.JWT.Models;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -14,11 +15,18 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
     {
         private readonly ISaveEtraMeetingGateway _saveEtraMeetingGateway;
         private readonly ISaveEtraMeetingIssueGateway _saveEtraMeetingIssueGateway;
+        private readonly ISaveEtraMeetingAttendanceGateway _saveEtraMeetingAttendanceGateway;
+        private readonly ISaveEtraMeetingFinaliseMeetingGateway _saveEtraMeetingFinaliseMeetingGateway;
 
-        public SaveEtraMeetingUseCase(ISaveEtraMeetingGateway saveEtraMeetingGateway, ISaveEtraMeetingIssueGateway saveEtraMeetingIssueGateway)
+        public SaveEtraMeetingUseCase(ISaveEtraMeetingGateway saveEtraMeetingGateway, 
+            ISaveEtraMeetingIssueGateway saveEtraMeetingIssueGateway, 
+            ISaveEtraMeetingAttendanceGateway saveEtraMeetingAttendanceGateway,
+            ISaveEtraMeetingFinaliseMeetingGateway saveEtraMeetingFinaliseMeetingGateway)
         {
             _saveEtraMeetingGateway = saveEtraMeetingGateway;
             _saveEtraMeetingIssueGateway = saveEtraMeetingIssueGateway;
+            _saveEtraMeetingAttendanceGateway = saveEtraMeetingAttendanceGateway;
+            _saveEtraMeetingFinaliseMeetingGateway = saveEtraMeetingFinaliseMeetingGateway;
         }
 
         public async Task<SaveETRAMeetingOutputModel> ExecuteAsync(SaveETRAMeetingInputModel request, IManageATenancyClaims claims, CancellationToken cancellationToken)
@@ -46,6 +54,8 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
                     outputModel.Issues.Add(issue);
                 }
             }
+
+            await _saveEtraMeetingAttendanceGateway.CreateEtraAttendance(etraMeeting, request.MeetingAttendance, cancellationToken).ConfigureAwait(false);
 
             return outputModel;
         }

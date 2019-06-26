@@ -15,6 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Gateways\SaveMeeting\SaveEtraMeetingFinaliseMeeting\" />
     <Folder Include="NewFolder\" />
     <Folder Include="Plugins\" />
     <Folder Include="Tests\Controllers\" />

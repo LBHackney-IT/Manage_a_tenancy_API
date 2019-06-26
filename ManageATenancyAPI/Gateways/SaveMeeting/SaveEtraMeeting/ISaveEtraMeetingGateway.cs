@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ManageATenancyAPI.Services.JWT.Models;
 
-namespace ManageATenancyAPI.Gateways.SaveEtraMeeting
+namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting
 {
     public interface ISaveEtraMeetingGateway
     {

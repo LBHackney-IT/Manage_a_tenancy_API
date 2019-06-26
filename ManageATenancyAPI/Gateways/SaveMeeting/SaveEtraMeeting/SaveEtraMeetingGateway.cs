@@ -6,7 +6,7 @@ using ManageATenancyAPI.Models;
 using ManageATenancyAPI.Models.Housing.NHO;
 using ManageATenancyAPI.Services.JWT.Models;
 
-namespace ManageATenancyAPI.Gateways.SaveEtraMeeting
+namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting
 {
     public class SaveEtraMeetingGateway: ISaveEtraMeetingGateway
     {

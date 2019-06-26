@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ManageATenancyAPI.Interfaces.Housing;
@@ -33,5 +31,4 @@ namespace ManageATenancyAPI.Gateways.SaveEtraMeeting
         public string MeetingName { get; set; }
         public int TraId { get; set; }
     }
-    
 }

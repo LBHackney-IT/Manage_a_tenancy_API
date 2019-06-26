@@ -11,6 +11,8 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
     {
         [Required]
         public int TRAId { get; set; }
+        [Required]
+        public string MeetingName { get; set; }
         public MeetingAttendees MeetingAttendance { get; set; }
 
         public IList<MeetingIssue> Issues { get; set; }

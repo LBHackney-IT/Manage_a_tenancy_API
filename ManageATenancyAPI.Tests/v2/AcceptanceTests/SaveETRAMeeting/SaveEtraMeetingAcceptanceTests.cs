@@ -5,6 +5,7 @@ using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using Xunit;
 using FluentAssertions;
+using ManageATenancyAPI.Gateways.SaveEtraMeeting;
 using ManageATenancyAPI.Tests.v2.Helper;
 
 namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
@@ -13,9 +14,10 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
     {
         private TRAController _controller;
         private ISaveEtraMeetingUseCase _useCase;
+        private ISaveEtraMeetingGateway _saveMeetingGateway;
         public SaveEtraMeetingAcceptanceTests()
         {
-            _useCase = new SaveEtraMeetingUseCase();
+            _useCase = new SaveEtraMeetingUseCase(_saveMeetingGateway);
             _controller = new TRAController(null, _useCase);
         }
 

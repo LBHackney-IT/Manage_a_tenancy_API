@@ -1,9 +1,11 @@
-﻿using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 
 namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
 {
-    public interface ISaveEtraMeetingUseCase : IUseCaseWithRequestResponse<SaveETRAMeetingInputModel, SaveETRAMeetingOutputModel>
+    public interface ISaveEtraMeetingUseCase 
     {
-
+        Task<SaveETRAMeetingOutputModel> ExecuteAsync(SaveETRAMeetingInputModel request, CancellationToken cancellationToken);
     }
 }

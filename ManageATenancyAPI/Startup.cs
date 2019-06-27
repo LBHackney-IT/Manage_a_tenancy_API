@@ -16,7 +16,9 @@ using ManageATenancyAPI.Database;
 using ManageATenancyAPI.DbContext;
 using ManageATenancyAPI.Extension;
 using ManageATenancyAPI.Filters;
+using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting;
 using ManageATenancyAPI.Tests;
+using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MyPropertyAccountAPI.Configuration;
@@ -40,7 +42,7 @@ namespace ManageATenancyAPI
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-
+            
 
             //   var connString = Configuration.GetSection("ConnectionStrings");
             var uhCon = Configuration.GetSection("ConnectionStrings").GetValue<string>("UHWReportingWarehouse");
@@ -54,6 +56,9 @@ namespace ManageATenancyAPI
             services.Configure<URLConfiguration>(Configuration.GetSection("URLs"));
             services.Configure<ConnStringConfiguration>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<AppConfiguration>(Configuration.GetSection("appConfigurations"));
+            //S3 related
+            services.Configure<JpegPersistenceServiceConfiguration>(Configuration.GetSection("JpegPersistenceServiceConfiguration"));
+            services.Configure<S3Configuration>(Configuration.GetSection("S3Configuration"));
 
             services.AddMvc();
             services.AddSwaggerGen(c =>

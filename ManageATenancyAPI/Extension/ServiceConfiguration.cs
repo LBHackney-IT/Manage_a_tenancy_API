@@ -9,10 +9,16 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Database;
+using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting;
+using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingAttendance;
+using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue;
+using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting;
 using ManageATenancyAPI.Helpers;
 using ManageATenancyAPI.Repository.Interfaces;
 using ManageATenancyAPI.Services.Interfaces;
+using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.Tests;
+using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 
 namespace ManageATenancyAPI.Extension
 {
@@ -64,6 +70,17 @@ namespace ManageATenancyAPI.Extension
 
             services.AddTransient(typeof(ITRARepository), typeof(TRARepository));
             services.AddTransient(typeof(IUHWWarehouseRepository), typeof(UHWWarehouseRepository));
+
+            services.AddScoped<IJWTService, JWTService>();
+
+            services.AddScoped<ISaveEtraMeetingUseCase, SaveEtraMeetingUseCase>();
+            services.AddScoped<ISaveEtraMeetingGateway, SaveEtraMeetingGateway>();
+            services.AddScoped<ISaveEtraMeetingIssueGateway, SaveEtraMeetingIssueGateway>();
+            services.AddScoped<ISaveEtraMeetingAttendanceGateway, SaveEtraMeetingAttendanceGateway>();
+            services.AddScoped<ISaveEtraMeetingSignOffMeetingGateway, SaveEtraMeetingSignOffMeetingGateway>();
+
+            services.AddScoped<IJpegPersistenceService, JpegPersistenceService>();
+
         }
     }
 }

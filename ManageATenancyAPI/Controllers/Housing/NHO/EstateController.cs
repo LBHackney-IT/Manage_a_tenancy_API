@@ -27,6 +27,11 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             _blockAction = blockAction;
         }
 
+        /// <summary>
+        /// Location of Issue - list
+        /// </summary>
+        /// <param name="traId"></param>
+        /// <returns></returns>
         [Route("estate/tra/{traId}")]
         [HttpGet]
         public async Task<HackneyResult<List<Estate>>> GetEstatesByTra(int traId)

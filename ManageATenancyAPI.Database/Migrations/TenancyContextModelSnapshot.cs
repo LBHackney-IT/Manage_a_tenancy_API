@@ -15,9 +15,11 @@ namespace ManageATenancyAPI.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            
 
             modelBuilder.Entity("ManageATenancyAPI.Database.Models.NewTenancyLastRun", b =>
                 {
@@ -31,6 +33,8 @@ namespace ManageATenancyAPI.Database.Migrations
 
                     b.ToTable("NewTenancyLastRun");
                 });
+
+            
 #pragma warning restore 612, 618
         }
     }

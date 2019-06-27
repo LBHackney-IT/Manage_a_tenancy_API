@@ -8,39 +8,39 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
-    <None Remove="Scripts\Createdatabase.ps1" />
-    <None Remove="Scripts\manage-a-tenancy-data.sql" />
-    <None Remove="Scripts\manage-a-tenancy-schema.sql" />
-    <None Remove="Scripts\uh-warehouse-data.sql" />
-    <None Remove="Scripts\uh-warehouse-schema.sql" />
+    <None Remove="v1\Scripts\Createdatabase.ps1" />
+    <None Remove="v1\Scripts\manage-a-tenancy-data.sql" />
+    <None Remove="v1\Scripts\manage-a-tenancy-schema.sql" />
+    <None Remove="v1\Scripts\uh-warehouse-data.sql" />
+    <None Remove="v1\Scripts\uh-warehouse-schema.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Scripts\manage-a-tenancy-schema.sql">
+    <Content Include="v1\Scripts\manage-a-tenancy-schema.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Scripts\uh-warehouse-data.sql">
+    <Content Include="v1\Scripts\uh-warehouse-data.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Scripts\uh-warehouse-schema.sql">
+    <Content Include="v1\Scripts\uh-warehouse-schema.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Scripts\Createdatabase.ps1">
+    <Content Include="v1\Scripts\Createdatabase.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Scripts\manage-a-tenancy-data.sql">
+    <Content Include="v1\Scripts\manage-a-tenancy-data.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

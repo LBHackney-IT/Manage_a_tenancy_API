@@ -375,7 +375,7 @@ namespace ManageATenancyAPI.Tests.Actions
             serviceJObject.Add("title", fakeData.Random.String());
             serviceJObject["_subjectid_value"] = fakeData.Random.Guid();
             serviceJObject["_customerid_value"] = fakeData.Random.Guid();
-            serviceJObject.Add("incidentid", fakeData.Random.String());
+            serviceJObject.Add("incidentid", fakeData.Random.Guid());
             serviceJObject.Add("annotationid", fakeData.Random.Guid());
 
             return serviceJObject;

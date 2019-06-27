@@ -27,12 +27,12 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
     {
         private readonly ILoggerAdapter<TRAController> _logger;
         private readonly IHackneyGetCRM365Token _getCRM365AccessToken;
-        private IHackneyHousingAPICall _hackneyETRAAccountApi;
+        private readonly IHackneyHousingAPICall _hackneyETRAAccountApi;
         private readonly IOptions<AppConfiguration> _appConfiguration;
         private readonly IHackneyHousingAPICallBuilder _ETRAAPICallBuilder;
         private readonly ILoggerAdapter<HackneyHousingAPICallBuilder> _apiBuilderLoggerAdapter;
-        private readonly ILoggerAdapter<ETRAMeetingsAction> _actionsLogger;
-        private IETRAMeetingsAction _etraMeetingsAction;
+private readonly ILoggerAdapter<ETRAMeetingsAction> _actionsLogger;
+        private readonly IETRAMeetingsAction _etraMeetingsAction;
         public ETRAController(IETRAMeetingsAction etraMeetingsAction, ILoggerAdapter<ETRAMeetingsAction> actionsLogger, ILoggerAdapter<TRAController> loggerAdapter, IOptions<URLConfiguration> config, IOptions<AppConfiguration> appConfig, IHackneyGetCRM365Token accessToken)
         {
             var serviceFactory = new HackneyAccountsServiceFactory();
@@ -44,6 +44,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
             _getCRM365AccessToken = accessToken;
             _etraMeetingsAction = etraMeetingsAction;
         }
+
         /// <summary>
         /// Creates an ETRA meeting
         /// </summary>
@@ -73,6 +74,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
                 return jsonResponse;
             }
         }
+
 
         [Route("UpdateETRAIssue")]
         [HttpPatch]

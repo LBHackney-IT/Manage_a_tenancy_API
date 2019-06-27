@@ -48,7 +48,7 @@ namespace ManageATenancyAPI.Services.Housing
 
                 HttpRequestMessage request = new HttpRequestMessage(method, requestUri) { Content = new StringContent(content) };
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                response = client.SendAsync(request).Result;
+                response = await client.SendAsync(request).ConfigureAwait(false);
            
                 if (!response.IsSuccessStatusCode)
                 {
@@ -69,9 +69,8 @@ namespace ManageATenancyAPI.Services.Housing
             var response = new HttpResponseMessage();
             try
             {
-                
                 var content = new StringContent(jObject.ToString(), Encoding.UTF8, "application/json");
-                response = client.PostAsync(query, content).Result;
+                response = await client.PostAsync(query, content).ConfigureAwait(false) ;
                
                 if (!response.IsSuccessStatusCode)
                 {

@@ -19,9 +19,9 @@ namespace ManageATenancyAPI.Database
         public TenancyContext(DbContextOptions options)
             : base(options)
         { }
-        
+
         public DbSet<NewTenancyLastRun> NewTenancyLastRun { get; set; }
-        
+
         public new void SaveChanges()
         {
             base.SaveChanges();

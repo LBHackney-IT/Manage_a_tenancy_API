@@ -39,14 +39,17 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         {
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
 
-            var expected = new JObject();
-            expected.Add("interactionid", "testid");
-            expected.Add("ticketnumber", "testticket");
-            etraMeetingActions.Setup(x => x.CreateETRAMeeting(It.IsAny<ETRAIssue>())).ReturnsAsync(HackneyResult<JObject>.Create(expected));
+            var expected = new CreateETRAMeetingActionResponse
+            {
+                InteractionId = Guid.NewGuid(),
+                TicketNumber = "testticket"
+            };
+
+            etraMeetingActions.Setup(x => x.CreateETRAMeeting(It.IsAny<ETRAIssue>())).ReturnsAsync(expected);
 
             var actual = etraController.Post(It.IsAny<ETRAIssue>()).Result;
 
-            Assert.Equal(JsonConvert.SerializeObject(actual.Value), JsonConvert.SerializeObject(HackneyResult<JObject>.Create(expected)));
+            Assert.Equal(JsonConvert.SerializeObject(actual.Value), JsonConvert.SerializeObject(expected));
             Assert.Equal(actual.StatusCode, 201);
         }
         [Fact]
@@ -54,14 +57,17 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         {
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
 
-            var expected = new JObject();
-            expected.Add("interactionid", null);
-            expected.Add("ticketnumber",null);
-            etraMeetingActions.Setup(x => x.CreateETRAMeeting(It.IsAny<ETRAIssue>())).ReturnsAsync(HackneyResult<JObject>.Create(expected));
+            var expected = new CreateETRAMeetingActionResponse
+            {
+                InteractionId = null,
+                TicketNumber = null
+            };
+
+            etraMeetingActions.Setup(x => x.CreateETRAMeeting(It.IsAny<ETRAIssue>())).ReturnsAsync(expected);
 
             var actual = etraController.Post(It.IsAny<ETRAIssue>()).Result;
 
-            Assert.Equal(JsonConvert.SerializeObject(actual.Value), JsonConvert.SerializeObject(HackneyResult<JObject>.Create(expected)));
+            Assert.Equal(JsonConvert.SerializeObject(actual.Value), JsonConvert.SerializeObject(expected));
             Assert.Equal(actual.StatusCode, 201);
         }
         [Fact]

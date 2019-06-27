@@ -41,9 +41,9 @@ jobs:
       - checkout
       - aws-cli/install
       - aws-cli/configure:
-          aws-access-key-id: $AWS_ID_KEY
-          aws-secret-access-key: $AWS_SECRET_KEY
-          aws-region: $AWS_REGION
+          aws-access-key-id: AWS_ID_KEY
+          aws-secret-access-key: AWS_SECRET_KEY
+          aws-region: AWS_REGION
       - aws-ecr/ecr-login
       - setup_remote_docker
       - run:

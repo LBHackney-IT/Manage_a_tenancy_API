@@ -9,7 +9,7 @@ namespace ManageATenancyAPI.Database
         public TenancyContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<TenancyContext>();
-            builder.UseSqlServer("Server=localhost,1433;Database=ManageATenancy_New;MultipleActiveResultSets=true;User ID=SA;Password=Rooty-Tooty");
+            builder.UseSqlServer("Server=localhost,1433;Database=ManageATenancy;MultipleActiveResultSets=true;User ID=SA;Password=Rooty-Tooty");
             return new TenancyContext(builder.Options);
         }
     }
@@ -20,13 +20,7 @@ namespace ManageATenancyAPI.Database
             : base(options)
         { }
 
-        public DbSet<HousingArea> HousingAreas { get; set; }
-        public DbSet<HousingAreaPatch> HousingAreaPatches { get; set; }
-
         public DbSet<NewTenancyLastRun> NewTenancyLastRun { get; set; }
-        public DbSet<TRA> TRAs { get; set; }
-        
-
 
         public new void SaveChanges()
         {

@@ -26,7 +26,7 @@ commands:
             --no-deregister \
             --access-key-id $AWS_ID_KEY \
             --secret-access-key $AWS_SECRET_KEY \
-            --timeout 2100 \
+            --timeout 1800 \
             --region $AWS_REGION \
             << parameters.cluster-name >> \
             << parameters.service-name >> \
@@ -75,7 +75,6 @@ jobs:
           cluster-name: 'hackney-apps-development'
           service-name: 'man-a-tenancy-development'
           image-tag: "$CIRCLE_SHA1"
-
   deploy-to-staging:
     docker:
       - image: circleci/python:3.7
@@ -84,7 +83,6 @@ jobs:
           cluster-name: 'hackney-apps-staging'
           service-name:  'man-a-tenancy-staging'
           image-tag: "$CIRCLE_SHA1"
-
   deploy-to-production:
     docker:
       - image: circleci/python:3.7
@@ -128,14 +126,12 @@ workflows:
           filters:
             branches:
               only: develop
-
       - deploy-to-staging:
           requires:
             - permit-staging-release
           filters:
             branches:
               only: develop
-
       - permit-production-release:
           type: approval
           requires:
@@ -143,7 +139,6 @@ workflows:
           filters:
             branches:
               only: develop
-
       - deploy-to-production:
           requires:
             - permit-production-release

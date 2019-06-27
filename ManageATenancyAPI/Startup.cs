@@ -10,6 +10,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 using System.Text;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Hackney.InterfaceStubs;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.Database;
@@ -57,7 +58,13 @@ namespace ManageATenancyAPI
             services.Configure<ConnStringConfiguration>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<AppConfiguration>(Configuration.GetSection("appConfigurations"));
             //S3 related
-            services.Configure<JpegPersistenceServiceConfiguration>(Configuration.GetSection("JpegPersistenceServiceConfiguration"));
+            services.Configure<JpegPersistenceServiceConfiguration>(m => new JpegPersistenceServiceConfiguration
+            {
+                Extension = "jpg",
+                FileType = FileType.Jpeg,
+                ProjectName = "etra"
+            });
+
             services.Configure<S3Configuration>(Configuration.GetSection("S3Configuration"));
 
             services.AddMvc();

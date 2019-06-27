@@ -18,9 +18,7 @@ using ManageATenancyAPI.Repository.Interfaces;
 using ManageATenancyAPI.Services.Interfaces;
 using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.Tests;
-using ManageATenancyAPI.UseCases.IssueType.GetAllIssueTypes;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
-using ManageATenancyAPI.UseCases.TRA.GetAllTRAs;
 
 namespace ManageATenancyAPI.Extension
 {
@@ -82,8 +80,6 @@ namespace ManageATenancyAPI.Extension
             services.AddScoped<ISaveEtraMeetingSignOffMeetingGateway, SaveEtraMeetingSignOffMeetingGateway>();
 
             services.AddScoped<IJpegPersistenceService, JpegPersistenceService>();
-
-            services.AddScoped<IGetAllTRAsUseCase, GetAllTRAsUseCase>();
 
         }
     }

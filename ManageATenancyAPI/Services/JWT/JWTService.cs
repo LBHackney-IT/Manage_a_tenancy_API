@@ -18,6 +18,7 @@ namespace ManageATenancyAPI.Services.JWT
         {
             var key = Encoding.ASCII.GetBytes(secret);
             var handler = new JwtSecurityTokenHandler();
+            
             var jwt = handler.ReadJwtToken(token);
 
             var validations = new TokenValidationParameters

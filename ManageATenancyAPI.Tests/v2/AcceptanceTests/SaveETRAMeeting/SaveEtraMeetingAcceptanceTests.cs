@@ -148,5 +148,49 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
                 issue.IssueNote.Should().Be(expectedIssue.IssueNote);
             }
         }
+
+
+        [Theory]
+        [InlineData(1, "100000501", "De Beauvoir Estate  1 - 126 Fermain Court", "Bad things have happened please fix", "Jeff", "chair", "" )]
+        [InlineData(2, "100000501", "De Beauvoir Estate  127 -256 Fermain Court", "Bad things have happened please fix", "Jeffery", "secretary", "")]
+        public async Task can_finalise_etra_meeting_when_signoff_is_present(int attendees, string issueTypeId, string issueLocationName, string note, string name, string role, string signature)
+        {
+            //arrange
+            var inputModel = new SaveETRAMeetingInputModel
+            {
+                TRAId = 3,
+                MeetingName = "New ETRA meeting",
+                MeetingAttendance = new MeetingAttendees
+                {
+                    Attendees = 1
+                },
+                Issues = new List<MeetingIssue>
+                {
+                    new MeetingIssue
+                    {
+                        IssueTypeId = issueTypeId,
+                        IssueLocationName = issueLocationName,
+                        IssueNote = note
+                    },
+                    new MeetingIssue
+                    {
+                        IssueTypeId = issueTypeId,
+                        IssueLocationName = $"{issueLocationName} 2",
+                        IssueNote = $"{note} 2"
+                    }
+                },
+                SignOff = new SignOff
+                {
+                    Name = name,
+                    Role = role,
+                    Signature = signature
+                }
+            };
+
+            //act
+            var response = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
+            //assert
+            var outputModel = response.GetOKResponseType<SaveETRAMeetingOutputModel>();
+        }
     }
 }

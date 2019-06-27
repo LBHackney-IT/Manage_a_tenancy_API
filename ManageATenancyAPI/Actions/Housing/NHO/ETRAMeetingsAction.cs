@@ -529,12 +529,12 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             {
                 if (!string.IsNullOrEmpty(request.Role))
                     confirmation.Add("hackney_signatoryrole", request.Role);
+
                 if (!string.IsNullOrEmpty(request.Name))
                     confirmation.Add("hackney_signatoryname", request.Name);
 
                 if (request.SignatureId != Guid.NewGuid())
                     confirmation.Add("hackney_signaturereference", request.SignatureId);
-                
             }
 
             var updateIssueIntractionQuery = HousingAPIQueryBuilder.updateIssueQuery(id);

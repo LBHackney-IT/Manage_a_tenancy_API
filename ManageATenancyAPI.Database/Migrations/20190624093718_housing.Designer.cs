@@ -4,14 +4,16 @@ using ManageATenancyAPI.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ManageATenancyAPI.Database.Migrations
 {
     [DbContext(typeof(TenancyContext))]
-    partial class TenancyContextModelSnapshot : ModelSnapshot
+    [Migration("20190624093718_housing")]
+    partial class housing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

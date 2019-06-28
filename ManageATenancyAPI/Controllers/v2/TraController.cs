@@ -39,6 +39,16 @@ namespace ManageATenancyAPI.Controllers.v2
 
             return Claims;
         }
+
+        protected string CreateManageATenancySingleMeetingToken(string traMeetingId)
+        {
+            string jwtToken = string.Empty;
+
+            jwtToken = _jwtService.CreateManageATenancySingleMeetingToken(new Guid(traMeetingId), Environment.GetEnvironmentVariable("HmacSecret"));
+
+            return jwtToken;
+        }
+
     }
 
     [Produces("application/json")]
@@ -48,7 +58,7 @@ namespace ManageATenancyAPI.Controllers.v2
         private readonly IGetAllTRAsUseCase _getAllTrAsUseCase;
         private readonly ISaveEtraMeetingUseCase _saveEtraMeetingUseCase;
 
-        public TRAController(IJWTService jwtService, IGetAllTRAsUseCase getAllTrAsUseCase, ISaveEtraMeetingUseCase saveEtraMeetingUseCase): base(jwtService)
+        public TRAController(IJWTService jwtService, IGetAllTRAsUseCase getAllTrAsUseCase, ISaveEtraMeetingUseCase saveEtraMeetingUseCase) : base(jwtService)
         {
             _getAllTrAsUseCase = getAllTrAsUseCase;
             _saveEtraMeetingUseCase = saveEtraMeetingUseCase;
@@ -81,6 +91,15 @@ namespace ManageATenancyAPI.Controllers.v2
 
             var outputModel = await _saveEtraMeetingUseCase.ExecuteAsync(inputModel, claims, Request.GetCancellationToken()).ConfigureAwait(false);
             return Ok(outputModel);
+        }
+
+        [HttpGet]
+        [Route("GetTokenForSingleMeeting/{traMeetingId}")]
+        public async Task<IActionResult> GetTokenForSingleMeeting(string traMeetingId)
+        {
+            var meetingToken = CreateManageATenancySingleMeetingToken(traMeetingId);
+
+            return Ok(meetingToken);
         }
     }
 }

@@ -4,8 +4,9 @@ using Newtonsoft.Json;
 
 namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
 {
+
     /// <summary>
-    /// 
+    /// Input Model for Save etra meeting use case
     /// </summary>
     public class SaveETRAMeetingInputModel
     {

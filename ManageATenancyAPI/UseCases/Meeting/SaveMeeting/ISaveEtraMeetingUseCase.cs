@@ -7,6 +7,6 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
 {
     public interface ISaveEtraMeetingUseCase 
     {
-        Task<SaveETRAMeetingOutputModel> ExecuteAsync(SaveETRAMeetingInputModel request, IManageATenancyClaims claims, CancellationToken cancellationToken);
+        Task<SaveEtraMeetingOutputModelOutputModel> ExecuteAsync(SaveETRAMeetingInputModel request, IManageATenancyClaims claims, CancellationToken cancellationToken);
     }
 }

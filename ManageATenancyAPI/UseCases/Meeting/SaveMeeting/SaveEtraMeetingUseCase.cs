@@ -30,7 +30,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
             _saveEtraMeetingSignOffMeetingGateway = saveEtraMeetingSignOffMeetingGateway;
         }
 
-        public async Task<SaveETRAMeetingOutputModel> ExecuteAsync(SaveETRAMeetingInputModel request, IManageATenancyClaims claims, CancellationToken cancellationToken)
+        public async Task<SaveEtraMeetingOutputModelOutputModel> ExecuteAsync(SaveETRAMeetingInputModel request, IManageATenancyClaims claims, CancellationToken cancellationToken)
         {
             var etraMeeting = new ETRAMeeting
             {
@@ -38,7 +38,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
                 TraId = request.TRAId,
             };
 
-            var outputModel = new SaveETRAMeetingOutputModel();
+            var outputModel = new SaveEtraMeetingOutputModelOutputModel();
 
             var meetingId = await _saveEtraMeetingGateway.CreateEtraMeeting(etraMeeting, claims, cancellationToken).ConfigureAwait(false);
 

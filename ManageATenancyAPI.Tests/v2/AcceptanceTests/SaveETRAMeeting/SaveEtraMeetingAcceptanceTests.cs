@@ -70,7 +70,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             //act
             var response = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
             //assert
-            var outputModel = response.GetOKResponseType<SaveETRAMeetingOutputModel>();
+            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModelOutputModel>();
             outputModel.Should().NotBeNull();
             outputModel.MeetingId.Should().NotBeEmpty();
         }
@@ -109,7 +109,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             //act
             var response = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
             //assert
-            var outputModel = response.GetOKResponseType<SaveETRAMeetingOutputModel>();
+            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModelOutputModel>();
             outputModel.Should().NotBeNull();
             outputModel.Issues.Should().NotBeNullOrEmpty();
             outputModel.Issues.Count.Should().Be(inputModel.Issues.Count);
@@ -152,7 +152,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             //act
             var response = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
             //assert
-            var outputModel = response.GetOKResponseType<SaveETRAMeetingOutputModel>();
+            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModelOutputModel>();
             outputModel.IsSignedOff.Should().BeTrue();
         }
 
@@ -172,7 +172,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             //act
             var response = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
             //assert
-            var outputModel = response.GetOKResponseType<SaveETRAMeetingOutputModel>();
+            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModelOutputModel>();
             outputModel.IsSignedOff.Should().BeFalse();
         }
     }

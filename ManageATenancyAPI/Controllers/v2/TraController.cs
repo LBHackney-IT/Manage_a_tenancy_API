@@ -22,7 +22,7 @@ namespace ManageATenancyAPI.Controllers.v2
             _authorization = "Authorization";
         }
 
-        protected IManageATenancyClaims GetClaims()
+        protected IManageATenancyClaims GetHousingOfficerClaims()
         {
             if (Request.Headers.ContainsKey(_authorization))
             {
@@ -30,6 +30,19 @@ namespace ManageATenancyAPI.Controllers.v2
                 authString = authString.Replace("bearer ", "", true, CultureInfo.InvariantCulture);
 
                 Claims = _jwtService.GetManageATenancyClaims(authString, Environment.GetEnvironmentVariable("HmacSecret"));
+            }
+
+            return Claims;
+        }
+
+        protected IMeetingClaims GetMeetingClaims()
+        {
+            if (Request.Headers.ContainsKey(_authorization))
+            {
+                var authString = Request.Headers[_authorization].ToString();
+                authString = authString.Replace("bearer ", "", true, CultureInfo.InvariantCulture);
+
+                 = _jwtService.GetManageATenancyClaims(authString, Environment.GetEnvironmentVariable("HmacSecret"));
             }
 
             return Claims;
@@ -51,16 +64,34 @@ namespace ManageATenancyAPI.Controllers.v2
         /// Creates an ETRA meeting
         /// </summary>
         /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
-        /// <response code="201">A successfully created ETRA meeting request</response>
+        /// <response code="200">A successfully created ETRA meeting request</response>
         [HttpPost]
+        [ProducesResponseType(typeof(SaveEtraMeetingOutputModelOutputModel), 200)]
+        [ProducesResponseType(typeof(BadRequestResult), 400)]
         public async Task<IActionResult> Post([FromBody]SaveETRAMeetingInputModel inputModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var claims = GetClaims();
+            var claims = GetHousingOfficerClaims();
 
             var outputModel = await _saveEtraMeetingUseCase.ExecuteAsync(inputModel, claims, Request.GetCancellationToken()).ConfigureAwait(false);
+            return Ok(outputModel);
+        }
+
+        /// <summary>
+        /// Gets an ETRA meeting
+        /// </summary>
+        /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
+        /// <response code="201">A successfully created ETRA meeting request</response>
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var claims = GetHousingOfficerClaims();
+
+            var inputModel = new SaveETRAMeetingInputModel();
+
+            var outputModel = await _.ExecuteAsync(inputModel, claims, Request.GetCancellationToken()).ConfigureAwait(false);
             return Ok(outputModel);
         }
     }

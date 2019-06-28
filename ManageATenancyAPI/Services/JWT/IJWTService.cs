@@ -1,4 +1,5 @@
 ﻿using ManageATenancyAPI.Services.JWT.Models;
+using System;
 
 namespace ManageATenancyAPI.Services.JWT
 {
@@ -15,5 +16,7 @@ namespace ManageATenancyAPI.Services.JWT
         /// <param name="secret"></param>
         /// <returns></returns>
         IManageATenancyClaims GetManageATenancyClaims(string token, string secret);
+
+        string CreateManageATenancySingleMeetingToken(Guid traMeetingId, string secret);
     }
 }

@@ -1,38 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ManageATenancyAPI.Interfaces.Housing;
 using ManageATenancyAPI.Services.JWT.Models;
-using ManageATenancyAPI.UseCases.Meeting.Boundary;
-using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 
 namespace ManageATenancyAPI.UseCases.Meeting.GetMeeting
 {
     public interface IGetEtraMeetingUseCase
     {
-        Task<GetEtraMeetingOutputModel> ExecuteAsync(GetEtraMeetingInputModel request, IManageATenancyClaims claims, CancellationToken cancellationToken);
+        Task<GetEtraMeetingOutputModel> ExecuteAsync(GetEtraMeetingInputModel request, CancellationToken cancellationToken);
     }
 
-    /// <summary>
-    /// Output model for getting a meeting
-    /// </summary>
-    public class GetEtraMeetingOutputModel : IMeetingOutputModel
+    public class GetEtraMeetingUseCase: IGetEtraMeetingUseCase
     {
-        /// <summary>
-        /// Refers to the TenancyInteractionId in Dynamics 365
-        /// </summary>
-        public Guid MeetingId { get; set; }
+        private readonly IETRAMeetingsAction _etraMeetingsAction;
 
-        public IList<MeetingIssueOutputModel> Issues { get; set; }
-        public SignOff SignOff { get; set; }
-        public bool IsSignedOff { get; set; }
-    }
+        public GetEtraMeetingUseCase(IETRAMeetingsAction etraMeetingsAction)
+        {
+            _etraMeetingsAction = etraMeetingsAction;
+        }
+        public async Task<GetEtraMeetingOutputModel> ExecuteAsync(GetEtraMeetingInputModel request, CancellationToken cancellationToken)
+        {
+            var getEtraMeetingOutputModel = await _etraMeetingsAction.GetMeetingV2Async(request.MeetingId, cancellationToken).ConfigureAwait(false);
+            getEtraMeetingOutputModel.Issues = await _etraMeetingsAction.GetETRAIssuesForMeeting(request.MeetingId, cancellationToken).ConfigureAwait(false);
 
-    /// <summary>
-    /// InputModel for getting a meeting
-    /// </summary>
-    public class GetEtraMeetingInputModel
-    {
-        public Guid MeetingId { get; set; }
+            return getEtraMeetingOutputModel;
+        }
     }
 }

@@ -308,7 +308,7 @@ namespace ManageATenancyAPI.Tests.Actions
             HttpResponseMessage responseMessage = null;
             mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
 
-            async Task act() => await service.GetMeeting(fakeMeetingId);
+            async Task act() => await service.GetMeetingAsync(fakeMeetingId);
 
             await Assert.ThrowsAsync<NullResponseException>(act);
         }
@@ -321,7 +321,7 @@ namespace ManageATenancyAPI.Tests.Actions
             var responseMessage = new HttpResponseMessage(HttpStatusCode.InternalServerError);
             mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
 
-            async Task act() => await service.GetMeeting(fakeMeetingId);
+            async Task act() => await service.GetMeetingAsync(fakeMeetingId);
 
             await Assert.ThrowsAsync<TenancyServiceException>(act);
         }
@@ -335,7 +335,7 @@ namespace ManageATenancyAPI.Tests.Actions
             var responseMessage = new HttpResponseMessage(HttpStatusCode.Created) { Content = new StringContent(responseJObject.ToString(), System.Text.Encoding.UTF8, "application/json") };
             mockingApiCall.Setup(x => x.getHousingAPIResponse(It.IsAny<HttpClient>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(responseMessage);
 
-            var response = await service.GetMeeting(fakeMeetingId);
+            var response = await service.GetMeetingAsync(fakeMeetingId);
 
             Assert.Equal(responseJObject["hackney_tenancymanagementinteractionsid"], response.Id);
         }

@@ -991,6 +991,27 @@ namespace ManageATenancyAPI.Helpers.Housing
             query.Append("/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=" + HttpUtility.UrlEncode(fetchXml.Trim()));
             return query.ToString();
         }
+
+        public static string getETRAIssuesV2(Guid meetingId)
+        {
+            StringBuilder query = new StringBuilder();
+
+            var fetchXml = $@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true' ><entity name='hackney_tenancymanagementinteractions' >              
+                <attribute name='hackney_tenancymanagementinteractionsid' />
+                <attribute name='hackney_issuelocation' />
+                <attribute name='hackney_enquirysubject' />
+                <filter>";
+            fetchXml = fetchXml + "<condition attribute='hackney_parent_interactionid' operator='eq' value='" + meetingId +
+                           "' />";
+                fetchXml = fetchXml + $@"
+                        </filter>
+                    <link-entity name='incident' from='incidentid' to='hackney_incidentid' link-type='inner' >
+                        <attribute name='description' />
+                    </link-entity>    
+            </entity></fetch>";
+            query.Append("/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=" + HttpUtility.UrlEncode(fetchXml.Trim()));
+            return query.ToString();
+        }
         public static string updateIssueQuery(string id)
         {
             return $"{GetActionById(id)}?$select=hackney_tenancymanagementinteractionsid";

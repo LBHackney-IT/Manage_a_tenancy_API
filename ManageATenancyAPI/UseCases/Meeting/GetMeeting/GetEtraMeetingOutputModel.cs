@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using ManageATenancyAPI.UseCases.Meeting.Boundary;
+using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 
-namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
+namespace ManageATenancyAPI.UseCases.Meeting.GetMeeting
 {
     /// <summary>
-    /// Output model for saving a meeting
+    /// Output model for getting a meeting
     /// </summary>
-    public class SaveEtraMeetingOutputModelOutputModel:IMeetingOutputModel
+    public class GetEtraMeetingOutputModel : IMeetingOutputModel
     {
         /// <summary>
         /// Refers to the TenancyInteractionId in Dynamics 365
@@ -19,6 +20,9 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
         public IList<MeetingIssueOutputModel> Issues { get; set; }
         public MeetingAttendees Attendees { get; set; }
         public SignOff SignOff { get; set; }
+
         public bool IsSignedOff { get; set; }
+
+        public DateTime CreatedOn { get; set; }
     }
 }

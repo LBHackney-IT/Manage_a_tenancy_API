@@ -42,7 +42,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
 
             var meetingId = await _saveEtraMeetingGateway.CreateEtraMeeting(etraMeeting, claims, cancellationToken).ConfigureAwait(false);
 
-            outputModel.MeetingId = meetingId;
+            outputModel.Id = meetingId;
             etraMeeting.Id = meetingId;
 
 

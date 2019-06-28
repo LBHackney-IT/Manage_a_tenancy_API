@@ -7,6 +7,7 @@ using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using Microsoft.AspNetCore.Mvc;
 using ManageATenancyAPI.Services.JWT;
+using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
 
 namespace ManageATenancyAPI.Controllers.v2
 {
@@ -41,11 +42,9 @@ namespace ManageATenancyAPI.Controllers.v2
             {
                 var authString = Request.Headers[_authorization].ToString();
                 authString = authString.Replace("bearer ", "", true, CultureInfo.InvariantCulture);
-
-                 = _jwtService.GetManageATenancyClaims(authString, Environment.GetEnvironmentVariable("HmacSecret"));
             }
 
-            return Claims;
+            return null;
         }
     }
 
@@ -54,10 +53,12 @@ namespace ManageATenancyAPI.Controllers.v2
     public class TRAController : BaseClaimsController
     {
         private readonly ISaveEtraMeetingUseCase _saveEtraMeetingUseCase;
+        private readonly IGetEtraMeetingUseCase _getEtraMeetingUseCase;
 
-        public TRAController(IJWTService jwtService, ISaveEtraMeetingUseCase saveEtraMeetingUseCase): base(jwtService)
+        public TRAController(IJWTService jwtService, ISaveEtraMeetingUseCase saveEtraMeetingUseCase, IGetEtraMeetingUseCase getEtraMeetingUseCase): base(jwtService)
         {
             _saveEtraMeetingUseCase = saveEtraMeetingUseCase;
+            _getEtraMeetingUseCase = getEtraMeetingUseCase;
         }
 
         /// <summary>
@@ -83,15 +84,21 @@ namespace ManageATenancyAPI.Controllers.v2
         /// Gets an ETRA meeting
         /// </summary>
         /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
-        /// <response code="201">A successfully created ETRA meeting request</response>
         [HttpGet]
+        [ProducesResponseType(typeof(GetEtraMeetingOutputModel), 200)]
+        [ProducesResponseType(typeof(UnauthorizedResult), 401)]
         public async Task<IActionResult> Get()
         {
-            var claims = GetHousingOfficerClaims();
+            var claims = GetMeetingClaims();
+            if (claims == null)
+                return Unauthorized();
 
-            var inputModel = new SaveETRAMeetingInputModel();
+            var inputModel = new GetEtraMeetingInputModel
+            {
+                MeetingId = claims.MeetingId
+            };
 
-            var outputModel = await _.ExecuteAsync(inputModel, claims, Request.GetCancellationToken()).ConfigureAwait(false);
+            var outputModel = await _getEtraMeetingUseCase.ExecuteAsync(inputModel, Request.GetCancellationToken()).ConfigureAwait(false);
             return Ok(outputModel);
         }
     }

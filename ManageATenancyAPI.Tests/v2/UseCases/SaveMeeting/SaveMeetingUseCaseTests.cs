@@ -66,7 +66,7 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
             //act
             var response = await _classUnderTest.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), CancellationToken.None).ConfigureAwait(false);
             //assert
-            response.MeetingId.Should().Be(newGuid);
+            response.Id.Should().Be(newGuid);
         }
 
         [Theory]

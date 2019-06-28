@@ -27,6 +27,8 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting
 
                 officerPatchId = manageATenancyClaims.OfficerPatchId.ToString(),
 
+
+                // area Id 
                 areaName = manageATenancyClaims.AreaId.ToString(),
 
                 managerId = manageATenancyClaims.AreaManagerId.ToString(),

@@ -6,6 +6,7 @@ using FluentAssertions;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingAttendance;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue;
+using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting;
 using ManageATenancyAPI.Services.JWT.Models;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
@@ -20,13 +21,13 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
         private Mock<ISaveEtraMeetingGateway> _mockSaveMeetingGateway;
         private Mock<ISaveEtraMeetingIssueGateway> _mockSaveMeetingIssueGateway;
         private Mock<ISaveEtraMeetingAttendanceGateway> _mockSaveMeetingAttendanceGateway;
-        private Mock<ISaveEtraMeetingFinaliseMeetingGateway> _mockSaveMeetingFinaliseMeetingGateway;
+        private Mock<ISaveEtraMeetingSignOffMeetingGateway> _mockSaveMeetingFinaliseMeetingGateway;
         public SaveMeetingUseCaseTests()
         {
             _mockSaveMeetingGateway = new Mock<ISaveEtraMeetingGateway>();
             _mockSaveMeetingIssueGateway = new Mock<ISaveEtraMeetingIssueGateway>();
             _mockSaveMeetingAttendanceGateway = new Mock<ISaveEtraMeetingAttendanceGateway>();
-            _mockSaveMeetingFinaliseMeetingGateway = new Mock<ISaveEtraMeetingFinaliseMeetingGateway>();
+            _mockSaveMeetingFinaliseMeetingGateway = new Mock<ISaveEtraMeetingSignOffMeetingGateway>();
             _classUnderTest = new SaveEtraMeetingUseCase(_mockSaveMeetingGateway.Object, _mockSaveMeetingIssueGateway.Object, _mockSaveMeetingAttendanceGateway.Object, _mockSaveMeetingFinaliseMeetingGateway.Object);
         }
 
@@ -212,7 +213,7 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
         [Theory]
         [InlineData("chair", "Jeff JohnJeff")]
         [InlineData("secretary", "Jeff NotJohnJeff")]
-        public async Task calls_finalise_meeting_gateway(string role, string name)
+        public async Task calls_finalise_meeting_gateway_if_signoff_is_present(string role, string name)
         {
             //arrange
             var inputModel = new SaveETRAMeetingInputModel
@@ -228,8 +229,24 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
             //act
             await _classUnderTest.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), CancellationToken.None).ConfigureAwait(false);
             //assert
-            _mockSaveMeetingFinaliseMeetingGateway.Verify(s => s.FinaliseMeeting(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
+            _mockSaveMeetingFinaliseMeetingGateway.Verify(s => s.SignOffMeetingAsync(It.IsAny<Guid>(), It.Is<SignOff>(m=> m == inputModel.SignOff), It.IsAny<CancellationToken>()), Times.Once);
         }
 
+        [Fact]
+        public async Task does_not_call_finalise_meeting_gateway_if_signoff_is_not_present()
+        {
+            //arrange
+            var inputModel = new SaveETRAMeetingInputModel
+            {
+                SignOff = null
+            };
+            //act
+            await _classUnderTest.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), CancellationToken.None)
+                .ConfigureAwait(false);
+            //assert
+            _mockSaveMeetingFinaliseMeetingGateway.Verify(
+                s => s.SignOffMeetingAsync(It.IsAny<Guid>(), It.Is<SignOff>(m => m == inputModel.SignOff),
+                    It.IsAny<CancellationToken>()), Times.Never);
+        }
     }
 }

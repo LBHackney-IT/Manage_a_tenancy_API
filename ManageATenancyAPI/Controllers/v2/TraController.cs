@@ -51,6 +51,10 @@ namespace ManageATenancyAPI.Controllers.v2
 
     }
 
+    }
+
+    }
+
     [Produces("application/json")]
     [Route("v1/tra")]
     public class TRAController : BaseClaimsController

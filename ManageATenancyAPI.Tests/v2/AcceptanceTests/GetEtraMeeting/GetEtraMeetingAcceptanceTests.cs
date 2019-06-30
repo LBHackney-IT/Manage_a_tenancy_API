@@ -54,13 +54,15 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.GetEtraMeeting
                     Attendees = 1
                 },
             };
-
-            //act
-            var response = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
-            //assert
-            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModelOutputModel>();
+            var saveMeetingResponse = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
+            var outputModel = saveMeetingResponse.GetOKResponseType<SaveEtraMeetingOutputModelOutputModel>();
             outputModel.Should().NotBeNull();
             outputModel.Id.Should().NotBeEmpty();
+            //act
+            var getMeetingResponse = await _classUnderTest.Get().ConfigureAwait(false);
+
+            //assert
+
         }
     }
 }

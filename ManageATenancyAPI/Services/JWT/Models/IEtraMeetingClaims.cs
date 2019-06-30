@@ -2,7 +2,7 @@
 
 namespace ManageATenancyAPI.Services.JWT.Models
 {
-    public interface IMeetingClaims
+    public interface IEtraMeetingClaims
     {
 
         Guid MeetingId { get; set; }

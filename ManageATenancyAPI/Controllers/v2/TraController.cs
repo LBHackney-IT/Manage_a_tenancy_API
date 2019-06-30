@@ -38,15 +38,20 @@ namespace ManageATenancyAPI.Controllers.v2
 
         protected IMeetingClaims GetMeetingClaims()
         {
+            IMeetingClaims claims = null;
             if (Request.Headers.ContainsKey(_authorization))
             {
-                var authString = Request.Headers[_authorization].ToString();
-                authString = authString.Replace("bearer ", "", true, CultureInfo.InvariantCulture);
+                var token = Request.Headers[_authorization].ToString();
+                token = token.Replace("bearer ", "", true, CultureInfo.InvariantCulture);
+
+                claims = _jwtService.GetMeetingIdClaims(token, Environment.GetEnvironmentVariable("HmacSecret"));
             }
 
-            return null;
+            return claims;
         }
     }
+
+
 
     [Produces("application/json")]
     [Route("v1/tra")]
@@ -54,6 +59,7 @@ namespace ManageATenancyAPI.Controllers.v2
     {
         private readonly ISaveEtraMeetingUseCase _saveEtraMeetingUseCase;
         private readonly IGetEtraMeetingUseCase _getEtraMeetingUseCase;
+
 
         public TRAController(IJWTService jwtService, ISaveEtraMeetingUseCase saveEtraMeetingUseCase, IGetEtraMeetingUseCase getEtraMeetingUseCase): base(jwtService)
         {
@@ -63,6 +69,10 @@ namespace ManageATenancyAPI.Controllers.v2
 
         /// <summary>
         /// Creates an ETRA meeting
+        /// If the signoff object is provided then it will complete the meeting in one go
+        /// If the signoff object is null then it will send out an email to the TRA representative stored in the database
+        /// with a link to signoff the meeting with their name.
+        /// In the second flow please post the signoff object via the Patch HttpMethod to complete the meeting
         /// </summary>
         /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
         /// <response code="200">A successfully created ETRA meeting request</response>
@@ -88,6 +98,28 @@ namespace ManageATenancyAPI.Controllers.v2
         [ProducesResponseType(typeof(GetEtraMeetingOutputModel), 200)]
         [ProducesResponseType(typeof(UnauthorizedResult), 401)]
         public async Task<IActionResult> Get()
+        {
+            var claims = GetMeetingClaims();
+            if (claims == null)
+                return Unauthorized();
+
+            var inputModel = new GetEtraMeetingInputModel
+            {
+                MeetingId = claims.MeetingId
+            };
+
+            var outputModel = await _getEtraMeetingUseCase.ExecuteAsync(inputModel, Request.GetCancellationToken()).ConfigureAwait(false);
+            return Ok(outputModel);
+        }
+
+        /// <summary>
+        /// Gets an ETRA meeting
+        /// </summary>
+        /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(GetEtraMeetingOutputModel), 200)]
+        [ProducesResponseType(typeof(UnauthorizedResult), 401)]
+        public async Task<IActionResult> Patch()
         {
             var claims = GetMeetingClaims();
             if (claims == null)

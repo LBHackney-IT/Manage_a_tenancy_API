@@ -7,6 +7,6 @@ namespace ManageATenancyAPI.Services.JWT.Models
 {
    public interface IMeetingClaims
     {
-        Guid TraMeetingId { get; set; }
+        Guid MeetingId { get; set; }
     }
 }

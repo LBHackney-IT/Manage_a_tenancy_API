@@ -18,5 +18,7 @@ namespace ManageATenancyAPI.Services.JWT
         IManageATenancyClaims GetManageATenancyClaims(string token, string secret);
 
         string CreateManageATenancySingleMeetingToken(Guid traMeetingId, string secret);
+
+        IMeetingClaims GetMeetingIdClaims(string token, string secret);
     }
 }

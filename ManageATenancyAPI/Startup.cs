@@ -58,11 +58,11 @@ namespace ManageATenancyAPI
             services.Configure<ConnStringConfiguration>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<AppConfiguration>(Configuration.GetSection("appConfigurations"));
             //S3 related
-            services.Configure<JpegPersistenceServiceConfiguration>(m => new JpegPersistenceServiceConfiguration
+            services.Configure<JpegPersistenceServiceConfiguration>(options =>
             {
-                Extension = "jpg",
-                FileType = FileType.Jpeg,
-                ProjectName = "etra"
+                options.Extension = "jpg";
+                options.FileType = FileType.Jpeg;
+                options.ProjectName = "etra";
             });
 
             services.Configure<S3Configuration>(Configuration.GetSection("S3Configuration"));

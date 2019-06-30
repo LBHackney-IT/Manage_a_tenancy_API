@@ -37,16 +37,6 @@ namespace ManageATenancyAPI.Controllers.v2
 
             return Claims;
         }
-
-        protected string CreateManageATenancySingleMeetingToken(Guid traMeetingId)
-        {
-            string jwtToken = string.Empty;
-
-            jwtToken = _jwtService.CreateManageATenancySingleMeetingToken(traMeetingId, Environment.GetEnvironmentVariable("HmacSecret"));
-
-            return jwtToken;
-        }
-
     }
 
 
@@ -77,24 +67,6 @@ namespace ManageATenancyAPI.Controllers.v2
 
             var outputModel = await _saveEtraMeetingUseCase.ExecuteAsync(inputModel, claims, Request.GetCancellationToken()).ConfigureAwait(false);
             return Ok(outputModel);
-        }
-
-        [HttpGet]
-        [Route("GetTokenForSingleMeeting/{traMeetingId}")]
-        public async Task<IActionResult> GetTokenForSingleMeeting(string traMeetingId)
-        {
-            Guid validMeetingId;
-
-            bool isValid = Guid.TryParse(traMeetingId, out validMeetingId);
-            if(isValid)
-            {
-                var meetingToken = CreateManageATenancySingleMeetingToken(validMeetingId);
-                return Ok(meetingToken);
-            }
-            else
-            {
-                return BadRequest(traMeetingId);
-            }
         }
     }
 }

@@ -25,7 +25,6 @@ namespace ManageATenancyAPI.Tests.v2.Controllers
         private readonly Mock<ISaveEtraMeetingUseCase> _mockUseCase;
         private readonly IJWTService _jwtService;
         
-
         public TRAControllerSaveMeetingTests()
         {
             _mockUseCase = new Mock<ISaveEtraMeetingUseCase>();

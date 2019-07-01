@@ -22,7 +22,7 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting
         {
             var finaliseMeetingRequest = new FinaliseETRAMeetingRequest
             {
-                //Name = signOff.Name,
+                Name = signOff.Name,
                 Role = signOff.Role,
             };
 

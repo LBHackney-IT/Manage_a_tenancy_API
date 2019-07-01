@@ -11,7 +11,7 @@ using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary;
 namespace ManageATenancyAPI.Controllers.v2
 {
     [Produces("application/json")]
-    [Route("v1/tra")]
+    [Route("v2/tra")]
     public class TRAController : BaseClaimsController
     {
         private readonly ISaveEtraMeetingUseCase _saveEtraMeetingUseCase;

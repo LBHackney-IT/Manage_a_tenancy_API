@@ -68,8 +68,4 @@
     <ProjectReference Include="..\ManageATenancyAPI\ManageATenancyAPI.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="v2\UseCases\SignOffMeeting\" />
-  </ItemGroup>
-
 </Project>

@@ -47,7 +47,7 @@ namespace ManageATenancyAPI.Tests.v2.Controllers
             //arrange
             var inputModel = SaveMeetingInputModelHelper.Create();
 
-            _mockUseCase.Setup(s => s.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SaveEtraMeetingOutputModelOutputModel
+            _mockUseCase.Setup(s => s.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SaveEtraMeetingOutputModel
             {
                 Id = Guid.NewGuid()
             });
@@ -63,7 +63,7 @@ namespace ManageATenancyAPI.Tests.v2.Controllers
         {
             var inputModel = SaveMeetingInputModelHelper.Create();
 
-            _mockUseCase.Setup(s => s.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SaveEtraMeetingOutputModelOutputModel
+            _mockUseCase.Setup(s => s.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SaveEtraMeetingOutputModel
             {
                 Id = Guid.NewGuid()
             });
@@ -71,7 +71,7 @@ namespace ManageATenancyAPI.Tests.v2.Controllers
             var response = await _classUnderTest.Post(inputModel);
 
             //assert
-            var outputModel = response.GetResponseType<SaveEtraMeetingOutputModelOutputModel>();
+            var outputModel = response.GetResponseType<SaveEtraMeetingOutputModel>();
             outputModel.Should().NotBeNull();
             outputModel.Id.Should().NotBeEmpty();
         }

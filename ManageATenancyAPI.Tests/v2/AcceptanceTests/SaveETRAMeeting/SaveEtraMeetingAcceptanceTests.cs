@@ -58,7 +58,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             //act
             var response = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
             //assert
-            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModelOutputModel>();
+            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModel>();
             outputModel.Should().NotBeNull();
             outputModel.Id.Should().NotBeEmpty();
         }
@@ -97,7 +97,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             //act
             var response = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
             //assert
-            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModelOutputModel>();
+            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModel>();
             outputModel.Should().NotBeNull();
             outputModel.Issues.Should().NotBeNullOrEmpty();
             outputModel.Issues.Count.Should().Be(inputModel.Issues.Count);
@@ -140,7 +140,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             //act
             var response = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
             //assert
-            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModelOutputModel>();
+            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModel>();
             outputModel.IsSignedOff.Should().BeTrue();
         }
 
@@ -160,7 +160,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             //act
             var response = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
             //assert
-            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModelOutputModel>();
+            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModel>();
             outputModel.IsSignedOff.Should().BeFalse();
         }
     }

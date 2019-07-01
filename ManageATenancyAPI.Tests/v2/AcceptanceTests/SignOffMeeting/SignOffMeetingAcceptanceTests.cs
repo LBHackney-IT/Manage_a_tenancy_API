@@ -74,7 +74,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SignOffMeeting
             };
 
             var saveMeetingResponse = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
-            var outputModel = saveMeetingResponse.GetOKResponseType<SaveEtraMeetingOutputModelOutputModel>();
+            var outputModel = saveMeetingResponse.GetOKResponseType<SaveEtraMeetingOutputModel>();
             //set meeting Id Token
             var jwtToken = _jwtService.CreateManageATenancySingleMeetingToken(outputModel.Id, Environment.GetEnvironmentVariable("HmacSecret"));
             _classUnderTest.SetTokenHeader(jwtToken);

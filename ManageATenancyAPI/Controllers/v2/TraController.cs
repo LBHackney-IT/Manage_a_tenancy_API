@@ -36,7 +36,7 @@ namespace ManageATenancyAPI.Controllers.v2
         /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
         /// <response code="200">A successfully created ETRA meeting request</response>
         [HttpPost]
-        [ProducesResponseType(typeof(SaveEtraMeetingOutputModelOutputModel), 200)]
+        [ProducesResponseType(typeof(SaveEtraMeetingOutputModel), 200)]
         [ProducesResponseType(typeof(BadRequestResult), 400)]
         public async Task<IActionResult> Post([FromBody]SaveETRAMeetingInputModel inputModel)
         {

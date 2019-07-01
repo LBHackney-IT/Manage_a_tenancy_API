@@ -7,7 +7,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
     /// <summary>
     /// Output model for saving a meeting
     /// </summary>
-    public class SaveEtraMeetingOutputModelOutputModel:IMeetingOutputModel
+    public class SaveEtraMeetingOutputModel:IMeetingOutputModel
     {
         /// <summary>
         /// Refers to the TenancyInteractionId in Dynamics 365

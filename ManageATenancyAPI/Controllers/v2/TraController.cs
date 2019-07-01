@@ -1,70 +1,29 @@
-﻿using System;
-using System.Globalization;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ManageATenancyAPI.Helpers;
-using ManageATenancyAPI.Services.JWT.Models;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using Microsoft.AspNetCore.Mvc;
 using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
+using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting;
+using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary;
 
 namespace ManageATenancyAPI.Controllers.v2
 {
-
-    public class BaseClaimsController : Controller
-    {
-        private readonly IJWTService _jwtService;
-        private string _authorization;
-        protected IManageATenancyClaims Claims { get; set; }
-        public BaseClaimsController(IJWTService jwtService)
-        {
-            _jwtService = jwtService;
-            _authorization = "Authorization";
-        }
-
-        protected IManageATenancyClaims GetHousingOfficerClaims()
-        {
-            if (Request.Headers.ContainsKey(_authorization))
-            {
-                var authString = Request.Headers[_authorization].ToString();
-                authString = authString.Replace("bearer ", "", true, CultureInfo.InvariantCulture);
-
-                Claims = _jwtService.GetManageATenancyClaims(authString, Environment.GetEnvironmentVariable("HmacSecret"));
-            }
-
-            return Claims;
-        }
-
-        protected IMeetingClaims GetMeetingClaims()
-        {
-            IMeetingClaims claims = null;
-            if (Request.Headers.ContainsKey(_authorization))
-            {
-                var token = Request.Headers[_authorization].ToString();
-                token = token.Replace("bearer ", "", true, CultureInfo.InvariantCulture);
-
-                claims = _jwtService.GetMeetingIdClaims(token, Environment.GetEnvironmentVariable("HmacSecret"));
-            }
-
-            return claims;
-        }
-    }
-
-
-
     [Produces("application/json")]
     [Route("v1/tra")]
     public class TRAController : BaseClaimsController
     {
         private readonly ISaveEtraMeetingUseCase _saveEtraMeetingUseCase;
         private readonly IGetEtraMeetingUseCase _getEtraMeetingUseCase;
+        private readonly ISignOffMeetingUseCase _signOffEtraMeetingUseCase;
 
 
-        public TRAController(IJWTService jwtService, ISaveEtraMeetingUseCase saveEtraMeetingUseCase, IGetEtraMeetingUseCase getEtraMeetingUseCase): base(jwtService)
+        public TRAController(IJWTService jwtService, ISaveEtraMeetingUseCase saveEtraMeetingUseCase, IGetEtraMeetingUseCase getEtraMeetingUseCase, ISignOffMeetingUseCase signOffEtraMeetingUseCase): base(jwtService)
         {
             _saveEtraMeetingUseCase = saveEtraMeetingUseCase;
             _getEtraMeetingUseCase = getEtraMeetingUseCase;
+            _signOffEtraMeetingUseCase = signOffEtraMeetingUseCase;
         }
 
         /// <summary>
@@ -117,20 +76,18 @@ namespace ManageATenancyAPI.Controllers.v2
         /// </summary>
         /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
         [HttpGet]
-        [ProducesResponseType(typeof(GetEtraMeetingOutputModel), 200)]
+        [ProducesResponseType(typeof(SignOffMeetingOutputModel), 200)]
         [ProducesResponseType(typeof(UnauthorizedResult), 401)]
-        public async Task<IActionResult> Patch()
+        public async Task<IActionResult> Patch([FromBody]SignOffMeetingInputModel inputModel)
         {
             var claims = GetMeetingClaims();
             if (claims == null)
                 return Unauthorized();
 
-            var inputModel = new GetEtraMeetingInputModel
-            {
-                MeetingId = claims.MeetingId
-            };
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var outputModel = await _getEtraMeetingUseCase.ExecuteAsync(inputModel, Request.GetCancellationToken()).ConfigureAwait(false);
+            var outputModel = await _signOffEtraMeetingUseCase.ExecuteAsync(inputModel, Request.GetCancellationToken()).ConfigureAwait(false);
             return Ok(outputModel);
         }
     }

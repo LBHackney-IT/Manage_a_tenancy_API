@@ -6,9 +6,6 @@ using ManageATenancyAPI.Interfaces.Housing;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Encodings.Web;
-using System.Web;
-using ManageATenancyAPI.Logging;
 using Newtonsoft.Json.Linq;
 
 namespace ManageATenancyAPI.Services.Housing

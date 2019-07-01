@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -26,7 +27,7 @@ namespace ManageATenancyAPI.Tests.v2.Controllers.Tra
         {
             _mockUseCase = new Mock<IGetEtraMeetingUseCase>();
             _jwtService = new JWTService();
-            _classUnderTest = new TRAController(_jwtService, null, _mockUseCase.Object);
+            _classUnderTest = new TRAController(_jwtService, null, _mockUseCase.Object, null);
 
             _meetingId = Guid.NewGuid();
 
@@ -71,6 +72,21 @@ namespace ManageATenancyAPI.Tests.v2.Controllers.Tra
             var response = await _classUnderTest.Get();
             //assert
             response.GetOKResponseType<GetEtraMeetingOutputModel>().Id.Should().Be(_meetingId);
+        }
+
+
+        [Fact]
+        public async Task returns_unauthorised_when_invalid_token_is_passed()
+        {
+            //arrange
+            
+            _classUnderTest.Request.Headers.Clear();
+            //act
+            var response = await _classUnderTest.Get();
+
+            //assert
+            var badRequest = response as UnauthorizedResult;
+            badRequest.StatusCode.Should().Be((int)HttpStatusCode.Unauthorized);
         }
     }
 }

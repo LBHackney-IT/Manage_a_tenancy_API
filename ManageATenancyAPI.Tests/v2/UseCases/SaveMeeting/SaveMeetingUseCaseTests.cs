@@ -8,6 +8,7 @@ using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingAttendance;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting;
 using ManageATenancyAPI.Services.JWT.Models;
+using ManageATenancyAPI.Tests.Unit.Services;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary;
@@ -23,14 +24,21 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
         private Mock<ISaveEtraMeetingIssueGateway> _mockSaveMeetingIssueGateway;
         private Mock<ISaveEtraMeetingAttendanceGateway> _mockSaveMeetingAttendanceGateway;
         private Mock<ISaveEtraMeetingSignOffMeetingGateway> _mockSaveMeetingFinaliseMeetingGateway;
+        private Mock<IEmailService> _mockEmailService;
         public SaveMeetingUseCaseTests()
         {
             _mockSaveMeetingGateway = new Mock<ISaveEtraMeetingGateway>();
             _mockSaveMeetingIssueGateway = new Mock<ISaveEtraMeetingIssueGateway>();
             _mockSaveMeetingAttendanceGateway = new Mock<ISaveEtraMeetingAttendanceGateway>();
             _mockSaveMeetingFinaliseMeetingGateway = new Mock<ISaveEtraMeetingSignOffMeetingGateway>();
-            _classUnderTest = new SaveEtraMeetingUseCase(_mockSaveMeetingGateway.Object, _mockSaveMeetingIssueGateway.Object, _mockSaveMeetingAttendanceGateway.Object, _mockSaveMeetingFinaliseMeetingGateway.Object);
+            _mockEmailService = new Mock<IEmailService>();
 
+            _classUnderTest = new SaveEtraMeetingUseCase(
+                _mockSaveMeetingGateway.Object, 
+                _mockSaveMeetingIssueGateway.Object, 
+                _mockSaveMeetingAttendanceGateway.Object, 
+                _mockSaveMeetingFinaliseMeetingGateway.Object,
+                _mockEmailService.Object);
         }
 
         [Theory]
@@ -264,6 +272,37 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
             _mockSaveMeetingFinaliseMeetingGateway.Verify(
                 s => s.SignOffMeetingAsync(It.IsAny<Guid>(), It.Is<SignOff>(m => m == inputModel.SignOff),
                     It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData("chair", "Jeff JohnJeff")]
+        [InlineData("secretary", "Jeff NotJohnJeff")]
+        public async Task calls_email_service(string role, string name)
+        {
+            //arrange
+            var inputModel = new SaveETRAMeetingInputModel
+            {
+                SignOff = new SignOff
+                {
+                    Role = role,
+                    Signature = "",
+                    Name = name
+                }
+            };
+            IManageATenancyClaims claims = new ManageATenancyClaims
+            {
+                FullName = name,
+                
+            };
+            //act
+            await _classUnderTest.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), CancellationToken.None)
+                .ConfigureAwait(false);
+            //assert
+            Assert.False(true);
+            //_mockEmailService.Verify(s=> s.SendTraConfirmationEmailAsync(
+            //    It.Is<SendTraConfirmationEmailInputModel>(m=> 
+            //        m.EmailAddress.Equals()
+            //    )));
         }
     }
 }

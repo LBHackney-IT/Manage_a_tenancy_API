@@ -7,6 +7,7 @@ using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingAttendance;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting;
 using ManageATenancyAPI.Services.JWT.Models;
+using ManageATenancyAPI.Tests.Unit.Services;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using Microsoft.EntityFrameworkCore.Internal;
 
@@ -18,16 +19,19 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
         private readonly ISaveEtraMeetingIssueGateway _saveEtraMeetingIssueGateway;
         private readonly ISaveEtraMeetingAttendanceGateway _saveEtraMeetingAttendanceGateway;
         private readonly ISaveEtraMeetingSignOffMeetingGateway _saveEtraMeetingSignOffMeetingGateway;
+        private readonly IEmailService _emailService;
 
         public SaveEtraMeetingUseCase(ISaveEtraMeetingGateway saveEtraMeetingGateway, 
             ISaveEtraMeetingIssueGateway saveEtraMeetingIssueGateway, 
             ISaveEtraMeetingAttendanceGateway saveEtraMeetingAttendanceGateway,
-            ISaveEtraMeetingSignOffMeetingGateway saveEtraMeetingSignOffMeetingGateway)
+            ISaveEtraMeetingSignOffMeetingGateway saveEtraMeetingSignOffMeetingGateway,
+            IEmailService emailService)
         {
             _saveEtraMeetingGateway = saveEtraMeetingGateway;
             _saveEtraMeetingIssueGateway = saveEtraMeetingIssueGateway;
             _saveEtraMeetingAttendanceGateway = saveEtraMeetingAttendanceGateway;
             _saveEtraMeetingSignOffMeetingGateway = saveEtraMeetingSignOffMeetingGateway;
+            _emailService = emailService;
         }
 
         public async Task<SaveEtraMeetingOutputModel> ExecuteAsync(SaveETRAMeetingInputModel request, IManageATenancyClaims claims, CancellationToken cancellationToken)
@@ -61,8 +65,10 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
             if (request.SignOff != null)
             {
                 var signOffMeetingOutputModel = await _saveEtraMeetingSignOffMeetingGateway.SignOffMeetingAsync(meetingId, request.SignOff, cancellationToken).ConfigureAwait(false);
-                outputModel.IsSignedOff = signOffMeetingOutputModel.IsSignedOff;
+                outputModel.IsSignedOff = signOffMeetingOutputModel?.IsSignedOff ?? false;
             }
+
+            
 
             return outputModel;
         }

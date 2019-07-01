@@ -17,7 +17,6 @@ namespace ManageATenancyAPI.Tests.Unit.Services
         private Mock<IJWTService> _mockJWTService;
         private IOptions<EmailConfiguration> _emailConfiguration;
 
-
         public EmailServiceTest()
         {
             _mockNotificationClient = new Mock<INotificationClient>();

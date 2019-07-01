@@ -60,8 +60,8 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
 
             if (request.SignOff != null)
             {
-                var isSignedOff = await _saveEtraMeetingSignOffMeetingGateway.SignOffMeetingAsync(meetingId, request.SignOff, cancellationToken).ConfigureAwait(false);
-                outputModel.IsSignedOff = isSignedOff;
+                var signOffMeetingOutputModel = await _saveEtraMeetingSignOffMeetingGateway.SignOffMeetingAsync(meetingId, request.SignOff, cancellationToken).ConfigureAwait(false);
+                outputModel.IsSignedOff = signOffMeetingOutputModel.IsSignedOff;
             }
 
             return outputModel;

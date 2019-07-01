@@ -15,9 +15,10 @@ namespace ManageATenancyAPI.UseCases.Meeting.SignOffMeeting
             _saveEtraMeetingSignOffMeetingGateway = saveEtraMeetingSignOffMeetingGateway;
         }
 
-        public Task<SignOffMeetingOutputModel> ExecuteAsync(SignOffMeetingInputModel request, CancellationToken cancellationToken)
+        public async Task<SignOffMeetingOutputModel> ExecuteAsync(SignOffMeetingInputModel request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var outputModel = await _saveEtraMeetingSignOffMeetingGateway.SignOffMeetingAsync(request.MeetingId, request?.SignOff, cancellationToken).ConfigureAwait(false);
+            return outputModel;
         }
     }
 }

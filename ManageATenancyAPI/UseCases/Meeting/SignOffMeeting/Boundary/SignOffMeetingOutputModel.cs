@@ -9,10 +9,10 @@ namespace ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary
     /// </summary>
     public class SignOffMeetingOutputModel
     {
-        [Required]
+        
         public Guid Id { get; set; }
-        [Required]
-        SignOff SignOff { get; set; }
-        bool IsSignedOff { get; set; }
+        
+        public SignOff SignOff { get; set; }
+        public bool IsSignedOff { get; set; }
     }
 }

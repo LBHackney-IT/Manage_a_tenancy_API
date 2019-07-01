@@ -19,6 +19,7 @@
     <Folder Include="Plugins\" />
     <Folder Include="Services\S3\" />
     <Folder Include="Tests\Controllers\" />
+    <Folder Include="UseCases\Meeting\GetMeeting\Boundary\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

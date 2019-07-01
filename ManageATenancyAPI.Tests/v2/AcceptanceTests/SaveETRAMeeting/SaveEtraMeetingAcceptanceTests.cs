@@ -5,18 +5,17 @@ using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using Xunit;
 using FluentAssertions;
+
 using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.Tests.v2.Helper;
-using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 
 namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
 {
-    public class SaveEtraMeetingAcceptanceTests
+    public class SaveEtraMeetingAcceptanceTests:AcceptanceTests
     {
         private TRAController _classUnderTest;
         private ISaveEtraMeetingUseCase _useCase;
@@ -28,7 +27,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
 
             _jwtService = serviceProvider.GetService<IJWTService>();
             _useCase = serviceProvider.GetService<ISaveEtraMeetingUseCase>();
-            _classUnderTest = new TRAController(_jwtService, _useCase);
+            _classUnderTest = new TRAController(_jwtService, _useCase,null, null);
 
             var headers = new KeyValuePair<string, StringValues>("Authorization",
                 "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IkhTMjU2IiwidHlwIjoiSldUIn0.eyJzdWIiOiJtaG9sZGVuIiwianRpIjoiIiwiQ3JlYXRlIG1lZXRpbmciOiJ7XCJlc3RhdGVPZmZpY2VyTG9naW5JZFwiOlwiMWYxYmI3MjctY2UxYi1lODExLTgxMTgtNzAxMDZmYWE2YTMxXCIsXCJvZmZpY2VySWRcIjpcIjFmMWJiNzI3LWNlMWItZTgxMS04MTE4LTcwMTA2ZmFhNmEzMVwiLFwidXNlcm5hbWVcIjpcIm1ob2xkZW5cIixcImZ1bGxOYW1lXCI6XCJNZWdhbiBIb2xkZW5cIixcImFyZWFNYW5hZ2VySWRcIjpcIjU1MTJjNDczLTk5NTMtZTgxMS04MTI2LTcwMTA2ZmFhZjhjMVwiLFwib2ZmaWNlclBhdGNoSWRcIjpcIjhlOTU4YTM3LTg2NTMtZTgxMS04MTI2LTcwMTA2ZmFhZjhjMVwiLFwiYXJlYUlkXCI6XCI2XCJ9IiwibmJmIjowLCJleHAiOjE1OTMwNzY2MjYsImlhdCI6MTU2MTQ1NDIyNiwiaXNzIjoiT3V0c3lzdGVtcyIsImF1ZCI6Ik1hbmFnZUFUZW5hbmN5In0.d7e_bDz1JnZdXjDASng67HWmC7s466lfQEDK-weyXCQ");
@@ -40,18 +39,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             _classUnderTest.Request.Headers.Add(headers);
         }
 
-        private static ServiceProvider BuildServiceProvider()
-        {
-            IServiceCollection collection = new ServiceCollection();
-            IConfiguration config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
 
-            var startup = new Startup(config, new HostingEnvironment());
-            startup.ConfigureServices(collection);
-            var serviceProvider = collection.BuildServiceProvider();
-            return serviceProvider;
-        }
 
         [Fact]
         public async Task can_save_etra_meeting()
@@ -70,9 +58,9 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             //act
             var response = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
             //assert
-            var outputModel = response.GetOKResponseType<SaveETRAMeetingOutputModel>();
+            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModel>();
             outputModel.Should().NotBeNull();
-            outputModel.MeetingId.Should().NotBeEmpty();
+            outputModel.Id.Should().NotBeEmpty();
         }
 
         [Theory]
@@ -109,7 +97,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             //act
             var response = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
             //assert
-            var outputModel = response.GetOKResponseType<SaveETRAMeetingOutputModel>();
+            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModel>();
             outputModel.Should().NotBeNull();
             outputModel.Issues.Should().NotBeNullOrEmpty();
             outputModel.Issues.Count.Should().Be(inputModel.Issues.Count);
@@ -152,7 +140,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             //act
             var response = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
             //assert
-            var outputModel = response.GetOKResponseType<SaveETRAMeetingOutputModel>();
+            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModel>();
             outputModel.IsSignedOff.Should().BeTrue();
         }
 
@@ -172,7 +160,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             //act
             var response = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
             //assert
-            var outputModel = response.GetOKResponseType<SaveETRAMeetingOutputModel>();
+            var outputModel = response.GetOKResponseType<SaveEtraMeetingOutputModel>();
             outputModel.IsSignedOff.Should().BeFalse();
         }
     }

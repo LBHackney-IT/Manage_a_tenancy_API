@@ -117,7 +117,7 @@ private readonly ILoggerAdapter<ETRAMeetingsAction> _actionsLogger;
             if (string.IsNullOrEmpty(id) || request == null)
                 return BadRequest();
 
-            var meeting = await _etraMeetingsAction.GetMeeting(id);
+            var meeting = await _etraMeetingsAction.GetMeetingAsync(id);
 
             if (meeting == null)
                 return NotFound();
@@ -202,7 +202,7 @@ private readonly ILoggerAdapter<ETRAMeetingsAction> _actionsLogger;
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentException("id parameter cannot be null or empty", "id");
 
-            var meeting = await _etraMeetingsAction.GetMeeting(id);
+            var meeting = await _etraMeetingsAction.GetMeetingAsync(id);
 
             if (meeting == null)
                 return NotFound();
@@ -229,7 +229,7 @@ private readonly ILoggerAdapter<ETRAMeetingsAction> _actionsLogger;
             if (id == Guid.Empty)
                 return BadRequest();
 
-            var meeting = await _etraMeetingsAction.GetMeeting(id.ToString());
+            var meeting = await _etraMeetingsAction.GetMeetingAsync(id.ToString());
 
             if (meeting == null)
                 return NotFound();

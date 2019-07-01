@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using LBH.Utils;
 using ManageATenancyAPI.Configuration;
@@ -13,6 +14,8 @@ using ManageATenancyAPI.Interfaces.Housing;
 using ManageATenancyAPI.Models;
 using ManageATenancyAPI.Models.Housing.NHO;
 using ManageATenancyAPI.Services.Housing;
+using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
+using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -277,6 +280,59 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
         }
 
+        public async Task<IList<MeetingIssueOutputModel>> GetETRAIssuesForMeeting(Guid id, CancellationToken cancellationToken)
+        {
+            HttpResponseMessage result = null;
+            try
+            {
+
+                _logger.LogInformation($"Getting ETRA issues");
+                var token = _crmAccessToken.getCRM365AccessToken().Result;
+                _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
+                _client.DefaultRequestHeaders.Add("Prefer", "odata.include-annotations=\"OData.Community.Display.V1.FormattedValue\"");
+
+                var query = HousingAPIQueryBuilder.getETRAIssues(id.ToString(), true);
+
+                result = _ManageATenancyAPI.getHousingAPIResponse(_client, query, null).Result;
+                if (result != null)
+                {
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        throw new TenancyServiceException();
+                    }
+
+                    var issuesRetrieveResponse = JsonConvert.DeserializeObject<JObject>(result.Content.ReadAsStringAsync().Result);
+                    if (issuesRetrieveResponse?["value"] != null && issuesRetrieveResponse?["value"].Count() > 0)
+                    {
+                        List<JToken> issuesRetrievedList = issuesRetrieveResponse["value"].ToList();
+
+                        IList< MeetingIssueOutputModel > list = new List<MeetingIssueOutputModel>();
+                        issuesRetrievedList.Select(s => new MeetingIssueOutputModel
+                        {
+                            Id = s["hackney_tenancymanagementinteractionsid"].ToObject<Guid>(),
+                            IssueLocationName = s["hackney_issuelocation"].ToString(),
+                            //IssueTypeId = 
+                        });
+
+                        return list;
+                    }
+
+                    return null;
+                }
+                else
+                {
+                    _logger.LogError($" ETRA issues missing for {id} ");
+                    throw new NullResponseException();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Get ETRA issues Error " + ex.Message);
+                throw ex;
+
+            }
+        }
+
         public async Task<ETRAUpdateResponse> UpdateIssue(UpdateETRAIssue issueToBeUpdated)
         {
             try
@@ -438,7 +494,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             return result;
         }
 
-        public async Task<ETRAMeeting> GetMeeting(string id)
+        public async Task<ETRAMeeting> GetMeetingAsync(string id)
         {
             var token = await _crmAccessToken.getCRM365AccessToken();
             _client = await _hackneyAccountApiBuilder.CreateRequest(token);
@@ -456,6 +512,54 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 var meeting = ETRAMeeting.Create(JsonConvert.DeserializeObject<dynamic>(await result.Content.ReadAsStringAsync()));
 
                 return meeting;
+            }
+            else
+            {
+                _logger.LogError($"ETRA meeting missing for id: {id}");
+                throw new NullResponseException();
+            }
+        }
+
+        public async Task<GetEtraMeetingOutputModel> GetMeetingV2Async(Guid id, CancellationToken cancellationToken)
+        {
+            var token = await _crmAccessToken.getCRM365AccessToken();
+            _client = await _hackneyAccountApiBuilder.CreateRequest(token);
+            var getMeetingQuery = HousingAPIQueryBuilder.GetActionById(id.ToString());
+
+            var result = await _ManageATenancyAPI.getHousingAPIResponse(_client, getMeetingQuery, null);
+
+            if (result != null)
+            {
+                if (!result.IsSuccessStatusCode)
+                {
+                    throw new TenancyServiceException();
+                }
+
+                dynamic crmMeeting = JsonConvert.DeserializeObject<dynamic>(await result.Content.ReadAsStringAsync());
+
+                var outputModel = new GetEtraMeetingOutputModel
+                {
+                    Id = crmMeeting["hackney_tenancymanagementinteractionsid"],
+
+                    Name = crmMeeting["hackney_name"],
+
+                    Attendees = new MeetingAttendees
+                    {
+                        Councillors = crmMeeting["hackney_councillorsattendingmeeting"],
+                        HackneyStaff = crmMeeting["hackney_othercouncilstaffattendingmeeting"],
+                        Attendees = crmMeeting["hackney_totalmeetingattendees"]
+                    },
+                    CreatedOn = crmMeeting["createdon"],
+
+                    SignOff = new SignOff
+                    {
+                        SignatureId = crmMeeting["hackney_signaturereference"],
+                        SignOffDate = crmMeeting["hackney_confirmationdate"],
+                        Role = crmMeeting["hackney_signatoryrole"],
+                    },
+                };
+
+                return outputModel;
             }
             else
             {

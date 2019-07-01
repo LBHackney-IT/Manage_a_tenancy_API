@@ -30,7 +30,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
             _saveEtraMeetingSignOffMeetingGateway = saveEtraMeetingSignOffMeetingGateway;
         }
 
-        public async Task<SaveETRAMeetingOutputModel> ExecuteAsync(SaveETRAMeetingInputModel request, IManageATenancyClaims claims, CancellationToken cancellationToken)
+        public async Task<SaveEtraMeetingOutputModel> ExecuteAsync(SaveETRAMeetingInputModel request, IManageATenancyClaims claims, CancellationToken cancellationToken)
         {
             var etraMeeting = new ETRAMeeting
             {
@@ -38,11 +38,11 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
                 TraId = request.TRAId,
             };
 
-            var outputModel = new SaveETRAMeetingOutputModel();
+            var outputModel = new SaveEtraMeetingOutputModel();
 
             var meetingId = await _saveEtraMeetingGateway.CreateEtraMeeting(etraMeeting, claims, cancellationToken).ConfigureAwait(false);
 
-            outputModel.MeetingId = meetingId;
+            outputModel.Id = meetingId;
             etraMeeting.Id = meetingId;
 
 
@@ -60,8 +60,8 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
 
             if (request.SignOff != null)
             {
-                var isSignedOff = await _saveEtraMeetingSignOffMeetingGateway.SignOffMeetingAsync(meetingId, request.SignOff, cancellationToken).ConfigureAwait(false);
-                outputModel.IsSignedOff = isSignedOff;
+                var signOffMeetingOutputModel = await _saveEtraMeetingSignOffMeetingGateway.SignOffMeetingAsync(meetingId, request.SignOff, cancellationToken).ConfigureAwait(false);
+                outputModel.IsSignedOff = signOffMeetingOutputModel.IsSignedOff;
             }
 
             return outputModel;

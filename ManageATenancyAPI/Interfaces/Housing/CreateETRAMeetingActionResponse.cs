@@ -9,4 +9,5 @@ namespace ManageATenancyAPI.Interfaces.Housing
         public string TicketNumber { get; set; }
         public string AnnotationId { get; set; }
     }
+
 }

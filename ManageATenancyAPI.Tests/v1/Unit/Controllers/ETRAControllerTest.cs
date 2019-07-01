@@ -87,7 +87,7 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         {
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
             const string id = "123id";
-            etraMeetingActions.Setup(x => x.GetMeeting(id)).ReturnsAsync((ETRAMeeting)null);
+            etraMeetingActions.Setup(x => x.GetMeetingAsync(id)).ReturnsAsync((ETRAMeeting)null);
 
             var request = new RecordETRAMeetingAttendanceRequest
             {
@@ -105,7 +105,7 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         {
             var meeting = GetMeeting(false);
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
-            etraMeetingActions.Setup(x => x.GetMeeting(meeting.Id)).ReturnsAsync(meeting);
+            etraMeetingActions.Setup(x => x.GetMeetingAsync(meeting.Id)).ReturnsAsync(meeting);
             var response = new RecordETRAMeetingAttendanceResponse
             {
                 Councillors = string.Empty,
@@ -349,7 +349,7 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         {
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
             const string id = "123id";
-            etraMeetingActions.Setup(x => x.GetMeeting(id)).ReturnsAsync((ETRAMeeting)null);
+            etraMeetingActions.Setup(x => x.GetMeetingAsync(id)).ReturnsAsync((ETRAMeeting)null);
 
             var actionResult = await etraController.FinaliseMeeting(id, It.IsAny<FinaliseETRAMeetingRequest>());
 
@@ -360,7 +360,7 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         {
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
             var meeting = GetMeeting();
-            etraMeetingActions.Setup(x => x.GetMeeting(meeting.Id)).ReturnsAsync(meeting);
+            etraMeetingActions.Setup(x => x.GetMeetingAsync(meeting.Id)).ReturnsAsync(meeting);
 
             var actionResult = await etraController.FinaliseMeeting(meeting.Id, It.IsAny<FinaliseETRAMeetingRequest>());
 
@@ -372,7 +372,7 @@ namespace ManageATenancyAPI.Tests.Unit.Controllers
         {
             var meeting = GetMeeting(false);
             var etraController = new ETRAController(etraMeetingActions.Object, null, null, urlMockConfig.Object, mockConfig.Object, mockToken.Object);
-            etraMeetingActions.Setup(x => x.GetMeeting(meeting.Id)).ReturnsAsync(meeting);
+            etraMeetingActions.Setup(x => x.GetMeetingAsync(meeting.Id)).ReturnsAsync(meeting);
             etraMeetingActions.Setup(x => x.FinaliseMeeting(meeting.Id, It.IsAny<FinaliseETRAMeetingRequest>())).ReturnsAsync(new FinaliseETRAMeetingResponse { Id = meeting.Id, IsFinalised = true });
 
             var actionResult = await etraController.FinaliseMeeting(meeting.Id, It.IsAny<FinaliseETRAMeetingRequest>());

@@ -25,12 +25,11 @@ namespace ManageATenancyAPI.Tests.v2.Controllers
         private readonly Mock<ISaveEtraMeetingUseCase> _mockUseCase;
         private readonly IJWTService _jwtService;
         
-
         public TRAControllerSaveMeetingTests()
         {
             _mockUseCase = new Mock<ISaveEtraMeetingUseCase>();
             _jwtService = new JWTService();
-            _classUnderTest = new TRAController(_jwtService,  _mockUseCase.Object);
+            _classUnderTest = new TRAController(_jwtService,  _mockUseCase.Object,null, null);
 
             var headers = new KeyValuePair<string, StringValues>("Authorization",
                 "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IkhTMjU2IiwidHlwIjoiSldUIn0.eyJzdWIiOiJtaG9sZGVuIiwianRpIjoiIiwiQ3JlYXRlIG1lZXRpbmciOiJ7XCJlc3RhdGVPZmZpY2VyTG9naW5JZFwiOlwiMWYxYmI3MjctY2UxYi1lODExLTgxMTgtNzAxMDZmYWE2YTMxXCIsXCJvZmZpY2VySWRcIjpcIjFmMWJiNzI3LWNlMWItZTgxMS04MTE4LTcwMTA2ZmFhNmEzMVwiLFwidXNlcm5hbWVcIjpcIm1ob2xkZW5cIixcImZ1bGxOYW1lXCI6XCJNZWdhbiBIb2xkZW5cIixcImFyZWFNYW5hZ2VySWRcIjpcIjU1MTJjNDczLTk5NTMtZTgxMS04MTI2LTcwMTA2ZmFhZjhjMVwiLFwib2ZmaWNlclBhdGNoSWRcIjpcIjhlOTU4YTM3LTg2NTMtZTgxMS04MTI2LTcwMTA2ZmFhZjhjMVwiLFwiYXJlYUlkXCI6XCI2XCJ9IiwibmJmIjowLCJleHAiOjE1OTMwNzY2MjYsImlhdCI6MTU2MTQ1NDIyNiwiaXNzIjoiT3V0c3lzdGVtcyIsImF1ZCI6Ik1hbmFnZUFUZW5hbmN5In0.d7e_bDz1JnZdXjDASng67HWmC7s466lfQEDK-weyXCQ");
@@ -48,9 +47,9 @@ namespace ManageATenancyAPI.Tests.v2.Controllers
             //arrange
             var inputModel = SaveMeetingInputModelHelper.Create();
 
-            _mockUseCase.Setup(s => s.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SaveETRAMeetingOutputModel
+            _mockUseCase.Setup(s => s.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SaveEtraMeetingOutputModel
             {
-                MeetingId = Guid.NewGuid()
+                Id = Guid.NewGuid()
             });
             //act
             var outputModel = await _classUnderTest.Post(inputModel);
@@ -64,17 +63,17 @@ namespace ManageATenancyAPI.Tests.v2.Controllers
         {
             var inputModel = SaveMeetingInputModelHelper.Create();
 
-            _mockUseCase.Setup(s => s.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SaveETRAMeetingOutputModel
+            _mockUseCase.Setup(s => s.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SaveEtraMeetingOutputModel
             {
-                MeetingId = Guid.NewGuid()
+                Id = Guid.NewGuid()
             });
             //act
             var response = await _classUnderTest.Post(inputModel);
 
             //assert
-            var outputModel = response.GetResponseType<SaveETRAMeetingOutputModel>();
+            var outputModel = response.GetResponseType<SaveEtraMeetingOutputModel>();
             outputModel.Should().NotBeNull();
-            outputModel.MeetingId.Should().NotBeEmpty();
+            outputModel.Id.Should().NotBeEmpty();
         }
 
         [Fact]

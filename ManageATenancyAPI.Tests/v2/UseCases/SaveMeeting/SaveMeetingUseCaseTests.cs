@@ -10,6 +10,7 @@ using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting;
 using ManageATenancyAPI.Services.JWT.Models;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
+using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary;
 using Moq;
 using Xunit;
 
@@ -29,6 +30,7 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
             _mockSaveMeetingAttendanceGateway = new Mock<ISaveEtraMeetingAttendanceGateway>();
             _mockSaveMeetingFinaliseMeetingGateway = new Mock<ISaveEtraMeetingSignOffMeetingGateway>();
             _classUnderTest = new SaveEtraMeetingUseCase(_mockSaveMeetingGateway.Object, _mockSaveMeetingIssueGateway.Object, _mockSaveMeetingAttendanceGateway.Object, _mockSaveMeetingFinaliseMeetingGateway.Object);
+
         }
 
         [Theory]
@@ -66,7 +68,7 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
             //act
             var response = await _classUnderTest.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), CancellationToken.None).ConfigureAwait(false);
             //assert
-            response.MeetingId.Should().Be(newGuid);
+            response.Id.Should().Be(newGuid);
         }
 
         [Theory]
@@ -103,6 +105,11 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
                     Signature = ""
                 }
             };
+
+            _mockSaveMeetingFinaliseMeetingGateway.Setup(s => s.SignOffMeetingAsync(
+                It.IsAny<Guid>(),
+                It.Is<SignOff>(m => m == inputModel.SignOff), It.IsAny<CancellationToken>())).ReturnsAsync(
+                new SignOffMeetingOutputModel { });
             //act
             await _classUnderTest.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), CancellationToken.None).ConfigureAwait(false);
             //assert
@@ -144,6 +151,11 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
                     Signature = ""
                 }
             };
+
+            _mockSaveMeetingFinaliseMeetingGateway.Setup(s => s.SignOffMeetingAsync(
+                It.IsAny<Guid>(),
+                It.Is<SignOff>(m => m == inputModel.SignOff), It.IsAny<CancellationToken>())).ReturnsAsync(
+                new SignOffMeetingOutputModel { });
 
             _mockSaveMeetingIssueGateway.Setup(s => s.CreateEtraMeetingIssue(It.IsAny<ETRAMeeting>(),
                     It.Is<MeetingIssue>(m=> m == inputModel.Issues[0]),
@@ -226,6 +238,11 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
                     Name = name
                 }
             };
+
+            _mockSaveMeetingFinaliseMeetingGateway.Setup(s => s.SignOffMeetingAsync(
+                It.IsAny<Guid>(), 
+                It.Is<SignOff>(m => m == inputModel.SignOff), It.IsAny<CancellationToken>())).ReturnsAsync(
+                new SignOffMeetingOutputModel{ });
             //act
             await _classUnderTest.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), CancellationToken.None).ConfigureAwait(false);
             //assert

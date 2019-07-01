@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
 {
@@ -19,5 +21,10 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
         /// </summary>
         [Required]
         public string Role { get; set; }
+
+        [JsonIgnore]
+        public Guid SignatureId { get; set; }
+
+        public DateTime SignOffDate { get; set; }
     }
 }

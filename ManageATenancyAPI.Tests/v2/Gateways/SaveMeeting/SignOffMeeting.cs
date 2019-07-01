@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting;
@@ -34,10 +32,12 @@ namespace ManageATenancyAPI.Tests.v2.Gateways.SaveMeeting
 
             _mockEtraActions
                 .Setup(s => s.FinaliseMeeting(It.Is<string>(m => m == id.ToString()),
-                    It.Is<FinaliseETRAMeetingRequest>(m => m.Name == name && m.Role == role && m.SignatureId != Guid.Empty))).ReturnsAsync(new FinaliseETRAMeetingResponse
+                    It.Is<FinaliseETRAMeetingRequest>(m => m.Name.Equals(name) && m.Role.Equals(role)))).ReturnsAsync(new FinaliseETRAMeetingResponse
                 {
-                    IsFinalised = true
+                    IsFinalised = true,
+                    Id = id.ToString()
                 });
+            _mockJpegPersistenceService.Setup(s => s.SaveAsync(It.IsAny<string>(), It.IsAny<byte[]>())).Returns(Task.CompletedTask);
 
             var signOff = new SignOff
             {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ManageATenancyAPI.Interfaces.Housing;
 using ManageATenancyAPI.Models.Housing.NHO;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
+using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary;
 
 namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting
 {
@@ -18,11 +19,11 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting
             _jpegPersistenceService = jpegPersistenceService;
         }
 
-        public async Task<bool> SignOffMeetingAsync(Guid meetingId, SignOff signOff, CancellationToken cancellationToken)
+        public async Task<SignOffMeetingOutputModel> SignOffMeetingAsync(Guid meetingId, SignOff signOff, CancellationToken cancellationToken)
         {
             var finaliseMeetingRequest = new FinaliseETRAMeetingRequest
             {
-                //Name = signOff.Name,
+                Name = signOff.Name,
                 Role = signOff.Role,
             };
 
@@ -32,10 +33,17 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting
                 var bytes = System.Convert.FromBase64String(signOff.Signature);
                 await _jpegPersistenceService.SaveAsync(signatureGuid.ToString(), bytes).ConfigureAwait(false);
                 finaliseMeetingRequest.SignatureId = signatureGuid;
+                signOff.SignatureId = signatureGuid;
             }
 
             var response = await _etraMeetingsAction.FinaliseMeeting(meetingId.ToString(), finaliseMeetingRequest).ConfigureAwait(false);
-            return response.IsFinalised;
+            
+            return new SignOffMeetingOutputModel
+            {
+                Id = meetingId,
+                SignOff = signOff,
+                IsSignedOff = response.IsFinalised
+            };
         }
     }
 }

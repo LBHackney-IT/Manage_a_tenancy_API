@@ -37,6 +37,35 @@ namespace ManageATenancyAPI.Services.JWT
             return manageATenancyClaims;
         }
 
+        /// <summary>
+        /// Validates claims against signing key with secret and returns data in a nicely formatted manner.
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="secret"></param>
+        /// <returns></returns>
+        public IMeetingClaims GetMeetingIdClaims(string token, string secret)
+        {
+            var key = Encoding.ASCII.GetBytes(secret);
+            var handler = new JwtSecurityTokenHandler();
+
+            var jwt = handler.ReadJwtToken(token);
+
+            var validations = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+            var claims = handler.ValidateToken(token, validations, out var tokenSecure);
+
+            IMeetingClaims manageATenancyClaims =  new MeetingClaims{
+                MeetingId = new Guid(claims.Claims.ToList()[0].Value)
+            };
+
+            return manageATenancyClaims;
+        }
+
         public string CreateManageATenancySingleMeetingToken(Guid traMeetingId, string secret)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -45,7 +74,7 @@ namespace ManageATenancyAPI.Services.JWT
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, traMeetingId.ToString())
+                    new Claim("meetingId", traMeetingId.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddDays(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

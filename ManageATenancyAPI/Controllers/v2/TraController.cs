@@ -1,120 +1,94 @@
-﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
-using ManageATenancyAPI.Gateways.GetAllTRAs;
+﻿using System.Threading.Tasks;
 using ManageATenancyAPI.Helpers;
-using ManageATenancyAPI.Services.JWT.Models;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
-using ManageATenancyAPI.UseCases.TRA.GetAllTRAs;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
 using ManageATenancyAPI.Services.JWT;
+using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
+using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting;
+using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary;
 
 namespace ManageATenancyAPI.Controllers.v2
 {
-
-    public class BaseClaimsController : Controller
-    {
-        private readonly IJWTService _jwtService;
-        private string _authorization;
-        protected IManageATenancyClaims Claims { get; set; }
-        public BaseClaimsController(IJWTService jwtService)
-        {
-            _jwtService = jwtService;
-            _authorization = "Authorization";
-        }
-
-        protected IManageATenancyClaims GetClaims()
-        {
-            if (Request.Headers.ContainsKey(_authorization))
-            {
-                var authString = Request.Headers[_authorization].ToString();
-                authString = authString.Replace("bearer ", "", true, CultureInfo.InvariantCulture);
-
-                Claims = _jwtService.GetManageATenancyClaims(authString, Environment.GetEnvironmentVariable("HmacSecret"));
-            }
-
-            return Claims;
-        }
-
-        protected string CreateManageATenancySingleMeetingToken(Guid traMeetingId)
-        {
-            string jwtToken = string.Empty;
-
-            jwtToken = _jwtService.CreateManageATenancySingleMeetingToken(traMeetingId, Environment.GetEnvironmentVariable("HmacSecret"));
-
-            return jwtToken;
-        }
-
-    }
-
-    }
-
-    }
-
     [Produces("application/json")]
-    [Route("v1/tra")]
+    [Route("v2/tra/meeting")]
     public class TRAController : BaseClaimsController
     {
-        private readonly IGetAllTRAsUseCase _getAllTrAsUseCase;
         private readonly ISaveEtraMeetingUseCase _saveEtraMeetingUseCase;
+        private readonly IGetEtraMeetingUseCase _getEtraMeetingUseCase;
+        private readonly ISignOffMeetingUseCase _signOffEtraMeetingUseCase;
 
-        public TRAController(IJWTService jwtService, IGetAllTRAsUseCase getAllTrAsUseCase, ISaveEtraMeetingUseCase saveEtraMeetingUseCase) : base(jwtService)
+
+        public TRAController(IJWTService jwtService, ISaveEtraMeetingUseCase saveEtraMeetingUseCase, IGetEtraMeetingUseCase getEtraMeetingUseCase, ISignOffMeetingUseCase signOffEtraMeetingUseCase): base(jwtService)
         {
-            _getAllTrAsUseCase = getAllTrAsUseCase;
             _saveEtraMeetingUseCase = saveEtraMeetingUseCase;
+            _getEtraMeetingUseCase = getEtraMeetingUseCase;
+            _signOffEtraMeetingUseCase = signOffEtraMeetingUseCase;
         }
 
         /// <summary>
         /// Creates an ETRA meeting
+        /// If the signoff object is provided then it will complete the meeting in one go
+        /// If the signoff object is null then it will send out an email to the TRA representative stored in the database
+        /// with a link to signoff the meeting with their name.
+        /// In the second flow please post the signoff object via the Patch HttpMethod to complete the meeting
         /// </summary>
         /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
-        /// <response code="201">A successfully created ETRA meeting request</response>
-        [HttpGet]
-        public async Task<GetAllTRAsOutputModel> Get()
-        {
-            var outputModel = await _getAllTrAsUseCase.ExecuteAsync(Request.GetCancellationToken()).ConfigureAwait(false);
-            return outputModel;
-        }
-
-        /// <summary>
-        /// Creates an ETRA meeting
-        /// </summary>
-        /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
-        /// <response code="201">A successfully created ETRA meeting request</response>
+        /// <response code="200">A successfully created ETRA meeting request</response>
         [HttpPost]
+        [ProducesResponseType(typeof(SaveEtraMeetingOutputModel), 200)]
+        [ProducesResponseType(typeof(BadRequestResult), 400)]
         public async Task<IActionResult> Post([FromBody]SaveETRAMeetingInputModel inputModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var claims = GetClaims();
+            var claims = GetHousingOfficerClaims();
 
             var outputModel = await _saveEtraMeetingUseCase.ExecuteAsync(inputModel, claims, Request.GetCancellationToken()).ConfigureAwait(false);
             return Ok(outputModel);
         }
 
+        /// <summary>
+        /// Gets an ETRA meeting
+        /// </summary>
+        /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
         [HttpGet]
-        [Route("GetTokenForSingleMeeting/{traMeetingId}")]
-        public async Task<IActionResult> GetTokenForSingleMeeting(string traMeetingId)
+        [ProducesResponseType(typeof(GetEtraMeetingOutputModel), 200)]
+        [ProducesResponseType(typeof(UnauthorizedResult), 401)]
+        public async Task<IActionResult> Get()
         {
-            Guid validMeetingId;
+            var claims = GetMeetingClaims();
+            if (claims == null)
+                return Unauthorized();
 
-            bool isValid = Guid.TryParse(traMeetingId, out validMeetingId);
-            if(isValid)
+            var inputModel = new GetEtraMeetingInputModel
             {
-                var meetingToken = CreateManageATenancySingleMeetingToken(validMeetingId);
-                return Ok(meetingToken);
-            }
-            else
-            {
-                return BadRequest(traMeetingId);
-            }
+                MeetingId = claims.MeetingId
+            };
 
-           
+            var outputModel = await _getEtraMeetingUseCase.ExecuteAsync(inputModel, Request.GetCancellationToken()).ConfigureAwait(false);
+            return Ok(outputModel);
+        }
+
+        /// <summary>
+        /// Gets an ETRA meeting
+        /// </summary>
+        /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(SignOffMeetingOutputModel), 200)]
+        [ProducesResponseType(typeof(UnauthorizedResult), 401)]
+        public async Task<IActionResult> Patch([FromBody]SignOffMeetingInputModel inputModel)
+        {
+            var claims = GetMeetingClaims();
+            if (claims == null)
+                return Unauthorized();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var outputModel = await _signOffEtraMeetingUseCase.ExecuteAsync(inputModel, Request.GetCancellationToken()).ConfigureAwait(false);
+            return Ok(outputModel);
         }
     }
 }

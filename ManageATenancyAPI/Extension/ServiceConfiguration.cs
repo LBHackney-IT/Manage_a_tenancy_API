@@ -18,6 +18,7 @@ using ManageATenancyAPI.Repository.Interfaces;
 using ManageATenancyAPI.Services.Interfaces;
 using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.Tests;
+using ManageATenancyAPI.Tests.Unit.Services;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 
 namespace ManageATenancyAPI.Extension
@@ -81,6 +82,10 @@ namespace ManageATenancyAPI.Extension
 
             services.AddScoped<IJpegPersistenceService, JpegPersistenceService>();
 
+            services.AddScoped<ISendTraConfirmationEmailGateway, SendTraConfirmationEmailGateway>();
+
+            services.AddScoped<INotificationClient, GovNotificationClient>();
+            
         }
     }
 }

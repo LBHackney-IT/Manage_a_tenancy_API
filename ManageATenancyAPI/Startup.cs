@@ -8,9 +8,11 @@ using NLog.Extensions.Logging;
 using NLog.Web;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Hackney.InterfaceStubs;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.Database;
@@ -19,11 +21,13 @@ using ManageATenancyAPI.Extension;
 using ManageATenancyAPI.Filters;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting;
 using ManageATenancyAPI.Tests;
-using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MyPropertyAccountAPI.Configuration;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 
 namespace ManageATenancyAPI
@@ -39,11 +43,53 @@ namespace ManageATenancyAPI
 
         public IConfiguration Configuration { get; }
 
+        private static List<ApiVersionDescription> _apiVersions { get; set; }
+        //TODO update the below to the name of your API
+        private const string ApiName = "Manage A Tenancy";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            
+
+            services.AddApiVersioning(o =>
+            {
+                o.DefaultApiVersion = new ApiVersion(2, 0);
+                o.AssumeDefaultVersionWhenUnspecified = true; // assume that the caller wants the default version if they don't specify
+                o.ApiVersionReader = new UrlSegmentApiVersionReader(); // read the version number from the url segment header)
+            });
+            services.AddSingleton<IApiVersionDescriptionProvider, DefaultApiVersionDescriptionProvider>();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.AddSecurityDefinition("Token",
+                    new ApiKeyScheme
+                    {
+                        In = "header",
+                        Description = "Your Hackney API Key",
+                        Name = "x-api-key",
+                        Type = "apiKey"
+                    });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Token", Enumerable.Empty<string>()}
+                });
+
+                c.SwaggerDoc("v1", new Info
+                {
+                    Title = $"{ApiName}-api 1.0",
+                    Version = "1.0",
+                    Description = $"{ApiName} version 1.0. Please check older versions for depreceted endpoints."
+                });
+
+                c.CustomSchemaIds(x => x.FullName);
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                if (File.Exists(xmlPath))
+                    c.IncludeXmlComments(xmlPath);
+            });
+
 
             //   var connString = Configuration.GetSection("ConnectionStrings");
             var uhCon = Configuration.GetSection("ConnectionStrings").GetValue<string>("UHWReportingWarehouse");
@@ -68,14 +114,6 @@ namespace ManageATenancyAPI
             services.Configure<S3Configuration>(Configuration.GetSection("S3Configuration"));
 
             services.AddMvc();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Version = "v1", Title = "ManageATenancyAPI" });
-                // Set the comments path for the Swagger JSON and UI.
-                var basePath = AppContext.BaseDirectory;
-                string xmlPath = Path.Combine(basePath, "ManageATenancyAPI.xml");
-                c.IncludeXmlComments(xmlPath);
-            });
             services.AddCors(option =>
             {
                 option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
@@ -123,47 +161,31 @@ namespace ManageATenancyAPI
             env.ConfigureNLog("NLog.config");
             app.UseCors("AllowAny");
 
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
+            }
+
+            //Get All ApiVersions,
+            var api = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
+            //Get All ApiVersions,
+            _apiVersions = api.ApiVersionDescriptions.Select(s => s).ToList();
+            //Swagger ui to view the swagger.json file
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint($"v1/swagger.json", $"{ApiName}-api v1");
+            });
+
+            app.UseSwagger();
+
+
             app.UseAuthentication();
-
             app.UseMvc();
-            app.UseDeveloperExceptionPage();
-
-                //Legacy support for old servers
-                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-                {
-                    app.UseSwagger();
-                    app.UseSwaggerUI(c =>
-                    {
-                        string basePath = "/";
-                        c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {"Development"}");
-                    });
-                }
-                else
-                {
-                    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Test")
-                    {
-                        app.UseSwagger(
-                            c => c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                                swaggerDoc.Host = "sandboxapi.hackney.gov.uk/manageatenancy")
-                        );
-                    }
-                    else
-                    {
-                        app.UseSwagger(
-                            c => c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                                swaggerDoc.Host = "api.hackney.gov.uk/manageatenancy")
-                        );
-                    }
-
-                    app.UseSwaggerUI(c =>
-                    {
-                        string basePath = "/manageatenancy/";
-                        c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
-
-                    });
-
-                }
-         
 
         }
     }

@@ -19,19 +19,19 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
         private readonly ISaveEtraMeetingIssueGateway _saveEtraMeetingIssueGateway;
         private readonly ISaveEtraMeetingAttendanceGateway _saveEtraMeetingAttendanceGateway;
         private readonly ISaveEtraMeetingSignOffMeetingGateway _saveEtraMeetingSignOffMeetingGateway;
-        private readonly IEmailService _emailService;
+        private readonly ISendTraConfirmationEmailGateway _sendTraConfirmationEmailGateway;
 
         public SaveEtraMeetingUseCase(ISaveEtraMeetingGateway saveEtraMeetingGateway, 
             ISaveEtraMeetingIssueGateway saveEtraMeetingIssueGateway, 
             ISaveEtraMeetingAttendanceGateway saveEtraMeetingAttendanceGateway,
             ISaveEtraMeetingSignOffMeetingGateway saveEtraMeetingSignOffMeetingGateway,
-            IEmailService emailService)
+            ISendTraConfirmationEmailGateway sendTraConfirmationEmailGateway)
         {
             _saveEtraMeetingGateway = saveEtraMeetingGateway;
             _saveEtraMeetingIssueGateway = saveEtraMeetingIssueGateway;
             _saveEtraMeetingAttendanceGateway = saveEtraMeetingAttendanceGateway;
             _saveEtraMeetingSignOffMeetingGateway = saveEtraMeetingSignOffMeetingGateway;
-            _emailService = emailService;
+            _sendTraConfirmationEmailGateway = sendTraConfirmationEmailGateway;
         }
 
         public async Task<SaveEtraMeetingOutputModel> ExecuteAsync(SaveETRAMeetingInputModel request, IManageATenancyClaims claims, CancellationToken cancellationToken)
@@ -68,6 +68,14 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
                 outputModel.IsSignedOff = signOffMeetingOutputModel?.IsSignedOff ?? false;
             }
 
+            var inputModel = new SendTraConfirmationEmailInputModel
+            {
+                MeetingId = meetingId,
+                OfficerName = claims.FullName,
+                TraName = request.MeetingName,
+            };
+
+            var sendTraConfirmationEmailOutputModel =  await _sendTraConfirmationEmailGateway.SendTraConfirmationEmailAsync(inputModel, cancellationToken).ConfigureAwait(false);
             
 
             return outputModel;

@@ -20,6 +20,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.GetMeeting
         public IList<MeetingIssueOutputModel> Issues { get; set; }
         public MeetingAttendees Attendees { get; set; }
         public SignOff SignOff { get; set; }
+        public bool IsEmailSent { get; set; }
 
         public bool IsSignedOff { get; set; }
 

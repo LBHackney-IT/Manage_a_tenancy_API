@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="appsettings.json" />
     <None Remove="v1\Scripts\Createdatabase.ps1" />
     <None Remove="v1\Scripts\manage-a-tenancy-data.sql" />
     <None Remove="v1\Scripts\manage-a-tenancy-schema.sql" />

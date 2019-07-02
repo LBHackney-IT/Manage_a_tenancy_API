@@ -9,13 +9,13 @@ using Microsoft.Extensions.Options;
 
 namespace ManageATenancyAPI.Tests.Unit.Services
 {
-    public class EmailService:IEmailService
+    public class SendTraConfirmationEmailGateway:ISendTraConfirmationEmailGateway
     {
         private INotificationClient _client;
         private readonly IJWTService _jwtService;
         private readonly IOptions<EmailConfiguration> _config;
 
-        public EmailService(INotificationClient client, IJWTService jwtService, IOptions<EmailConfiguration> config)
+        public SendTraConfirmationEmailGateway(INotificationClient client, IJWTService jwtService, IOptions<EmailConfiguration> config)
         {
             _client = client;
             _jwtService = jwtService;
@@ -41,7 +41,8 @@ namespace ManageATenancyAPI.Tests.Unit.Services
 
             return new SendTraConfirmationEmailOutputModel
             {
-                IsSuccessful = true
+                IsSent = true,
+                MeetingUrl = personalization[EmailKeys.MeetingUrl].ToString()
             };
         }
     }

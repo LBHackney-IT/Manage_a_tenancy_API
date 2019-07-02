@@ -12,7 +12,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
 {
     public class EmailServiceTest
     {
-        private IEmailService _classUnderTest;
+        private ISendTraConfirmationEmailGateway _classUnderTest;
         private Mock<INotificationClient> _mockNotificationClient;
         private Mock<IJWTService> _mockJWTService;
         private IOptions<EmailConfiguration> _emailConfiguration;
@@ -27,7 +27,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
                 FrontEndAppUrl = "https://www.front-end-app.com/",
                 TemplateId = Guid.NewGuid().ToString()
             });
-            _classUnderTest = new EmailService(_mockNotificationClient.Object, _mockJWTService.Object, _emailConfiguration);
+            _classUnderTest = new SendTraConfirmationEmailGateway(_mockNotificationClient.Object, _mockJWTService.Object, _emailConfiguration);
         }
 
         [Theory]

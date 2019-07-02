@@ -26,6 +26,7 @@ using Newtonsoft.Json.Linq;
 
 namespace ManageATenancyAPI.Controllers.Housing.NHO
 {
+    [ApiVersion("1.0")]
     [Authorize]
     [Produces("application/json")]
     [Route("v1/[controller]")]

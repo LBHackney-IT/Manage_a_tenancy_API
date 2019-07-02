@@ -103,6 +103,7 @@ namespace ManageATenancyAPI
             services.Configure<URLConfiguration>(Configuration.GetSection("URLs"));
             services.Configure<ConnStringConfiguration>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<AppConfiguration>(Configuration.GetSection("appConfigurations"));
+            services.Configure<EmailConfiguration>(Configuration.GetSection("emailConfiguration"));
             //S3 related
             services.Configure<JpegPersistenceServiceConfiguration>(options =>
             {

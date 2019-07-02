@@ -9,5 +9,7 @@ namespace ManageATenancyAPI.Models
     {
         public string developerMessage { get; set; }
         public string userMessage { get; set; }
+        public string source { get; set; }
+        public string stackTrace { get; set; }
     }
 }

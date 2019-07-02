@@ -6,6 +6,9 @@ COPY ManageATenancyAPI/ManageATenancyAPI.csproj ManageATenancyAPI/
 COPY Hackney.InterfaceStubs/Hackney.InterfaceStubs.csproj Hackney.InterfaceStubs/
 COPY Hackney.ServiceLocator/Hackney.ServiceLocator.csproj Hackney.ServiceLocator/
 COPY ManageATenancyAPI.Database/ManageATenancyAPI.Database.csproj ManageATenancyAPI.Database/
+RUN cd ManageATenancyAPI
+RUN dotnet add package Notify -s https://api.bintray.com/nuget/gov-uk-notify/nuget
+RUN cd ..
 RUN dotnet restore ManageATenancyAPI/ManageATenancyAPI.csproj
 
 # copy all other files in the repo

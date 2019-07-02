@@ -52,12 +52,6 @@ namespace ManageATenancyAPI
         {
             // Add framework services.
 
-            services.AddApiVersioning(o =>
-            {
-                o.DefaultApiVersion = new ApiVersion(2, 0);
-                o.AssumeDefaultVersionWhenUnspecified = true; // assume that the caller wants the default version if they don't specify
-                o.ApiVersionReader = new UrlSegmentApiVersionReader(); // read the version number from the url segment header)
-            });
             services.AddSingleton<IApiVersionDescriptionProvider, DefaultApiVersionDescriptionProvider>();
 
             services.AddSwaggerGen(c =>

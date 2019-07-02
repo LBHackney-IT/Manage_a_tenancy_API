@@ -23,7 +23,7 @@ namespace ManageATenancyAPI.Repository
 
         public async Task<object> GetTagReferencenumber(string hackneyhomesId)
         {
-            _logger.LogInformation($"Get Tag Refernce number for {hackneyhomesId}");
+            _logger.LogInformation($"GetAsync Tag Refernce number for {hackneyhomesId}");
 
             try
             {

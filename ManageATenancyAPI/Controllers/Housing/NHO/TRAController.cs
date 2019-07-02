@@ -128,7 +128,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
                     _traAction.UpdateNotes(traId, tra.Notes);
                 }
 
-                var traUpdated = _traAction.Get(traId);
+                var traUpdated = _traAction.GetAsync(traId);
 
                 return Ok(HackneyResult<TRA>.Create(traUpdated));
             }

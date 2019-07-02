@@ -129,7 +129,7 @@ namespace ManageATenancyAPI.Controllers
         }
 
         /// <summary>
-        /// Get account details by tag reference or paris ref
+        /// GetAsync account details by tag reference or paris ref
         /// </summary>
         /// <param name="referencenumber">Payment reference or tag reference number for Account</param>
         /// <returns>Returns account details in Json Object</returns>

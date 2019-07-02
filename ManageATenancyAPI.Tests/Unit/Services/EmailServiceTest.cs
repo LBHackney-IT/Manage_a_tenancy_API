@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Configuration;
+using ManageATenancyAPI.Models;
 using ManageATenancyAPI.Services.JWT;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -15,31 +17,32 @@ namespace ManageATenancyAPI.Tests.Unit.Services
         private ISendTraConfirmationEmailGateway _classUnderTest;
         private Mock<INotificationClient> _mockNotificationClient;
         private Mock<IJWTService> _mockJWTService;
+        private Mock<ITraAction> _mockTraAction;
         private IOptions<EmailConfiguration> _emailConfiguration;
 
         public EmailServiceTest()
         {
             _mockNotificationClient = new Mock<INotificationClient>();
             _mockJWTService = new Mock<IJWTService>();
+            _mockTraAction = new Mock<ITraAction>();
             _emailConfiguration = Options.Create(new EmailConfiguration
             {
                 ApiKey = "API KEY",
                 FrontEndAppUrl = "https://www.front-end-app.com/",
                 TemplateId = Guid.NewGuid().ToString()
             });
-            _classUnderTest = new SendTraConfirmationEmailGateway(_mockNotificationClient.Object, _mockJWTService.Object, _emailConfiguration);
+            _classUnderTest = new SendTraConfirmationEmailGateway(_mockNotificationClient.Object, _mockJWTService.Object, _emailConfiguration, _mockTraAction.Object);
         }
 
         [Theory]
-        [InlineData("123","test@t.com", "tra name", "officer of Hackney", "123 hackney road")]
-        [InlineData("456","test2@t.com", "tra name 2", "officer of Hackney 2", "123 hackney road 2")]
-        public async Task calls_notification_client(string templateId, string emailAdress, string traName, string officerName, string officerAddress)
+        [InlineData(123, "officer of Hackney", "123 hackney road" ,"test@t.com", "Tra Name")]
+        [InlineData(456, "officer of Hackney 2", "123 hackney road 2", "test@p.com", "Tra Name 2")]
+        public async Task calls_notification_client(int traId, string officerName, string officerAddress, string email, string traName)
         {
             //arrange
             var inputModel = new SendTraConfirmationEmailInputModel
             {
-                EmailAddress = emailAdress,
-                TraName = traName,
+                TraId = traId,
                 OfficerName = officerName,
                 OfficerAddress = officerAddress,
                 MeetingId = Guid.NewGuid()
@@ -51,9 +54,16 @@ namespace ManageATenancyAPI.Tests.Unit.Services
                 s.CreateManageATenancySingleMeetingToken(It.Is<Guid>(m => m == inputModel.MeetingId),
                     It.IsAny<string>())).Returns(token);
 
+            _mockTraAction.Setup(s =>
+                s.GetAsync(It.Is<int>(m => m == inputModel.TraId))).ReturnsAsync(new TRA
+            {
+                Email = email,
+                Name = traName
+            });
+
             var personalization = new Dictionary<string, object>
             {
-                {EmailKeys.EmailAddress,emailAdress},
+                {EmailKeys.EmailAddress,email},
                 {EmailKeys.Subject, $"{traName} meeting notes confirmation" },
                 {EmailKeys.MeetingUrl, $"{_emailConfiguration?.Value.FrontEndAppUrl}?meetingtoken={token}"},
                 {EmailKeys.OfficerName, $"{officerName}"},
@@ -64,7 +74,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             var outputModel = await _classUnderTest.SendTraConfirmationEmailAsync(inputModel, CancellationToken.None).ConfigureAwait(false);
             //assert
             _mockNotificationClient.Verify(s=> s.SendEmailAsync(
-                It.Is<string>(m=> m.Equals(emailAdress)), 
+                It.Is<string>(m=> m.Equals(email)), 
                 It.Is<string>(m=> m.Equals(_emailConfiguration.Value.TemplateId)),
                 It.Is<Dictionary<string, object>>( m=> 
                     m[EmailKeys.EmailAddress].Equals(personalization[EmailKeys.EmailAddress]) &&
@@ -86,8 +96,6 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             //arrange
             var inputModel = new SendTraConfirmationEmailInputModel
             {
-                EmailAddress = emailAdress,
-                TraName = traName,
                 OfficerName = officerName,
                 OfficerAddress = officerAddress,
                 MeetingId = Guid.NewGuid()

@@ -274,7 +274,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Get ETRA issues Error " + ex.Message);
+                _logger.LogError($"GetAsync ETRA issues Error " + ex.Message);
                 throw ex;
 
             }
@@ -327,7 +327,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Get ETRA issues Error " + ex.Message);
+                _logger.LogError($"GetAsync ETRA issues Error " + ex.Message);
                 throw ex;
 
             }

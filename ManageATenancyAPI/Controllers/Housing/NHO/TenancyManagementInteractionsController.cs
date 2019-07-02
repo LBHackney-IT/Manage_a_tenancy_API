@@ -267,7 +267,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         }
 
         /// <summary>
-        /// Get group Tray 
+        /// GetAsync group Tray 
         /// </summary>
         /// <param name="OfficeId">OfficeId of the Group Tray</param>
         /// <returns>A JSON object for a successfully returns for Group Tray TenancyManagement request</returns>

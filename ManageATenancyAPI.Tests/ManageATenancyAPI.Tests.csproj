@@ -72,4 +72,9 @@
     <ProjectReference Include="..\ManageATenancyAPI\ManageATenancyAPI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="v2\AcceptanceTests\SendETraEmailConfirmation\" />
+    <Folder Include="v2\Gateways\SendEtraMeetingEmailConfirmation\" />
+  </ItemGroup>
+
 </Project>

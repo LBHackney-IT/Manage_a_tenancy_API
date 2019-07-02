@@ -72,11 +72,12 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
             {
                 MeetingId = meetingId,
                 OfficerName = claims.FullName,
-                TraName = request.MeetingName,
+                TraId = request.TRAId
             };
 
             var sendTraConfirmationEmailOutputModel =  await _sendTraConfirmationEmailGateway.SendTraConfirmationEmailAsync(inputModel, cancellationToken).ConfigureAwait(false);
-            
+
+            outputModel.IsEmailSent = sendTraConfirmationEmailOutputModel?.IsSent ?? false;
 
             return outputModel;
         }

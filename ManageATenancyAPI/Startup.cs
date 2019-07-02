@@ -172,9 +172,9 @@ namespace ManageATenancyAPI
                 app.UseHsts();
             }
 
-            //Get All ApiVersions,
+            //GetAsync All ApiVersions,
             var api = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
-            //Get All ApiVersions,
+            //GetAsync All ApiVersions,
             _apiVersions = api.ApiVersionDescriptions.Select(s => s).ToList();
             //Swagger ui to view the swagger.json file
             app.UseSwaggerUI(c =>

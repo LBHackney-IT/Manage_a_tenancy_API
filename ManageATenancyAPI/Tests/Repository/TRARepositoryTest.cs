@@ -108,7 +108,7 @@ namespace ManageATenancyAPI.Tests.Repository
 
         #endregion
 
-        #region Get TRA information
+        #region GetAsync TRA information
         [Fact]
         public void should_construct_generic_repository_on_initial_load_get_tra_information()
         {

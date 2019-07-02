@@ -30,8 +30,8 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting
 
                 // area Id 
                 areaName = manageATenancyClaims.AreaId.ToString(),
-
-                managerId = manageATenancyClaims.AreaManagerId.ToString(),
+                //setting manager Id assigns it to a manager
+                //managerId = manageATenancyClaims.AreaManagerId.ToString(),
                 ServiceRequest = new CRMServiceRequest
                 {
                     Description = meeting.MeetingName,

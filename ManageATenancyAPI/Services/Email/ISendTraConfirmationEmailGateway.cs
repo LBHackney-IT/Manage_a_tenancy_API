@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace ManageATenancyAPI.Tests.Unit.Services
+namespace ManageATenancyAPI.Services.Email
 {
     public interface ISendTraConfirmationEmailGateway
     {

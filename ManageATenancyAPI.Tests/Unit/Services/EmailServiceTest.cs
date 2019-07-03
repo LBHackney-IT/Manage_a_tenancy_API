@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.Models;
+using ManageATenancyAPI.Services.Email;
 using ManageATenancyAPI.Services.JWT;
 using Microsoft.Extensions.Options;
 using Moq;

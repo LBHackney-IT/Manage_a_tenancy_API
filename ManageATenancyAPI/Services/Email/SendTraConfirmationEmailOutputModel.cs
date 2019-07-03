@@ -1,4 +1,4 @@
-﻿namespace ManageATenancyAPI.Tests.Unit.Services
+﻿namespace ManageATenancyAPI.Services.Email
 {
     public class SendTraConfirmationEmailOutputModel
     {

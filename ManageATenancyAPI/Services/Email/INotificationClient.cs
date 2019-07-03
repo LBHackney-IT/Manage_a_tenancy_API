@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Notify.Models.Responses;
 
-namespace ManageATenancyAPI.Tests.Unit.Services
+namespace ManageATenancyAPI.Services.Email
 {
     public interface INotificationClient
     {

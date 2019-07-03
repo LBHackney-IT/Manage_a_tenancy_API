@@ -7,6 +7,7 @@ using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingAttendance;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting;
+using ManageATenancyAPI.Services.Email;
 using ManageATenancyAPI.Services.JWT.Models;
 using ManageATenancyAPI.Tests.Unit.Services;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;

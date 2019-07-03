@@ -8,8 +8,7 @@ using ManageATenancyAPI.Configuration;
 using ManageATenancyAPI.Services.JWT;
 using Microsoft.Extensions.Options;
 
-
-namespace ManageATenancyAPI.Tests.Unit.Services
+namespace ManageATenancyAPI.Services.Email
 {
     public class SendTraConfirmationEmailGateway:ISendTraConfirmationEmailGateway
     {

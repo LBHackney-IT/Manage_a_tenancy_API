@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using Notify.Client;
 using Notify.Models.Responses;
 
-namespace ManageATenancyAPI.Tests.Unit.Services
+namespace ManageATenancyAPI.Services.Email
 {
     public class GovNotificationClient:INotificationClient
     {

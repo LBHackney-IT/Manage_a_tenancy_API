@@ -69,6 +69,8 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
             if (request.SignOff != null)
             {
                 var signOffMeetingOutputModel = await _saveEtraMeetingSignOffMeetingGateway.SignOffMeetingAsync(meetingId, request.SignOff, cancellationToken).ConfigureAwait(false);
+                outputModel.SignOff = signOffMeetingOutputModel?.SignOff;
+
                 outputModel.IsSignedOff = signOffMeetingOutputModel?.IsSignedOff ?? false;
             }
 

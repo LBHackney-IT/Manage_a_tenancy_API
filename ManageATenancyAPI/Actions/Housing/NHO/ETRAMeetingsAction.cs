@@ -566,8 +566,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                         SignatureId = crmMeeting["hackney_signaturereference"] != null ? crmMeeting["hackney_signaturereference"].ToObject<Guid>() : Guid.Empty,
                         SignOffDate = signOffDate.ToObject<DateTime>(),
                         Role = crmMeeting["hackney_signatoryrole"].ToString(),
-                        Name = crmMeeting["hackney_signatoryname"].ToString()
+                        Name = crmMeeting["hackney_signatoryname"].ToString(),
                     };
+
                 }
 
                 var name = crmMeeting["incident1_x002e_description"].ToString();
@@ -581,6 +582,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     Attendees = attendees,
                     CreatedOn = createdOn,
                     SignOff = signOff,
+                    IsSignedOff = signOff != null ? true:false
                 };
 
                 return outputModel;
@@ -650,8 +652,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
         public async Task<FinaliseETRAMeetingResponse> FinaliseMeeting(string id, FinaliseETRAMeetingRequest request)
         {
+            var signOffDate = DateTime.Now;
             var confirmation = new JObject {
-                { "hackney_confirmationdate", DateTime.Now }
+                { "hackney_confirmationdate", signOffDate }
             };
 
             if (request != null)
@@ -678,7 +681,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 throw new TenancyServiceException();
             }
 
-            return new FinaliseETRAMeetingResponse { Id = id, IsFinalised = updateIntractionResponse.IsSuccessStatusCode };
+            return new FinaliseETRAMeetingResponse { Id = id, IsFinalised = updateIntractionResponse.IsSuccessStatusCode, SignOffDate = signOffDate };
         }
 
         public async Task<IncidentClosedResponse> CloseIncident(string closingNotes, Guid incidentId)

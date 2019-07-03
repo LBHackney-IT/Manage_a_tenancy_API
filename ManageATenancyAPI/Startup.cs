@@ -154,7 +154,7 @@ namespace ManageATenancyAPI
             loggerFactory.AddNLog();
             app.AddNLogWeb();
             env.ConfigureNLog("NLog.config");
-            app.UseCors("AllowAny");
+            app.UseCors(builder => { builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials(); });
 
 
             if (env.IsDevelopment())

@@ -75,7 +75,6 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.GetEtraMeeting
                     Role = role,
                     Signature = signature
                 }
-
             };
 
             var saveMeetingResponse = await _classUnderTest.Post(inputModel).ConfigureAwait(false);
@@ -88,8 +87,24 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.GetEtraMeeting
             var getMeetingResponse = await _classUnderTest.Get().ConfigureAwait(false);
             var getMeetingResponseOutputModel = getMeetingResponse.GetOKResponseType<GetEtraMeetingOutputModel>();
             //assert
-            getMeetingResponseOutputModel.Should().BeEquivalentTo(outputModel);
-            getMeetingResponseOutputModel.Should().BeEquivalentTo(outputModel);
+
+            getMeetingResponseOutputModel.Id.Should().Be(outputModel.Id);
+            getMeetingResponseOutputModel.Name.Should().Be(outputModel.Name);
+            
+            getMeetingResponseOutputModel.Attendees.Should().BeEquivalentTo(outputModel.Attendees);
+            getMeetingResponseOutputModel.Issues.Should().BeEquivalentTo(outputModel.Issues);
+
+            getMeetingResponseOutputModel.SignOff.Signature.Should().Be(outputModel.SignOff.Signature);
+            getMeetingResponseOutputModel.SignOff.SignatureId.Should().Be(outputModel.SignOff.SignatureId);
+            getMeetingResponseOutputModel.SignOff.Name.Should().Be(outputModel.SignOff.Name);
+            getMeetingResponseOutputModel.SignOff.Role.Should().Be(outputModel.SignOff.Role);
+            getMeetingResponseOutputModel.SignOff.SignOffDate.Should().BeSameDateAs(outputModel.SignOff.SignOffDate);
+
+            getMeetingResponseOutputModel.IsEmailSent.Should().Be(outputModel.IsEmailSent);
+            getMeetingResponseOutputModel.IsSignedOff.Should().Be(outputModel.IsSignedOff);
+
+            //getMeetingResponseOutputModel.CreatedOn.Should().Be(outputModel.CreatedOn);
+
         }
     }
 }

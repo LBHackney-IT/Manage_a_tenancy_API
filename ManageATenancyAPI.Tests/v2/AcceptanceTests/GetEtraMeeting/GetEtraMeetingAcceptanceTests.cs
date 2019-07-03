@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ManageATenancyAPI.Controllers.v2;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
@@ -39,8 +40,10 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.GetEtraMeeting
 
         }
 
-        [Fact]
-        public async Task can_get_saved_etra_meeting()
+        [Theory]
+        [InlineData(1, "100000501", "De Beauvoir Estate  1 - 126 Fermain Court", "Bad things have happened please fix")]
+        [InlineData(2, "100000501", "De Beauvoir Estate  127 -256 Fermain Court", "Bad things have happened please fix")]
+        public async Task can_save_then_get_etra_meeting(int attendees, string issueTypeId, string issueLocationName, string note)
         {
             //arrange
             var inputModel = new SaveETRAMeetingInputModel
@@ -50,6 +53,21 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.GetEtraMeeting
                 MeetingAttendance = new MeetingAttendees
                 {
                     Attendees = 1
+                },
+                Issues = new List<MeetingIssue>
+                {
+                    new MeetingIssue
+                    {
+                        IssueTypeId = issueTypeId,
+                        IssueLocationName = issueLocationName,
+                        IssueNote = note
+                    },
+                    new MeetingIssue
+                    {
+                        IssueTypeId = issueTypeId,
+                        IssueLocationName = $"{issueLocationName} 2",
+                        IssueNote = $"{note} 2"
+                    }
                 },
             };
 
@@ -63,6 +81,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.GetEtraMeeting
             var getMeetingResponse = await _classUnderTest.Get().ConfigureAwait(false);
             var getMeetingResponseOutputModel = getMeetingResponse.GetOKResponseType<GetEtraMeetingOutputModel>();
             //assert
+            getMeetingResponseOutputModel.Should().BeEquivalentTo(outputModel);
             getMeetingResponseOutputModel.Should().BeEquivalentTo(outputModel);
         }
     }

@@ -1000,6 +1000,7 @@ namespace ManageATenancyAPI.Helpers.Housing
                 <attribute name='hackney_tenancymanagementinteractionsid' />
                 <attribute name='hackney_issuelocation' />
                 <attribute name='hackney_enquirysubject' />
+                <attribute name='hackney_incidentid' />
                 <filter>";
             fetchXml = fetchXml + "<condition attribute='hackney_parent_interactionid' operator='eq' value='" + meetingId +
                            "' />";
@@ -1009,6 +1010,33 @@ namespace ManageATenancyAPI.Helpers.Housing
                         <attribute name='description' />
                     </link-entity>    
             </entity></fetch>";
+            query.Append("/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=" + HttpUtility.UrlEncode(fetchXml.Trim()));
+            return query.ToString();
+        }
+
+        public static string getEtraMeetingV2(Guid meetingId)
+        {
+            StringBuilder query = new StringBuilder();
+
+            var fetchXml = $@"
+            <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true' >
+                <entity name='hackney_tenancymanagementinteractions' >              
+                    <attribute name='hackney_councillorsattendingmeeting' />
+                    <attribute name='hackney_othercouncilstaffattendingmeeting' />
+                    <attribute name='hackney_totalmeetingattendees' />
+                    <attribute name='hackney_confirmationdate' />
+                    <attribute name='hackney_signaturereference' />
+                    <attribute name='hackney_incidentid' />
+                    <attribute name='hackney_tenancymanagementinteractionsid' />
+                    <attribute name='createdon' />
+                    <filter>
+                        <condition attribute='hackney_tenancymanagementinteractionsid' operator='eq' value='{meetingId.ToString()}' />
+                    </filter>
+                    <link-entity name='incident' from='incidentid' to='hackney_incidentid' link-type='inner' >
+                        <attribute name='description' />
+                    </link-entity>
+                </entity>
+            </fetch>";
             query.Append("/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=" + HttpUtility.UrlEncode(fetchXml.Trim()));
             return query.ToString();
         }

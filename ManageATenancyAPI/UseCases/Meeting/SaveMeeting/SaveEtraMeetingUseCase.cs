@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Amazon.Runtime.Internal.Transform;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingAttendance;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue;
@@ -43,6 +44,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
             };
 
             var outputModel = new SaveEtraMeetingOutputModel();
+            outputModel.Name = request.MeetingName;
 
             var meetingId = await _saveEtraMeetingGateway.CreateEtraMeeting(etraMeeting, claims, cancellationToken).ConfigureAwait(false);
 
@@ -60,7 +62,9 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
                 }
             }
 
-            await _saveEtraMeetingAttendanceGateway.CreateEtraAttendance(etraMeeting, request.MeetingAttendance, cancellationToken).ConfigureAwait(false);
+            var successfullySavedAttendees = await _saveEtraMeetingAttendanceGateway.CreateEtraAttendance(etraMeeting, request.MeetingAttendance, cancellationToken).ConfigureAwait(false);
+            if(successfullySavedAttendees)
+                outputModel.Attendees = request.MeetingAttendance;
 
             if (request.SignOff != null)
             {
@@ -71,7 +75,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
             var inputModel = new SendTraConfirmationEmailInputModel
             {
                 MeetingId = meetingId,
-                OfficerName = claims.FullName,
+                OfficerName = claims?.FullName,
                 TraId = request.TRAId
             };
 

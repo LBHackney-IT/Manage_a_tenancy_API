@@ -1020,14 +1020,20 @@ namespace ManageATenancyAPI.Helpers.Housing
 
             var fetchXml = $@"
             <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true' >
-                <entity name='hackney_tenancymanagementinteractions' >              
+                <entity name='hackney_tenancymanagementinteractions' >    
+                    
+                    <attribute name='hackney_incidentid' />
+                    <attribute name='hackney_tenancymanagementinteractionsid' />
+
                     <attribute name='hackney_councillorsattendingmeeting' />
                     <attribute name='hackney_othercouncilstaffattendingmeeting' />
                     <attribute name='hackney_totalmeetingattendees' />
+
                     <attribute name='hackney_confirmationdate' />
                     <attribute name='hackney_signaturereference' />
-                    <attribute name='hackney_incidentid' />
-                    <attribute name='hackney_tenancymanagementinteractionsid' />
+                    <attribute name='hackney_signatoryrole' />
+                    <attribute name='hackney_signatoryname' />
+
                     <attribute name='createdon' />
                     <filter>
                         <condition attribute='hackney_tenancymanagementinteractionsid' operator='eq' value='{meetingId.ToString()}' />

@@ -561,26 +561,25 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 SignOff signOff = null;
                 if (signOffDate != null)
                 {
-                    var signatureId = (string)crmMeeting["hackney_signaturereference"];
                     signOff = new SignOff
                     {
-                        SignatureId = !string.IsNullOrEmpty(signatureId) ? new Guid(signatureId) : Guid.Empty,
+                        SignatureId = crmMeeting["hackney_signaturereference"] != null ? crmMeeting["hackney_signaturereference"].ToObject<Guid>() : Guid.Empty,
                         SignOffDate = signOffDate.ToObject<DateTime>(),
                         Role = crmMeeting["hackney_signatoryrole"].ToString(),
+                        Name = crmMeeting["hackney_signatoryname"].ToString()
                     };
                 }
 
-                var Id = crmMeeting["hackney_tenancymanagementinteractionsid"].ToObject<Guid>();
-                var Name = crmMeeting["incident1_x002e_description"].ToString();
-                var CreatedOn = crmMeeting["createdon"].ToObject<DateTime>();
-                var SignOff = signOff;
+                var name = crmMeeting["incident1_x002e_description"].ToString();
+                var createdOn = crmMeeting["createdon"].ToObject<DateTime>();
+                
 
                 var outputModel = new GetEtraMeetingOutputModel
                 {
-                    Id = Id,
-                    Name = Name,
+                    Id = id,
+                    Name = name,
                     Attendees = attendees,
-                    CreatedOn = CreatedOn,
+                    CreatedOn = createdOn,
                     SignOff = signOff,
                 };
 

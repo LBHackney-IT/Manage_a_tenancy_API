@@ -7,6 +7,7 @@ using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 
 namespace ManageATenancyAPI.Controllers.v2
@@ -15,6 +16,7 @@ namespace ManageATenancyAPI.Controllers.v2
     [Produces("application/json")]
     [Route("v2/tra/meeting")]
     [EnableCors("AllowAny")]
+    
     public class TRAController : BaseClaimsController
     {
         private readonly ISaveEtraMeetingUseCase _saveEtraMeetingUseCase;
@@ -41,6 +43,7 @@ namespace ManageATenancyAPI.Controllers.v2
         [HttpPost]
         [ProducesResponseType(typeof(SaveEtraMeetingOutputModel), 200)]
         [ProducesResponseType(typeof(BadRequestResult), 400)]
+        [Authorize]
         public async Task<IActionResult> Post([FromBody]SaveETRAMeetingInputModel inputModel)
         {
             if (!ModelState.IsValid)
@@ -59,6 +62,7 @@ namespace ManageATenancyAPI.Controllers.v2
         [HttpGet]
         [ProducesResponseType(typeof(GetEtraMeetingOutputModel), 200)]
         [ProducesResponseType(typeof(UnauthorizedResult), 401)]
+        [Authorize]
         public async Task<IActionResult> Get()
         {
             var claims = GetMeetingClaims();
@@ -81,6 +85,7 @@ namespace ManageATenancyAPI.Controllers.v2
         [HttpPatch]
         [ProducesResponseType(typeof(SignOffMeetingOutputModel), 200)]
         [ProducesResponseType(typeof(UnauthorizedResult), 401)]
+        [Authorize]
         public async Task<IActionResult> Patch([FromBody]SignOffMeetingInputModel inputModel)
         {
             var claims = GetMeetingClaims();

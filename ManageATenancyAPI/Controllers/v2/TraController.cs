@@ -107,6 +107,7 @@ namespace ManageATenancyAPI.Controllers.v2
         {
             Response.Headers.Add("Access-Control-Allow-Methods","POST, GET, OPTIONS, DELETE, PATCH");
             Response.Headers.Add("Access-Control-Origin", "*");
+            Response.Headers.Add("Access-Control-Allow-Headers","*");
             return Ok();
         }
     }

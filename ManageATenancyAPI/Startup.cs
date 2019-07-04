@@ -47,8 +47,7 @@ namespace ManageATenancyAPI
             services.Configure<URLConfiguration>(Configuration.GetSection("URLs"));
             services.Configure<ConnStringConfiguration>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<AppConfiguration>(Configuration.GetSection("appConfigurations"));
-            
-            services.AddMvc();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Version = "v1", Title = "ManageATenancyAPI" });

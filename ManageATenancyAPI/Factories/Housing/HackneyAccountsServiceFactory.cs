@@ -18,7 +18,7 @@ namespace ManageATenancyAPI.Factories.Housing
         {
             if (TestStatus.IsRunningInTests == false)
             {
-                return new HackneyHousingAPICall(new LoggerAdapter<HackneyHousingAPICall>(new Logger<HackneyHousingAPICall>(new LoggerFactory())));
+                return new HackneyHousingAPICall();
             }
             else
             {

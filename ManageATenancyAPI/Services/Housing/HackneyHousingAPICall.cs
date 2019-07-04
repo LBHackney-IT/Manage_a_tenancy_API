@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -13,12 +14,11 @@ namespace ManageATenancyAPI.Services.Housing
 {
     public class HackneyHousingAPICall : IHackneyHousingAPICall
     {
-        private readonly ILoggerAdapter<HackneyHousingAPICall> _loggerAdapter;
         private string beginningOfQuery;
 
-        public HackneyHousingAPICall(ILoggerAdapter<HackneyHousingAPICall> loggerAdapter)
+        public HackneyHousingAPICall()
         {
-            _loggerAdapter = loggerAdapter;
+
         }
 
         public async Task<HttpResponseMessage> getHousingAPIResponse(HttpClient httpClient, string query,string parameter)
@@ -26,9 +26,10 @@ namespace ManageATenancyAPI.Services.Housing
             var response = new HttpResponseMessage();
             //try
             //{
-                _loggerAdapter.LogInformation($"getHousingAPIResponse query: {query}");
+                Console.WriteLine($"getHousingAPIResponse query: {query}");
                 response = httpClient.GetAsync(query).Result;
-                _loggerAdapter.LogInformation($"getHousingAPIResponse response: {await response.Content.ReadAsStringAsync()}");
+                var responseLog = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"getHousingAPIResponse response: {responseLog}");
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -53,14 +54,15 @@ namespace ManageATenancyAPI.Services.Housing
                 value.ToString() :
                 JsonConvert.SerializeObject(value, new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore });
 
-                _loggerAdapter.LogInformation($"SendAsJsonAsync Request: {content}");
+                Console.WriteLine($"SendAsJsonAsync Request: {content}");
                 HttpRequestMessage request = new HttpRequestMessage(method, requestUri) { Content = new StringContent(content) };
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 response = await client.SendAsync(request).ConfigureAwait(false);
+                var responseLog = await response.Content.ReadAsStringAsync();
+                //Debug.WriteLine($"SendAsJsonAsync Response {responseLog}");
+                Console.WriteLine($"SendAsJsonAsync Response {responseLog}");
 
-                _loggerAdapter.LogInformation($"SendAsJsonAsync Response {await response.Content.ReadAsStringAsync()}");
-
-                if (!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
                 {
                     throw new ServiceException();
                 }
@@ -80,9 +82,10 @@ namespace ManageATenancyAPI.Services.Housing
             //try
             //{
                 var content = new StringContent(jObject.ToString(), Encoding.UTF8, "application/json");
-                _loggerAdapter.LogInformation($"Post Housing API: {jObject}");
+                Console.WriteLine($"Post Housing API: {jObject}");
                 response = await client.PostAsync(query, content).ConfigureAwait(false) ;
-                _loggerAdapter.LogInformation($"Post Housing API Response {await response.Content.ReadAsStringAsync()}");
+                var responseLog = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Post Housing API Response {responseLog}");
             if (!response.IsSuccessStatusCode)
                 {
                     throw new ServiceException();
@@ -106,8 +109,11 @@ namespace ManageATenancyAPI.Services.Housing
             HttpRequestMessage request = new HttpRequestMessage(method, requestUri) { Content = new StringContent(jsonString, System.Text.Encoding.UTF8, "application/json") };
             //try
             //{
-                updateResponse = await client.SendAsync(request);
-                if (updateResponse.IsSuccessStatusCode)
+            Console.WriteLine($"UpdateObject: {jsonString}");
+            updateResponse = await client.SendAsync(request);
+            
+
+            if (updateResponse.IsSuccessStatusCode)
                 {
                     return true;
                 }

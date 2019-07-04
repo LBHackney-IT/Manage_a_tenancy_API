@@ -151,9 +151,11 @@ namespace ManageATenancyAPI
             //add db connection string to logger
             NLog.GlobalDiagnosticsContext.Set("ManageATenancyDatabase", Configuration.GetConnectionString("ManageATenancyDatabase"));
 
-            loggerFactory.AddNLog();
-            app.AddNLogWeb();
-            env.ConfigureNLog("NLog.config");
+            //loggerFactory.AddNLog();
+            loggerFactory.AddConsole(LogLevel.Trace);
+            //loggerFactory.AddDebug();
+            //app.AddNLogWeb();
+            //env.ConfigureNLog("NLog.config");
             app.UseCors(builder => { builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials(); });
 
 

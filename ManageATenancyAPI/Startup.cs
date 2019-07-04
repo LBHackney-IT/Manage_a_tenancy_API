@@ -111,7 +111,7 @@ namespace ManageATenancyAPI
             services.AddMvc();
             services.AddCors(option =>
             {
-                option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+                option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             });
             services.AddCustomServices();
             services.AddMvc(options => options.Filters.Add(typeof(JsonExceptionFilter)));

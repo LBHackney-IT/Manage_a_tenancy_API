@@ -7,12 +7,14 @@ using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary;
+using Microsoft.AspNetCore.Cors;
 
 namespace ManageATenancyAPI.Controllers.v2
 {
     [ApiVersion("2.0")]
     [Produces("application/json")]
     [Route("v2/tra/meeting")]
+    [EnableCors("AllowAny")]
     public class TRAController : BaseClaimsController
     {
         private readonly ISaveEtraMeetingUseCase _saveEtraMeetingUseCase;

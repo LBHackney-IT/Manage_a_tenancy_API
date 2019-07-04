@@ -108,7 +108,6 @@ namespace ManageATenancyAPI
 
             services.Configure<S3Configuration>(Configuration.GetSection("S3Configuration"));
 
-            services.AddMvc();
             services.AddCors(option =>
             {
                 option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());

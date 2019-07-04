@@ -51,7 +51,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
                 MeetingName = "New ETRA meeting",
                 MeetingAttendance = new MeetingAttendees
                 {
-                    Attendees = 1
+                    NumberOfAttendees = 1
                 },
             };
 
@@ -75,7 +75,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
                 MeetingName = "New ETRA meeting",
                 MeetingAttendance = new MeetingAttendees
                 {
-                    Attendees = 1
+                    NumberOfAttendees = 1
                 },
                 Issues = new List<MeetingIssue>
                 {
@@ -127,7 +127,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
                 MeetingName = "New ETRA meeting",
                 MeetingAttendance = new MeetingAttendees
                 {
-                    Attendees = 1
+                    NumberOfAttendees = 1
                 },
                 SignOff = new SignOff
                 {
@@ -154,7 +154,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
                 MeetingName = "New ETRA meeting",
                 MeetingAttendance = new MeetingAttendees
                 {
-                    Attendees = 1
+                    NumberOfAttendees = 1
                 },
             };
             //act

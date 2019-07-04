@@ -553,7 +553,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 {
                     Councillors = Councillors,
                     HackneyStaff = HackneyStaff,
-                    Attendees = Attendees
+                    NumberOfAttendees = Attendees
                 };
 
                 var signOffDate = crmMeeting["hackney_confirmationdate"];

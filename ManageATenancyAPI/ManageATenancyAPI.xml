@@ -397,7 +397,7 @@
             Optional ideally comma seperated list of Hackney staff as a record of who attended 
             </summary>
         </member>
-        <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.MeetingAttendees.Attendees">
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.MeetingAttendees.NumberOfAttendees">
             <summary>
             Number of attendees to the meeting that aren't Councillors or Hackney staff, must be greater than 1
             </summary>

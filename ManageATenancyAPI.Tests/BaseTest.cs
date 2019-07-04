@@ -13,7 +13,7 @@ namespace ManageATenancyAPI.Tests
         public BaseTest()
         {
             Config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.json",true)
                 .Build();
 
         }

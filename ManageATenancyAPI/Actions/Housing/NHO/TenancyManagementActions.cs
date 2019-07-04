@@ -481,7 +481,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Get Tenancy Management Interaction Error " + ex.Message);
+                _logger.LogError($"GetAsync Tenancy Management Interaction Error " + ex.Message);
                 throw ex;
 
             }
@@ -494,7 +494,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             {
 
                 HttpResponseMessage updateResponse = new HttpResponseMessage();
-                _logger.LogInformation($"Get Tenancy Management Group Tray Interaction");
+                _logger.LogInformation($"GetAsync Tenancy Management Group Tray Interaction");
                 var token = _crmAccessToken.getCRM365AccessToken().Result;
                 _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
                 _client.DefaultRequestHeaders.Add("Prefer", "odata.include-annotations=\"OData.Community.Display.V1.FormattedValue\"");
@@ -536,7 +536,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Get Tenancy Management Group Tray Interaction Error " + ex.Message);
+                _logger.LogError($"GetAsync Tenancy Management Group Tray Interaction Error " + ex.Message);
                 throw ex;
 
             }

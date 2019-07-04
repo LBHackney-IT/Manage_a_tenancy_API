@@ -69,7 +69,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     sr["subjectid@odata.bind"] = "/subjects(" + meetingInfo.ServiceRequest.Subject + ")";
                 }
                 //change this with dynamic account value 
-                sr["customerid_account@odata.bind"] = "/accounts("+ _configuration.ETRAAccount +")";
+                sr["customerid_account@odata.bind"] = "/accounts(" + _configuration.ETRAAccount + ")";
                 if (!string.IsNullOrEmpty(meetingInfo.ServiceRequest.Title))
                 {
                     sr.Add("title", meetingInfo.ServiceRequest.Title);
@@ -111,8 +111,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     }
                     if (!string.IsNullOrWhiteSpace(meetingInfo.ServiceRequest.Description))
                     {
-                         annotationResult = await CreateAnnotation(meetingInfo.ServiceRequest.Description, meetingInfo.estateOfficerName,
-                            meetingInfo.ServiceRequest.Id, null);
+                        annotationResult = await CreateAnnotation(meetingInfo.ServiceRequest.Description, meetingInfo.estateOfficerName,
+                           meetingInfo.ServiceRequest.Id, null);
                     }
                 }
                 catch (Exception ex)
@@ -144,7 +144,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                         var response = new CreateETRAMeetingActionResponse
                         {
                             IncidentId = Guid.Parse(incidentid),
-                            InteractionId =  Guid.Parse(apiResponse["hackney_tenancymanagementinteractionsid"].ToString()),
+                            InteractionId = Guid.Parse(apiResponse["hackney_tenancymanagementinteractionsid"].ToString()),
                             TicketNumber = ticketnumber,
                             AnnotationId = annotationResult
                         };
@@ -274,7 +274,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Get ETRA issues Error " + ex.Message);
+                _logger.LogError($"GetAsync ETRA issues Error " + ex.Message);
                 throw ex;
 
             }
@@ -306,13 +306,14 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     {
                         List<JToken> issuesRetrievedList = issuesRetrieveResponse["value"].ToList();
 
-                        IList< MeetingIssueOutputModel > list = new List<MeetingIssueOutputModel>();
-                        issuesRetrievedList.Select(s => new MeetingIssueOutputModel
+                        IList<MeetingIssueOutputModel> list = null;
+                        list = issuesRetrievedList.Select(s => new MeetingIssueOutputModel
                         {
                             Id = s["hackney_tenancymanagementinteractionsid"].ToObject<Guid>(),
                             IssueLocationName = s["hackney_issuelocation"].ToString(),
-                            //IssueTypeId = 
-                        });
+                            IssueTypeId = s["hackney_enquirysubject"].ToString(),
+                            IssueNote = s["annotation2_x002e_notetext"].ToString()
+                        }).ToList();
 
                         return list;
                     }
@@ -327,7 +328,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Get ETRA issues Error " + ex.Message);
+                _logger.LogError($"GetAsync ETRA issues Error " + ex.Message);
                 throw ex;
 
             }
@@ -354,7 +355,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     result.Action = "Deleted";
                     return result;
                 }
-                
+
                 var issueUpdateObject = new JObject();
 
                 //update service area scenario
@@ -402,8 +403,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
                 //updated interaction record
                 var updateIssueIntractionQuery = HousingAPIQueryBuilder.updateIssueQuery(issueToBeUpdated.issueInteractionId.ToString());
-                
-                var updateIntractionResponse = 
+
+                var updateIntractionResponse =
                 _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, updateIssueIntractionQuery, issueUpdateObject).Result;
                 if (!updateIntractionResponse.IsSuccessStatusCode)
                 {
@@ -438,7 +439,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             var noteText = $"Response from: {request.ServiceAreaName}\r\n\r\n{request.ResponseText}\r\n\r\n{completionDateText}Responder: {request.ResponderName} on {DateTime.Now}";
 
             var annotationId = await CreateAnnotation(noteText, request.IssueIncidentId.ToString(), request.AnnotationSubjectId.ToString());
-            
+
             var updateIssueIntractionQuery = HousingAPIQueryBuilder.updateIssueQuery(id);
 
             var updateIntractionResponse = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, updateIssueIntractionQuery, issueUpdateObject);
@@ -524,7 +525,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
         {
             var token = await _crmAccessToken.getCRM365AccessToken();
             _client = await _hackneyAccountApiBuilder.CreateRequest(token);
-            var getMeetingQuery = HousingAPIQueryBuilder.GetActionById(id.ToString());
+            _client.DefaultRequestHeaders.Add("Prefer",
+                "odata.include-annotations=\"OData.Community.Display.V1.FormattedValue\"");
+            var getMeetingQuery = HousingAPIQueryBuilder.getEtraMeetingV2(id);
 
             var result = await _ManageATenancyAPI.getHousingAPIResponse(_client, getMeetingQuery, null);
 
@@ -535,28 +538,51 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     throw new TenancyServiceException();
                 }
 
-                dynamic crmMeeting = JsonConvert.DeserializeObject<dynamic>(await result.Content.ReadAsStringAsync());
+                JObject response = JsonConvert.DeserializeObject<JObject>(await result.Content.ReadAsStringAsync());
+
+                var crmMeeting = response["value"];
+                crmMeeting = crmMeeting[0];
+
+                var interactionId = crmMeeting["hackney_tenancymanagementinteractionsid"];
+
+                var Councillors = (string)crmMeeting["hackney_councillorsattendingmeeting"];
+                var HackneyStaff = (string)crmMeeting["hackney_othercouncilstaffattendingmeeting"];
+                var Attendees = (int)crmMeeting["hackney_totalmeetingattendees"];
+
+                var attendees = new MeetingAttendees
+                {
+                    Councillors = Councillors,
+                    HackneyStaff = HackneyStaff,
+                    Attendees = Attendees
+                };
+
+                var signOffDate = crmMeeting["hackney_confirmationdate"];
+
+                SignOff signOff = null;
+                if (signOffDate != null)
+                {
+                    signOff = new SignOff
+                    {
+                        SignatureId = crmMeeting["hackney_signaturereference"] != null ? crmMeeting["hackney_signaturereference"].ToObject<Guid>() : Guid.Empty,
+                        SignOffDate = signOffDate.ToObject<DateTime>(),
+                        Role = crmMeeting["hackney_signatoryrole"].ToString(),
+                        Name = crmMeeting["hackney_signatoryname"].ToString(),
+                    };
+
+                }
+
+                var name = crmMeeting["incident1_x002e_description"].ToString();
+                var createdOn = crmMeeting["createdon"].ToObject<DateTime>();
+                
 
                 var outputModel = new GetEtraMeetingOutputModel
                 {
-                    Id = crmMeeting["hackney_tenancymanagementinteractionsid"],
-
-                    Name = crmMeeting["hackney_name"],
-
-                    Attendees = new MeetingAttendees
-                    {
-                        Councillors = crmMeeting["hackney_councillorsattendingmeeting"],
-                        HackneyStaff = crmMeeting["hackney_othercouncilstaffattendingmeeting"],
-                        Attendees = crmMeeting["hackney_totalmeetingattendees"]
-                    },
-                    CreatedOn = crmMeeting["createdon"],
-
-                    SignOff = new SignOff
-                    {
-                        SignatureId = crmMeeting["hackney_signaturereference"],
-                        SignOffDate = crmMeeting["hackney_confirmationdate"],
-                        Role = crmMeeting["hackney_signatoryrole"],
-                    },
+                    Id = id,
+                    Name = name,
+                    Attendees = attendees,
+                    CreatedOn = createdOn,
+                    SignOff = signOff,
+                    IsSignedOff = signOff != null ? true:false
                 };
 
                 return outputModel;
@@ -568,6 +594,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
         }
 
+
         public async Task<IEnumerable<ETRAMeeting>> GetETRAMeetingsForTRAId(string id)
         {
             var query = HousingAPIQueryBuilder.GetETRAMeetingsByTRAId(id);
@@ -578,7 +605,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
             if (meetingsResponse == null)
                 throw new NullResponseException();
-            
+
             if (!meetingsResponse.IsSuccessStatusCode)
                 throw new TenancyServiceException();
 
@@ -586,7 +613,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
             if (responseObject?["value"] == null || !responseObject["value"].Any())
                 return new List<ETRAMeeting>();
-            
+
             var meetings = responseObject["value"].ToList();
             var result = meetings.Select(x => ETRAMeeting.Create(x));
             return result;
@@ -625,8 +652,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
         public async Task<FinaliseETRAMeetingResponse> FinaliseMeeting(string id, FinaliseETRAMeetingRequest request)
         {
+            var signOffDate = DateTime.Now;
             var confirmation = new JObject {
-                { "hackney_confirmationdate", DateTime.Now }
+                { "hackney_confirmationdate", signOffDate }
             };
 
             if (request != null)
@@ -645,7 +673,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             var token = await _crmAccessToken.getCRM365AccessToken();
             _client = await _hackneyAccountApiBuilder.CreateRequest(token);
 
-            var updateIntractionResponse = await 
+            var updateIntractionResponse = await
                 _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, updateIssueIntractionQuery, confirmation);
 
             if (!updateIntractionResponse.IsSuccessStatusCode)
@@ -653,7 +681,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 throw new TenancyServiceException();
             }
 
-            return new FinaliseETRAMeetingResponse { Id = id, IsFinalised = updateIntractionResponse.IsSuccessStatusCode };
+            return new FinaliseETRAMeetingResponse { Id = id, IsFinalised = updateIntractionResponse.IsSuccessStatusCode, SignOffDate = signOffDate };
         }
 
         public async Task<IncidentClosedResponse> CloseIncident(string closingNotes, Guid incidentId)
@@ -700,8 +728,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 string requestUrl = $"api/data/v8.2/annotations({annotationId})";
 
                 response = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, requestUrl, note);
-               
-               if(!response.IsSuccessStatusCode)
+
+                if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError($" An error has occured while updating the annotation with id:  {annotationId}");
                     throw new TenancyServiceException();
@@ -710,7 +738,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             catch (Exception ex)
             {
                 _logger.LogError($" Update Annotation Error {ex.Message} with id  {annotationId}");
-                throw ex; 
+                throw ex;
             }
 
         }
@@ -852,7 +880,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
         private async Task<string> CreateAnnotation(string notes, string estateOfficer, string serviceRequestId, string annotationSubjectId)
         {
-            string descriptionText = $"{notes} logged on {DateTime.Now} by {estateOfficer}";
+            string descriptionText = $"{notes}";
             return await CreateAnnotation(descriptionText, serviceRequestId, annotationSubjectId);
         }
 

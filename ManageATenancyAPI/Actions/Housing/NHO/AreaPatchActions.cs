@@ -97,7 +97,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             try
             {
                 HttpResponseMessage updateResponse = new HttpResponseMessage();
-                _logger.LogInformation($"Get All Officers Per Area");
+                _logger.LogInformation($"GetAsync All Officers Per Area");
 
                 var accessToken = _accessToken.getCRM365AccessToken().Result;
                 _client = _housingApiBuilder.CreateRequest(accessToken).Result;
@@ -268,7 +268,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             HttpResponseMessage result = null;
             try
             {
-                _logger.LogInformation($"Get All Officers Per Area");
+                _logger.LogInformation($"GetAsync All Officers Per Area");
 
                 var accessToken = _accessToken.getCRM365AccessToken().Result;
                 _client = _housingApiBuilder.CreateRequest(accessToken).Result;
@@ -303,7 +303,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 }
                 else
                 {
-                    _logger.LogError($" Get all unassigned officers result missing ");
+                    _logger.LogError($" GetAsync all unassigned officers result missing ");
                     throw new MissingResultForGetAllUnassignedOfficersException();
                 }
             }

@@ -455,7 +455,7 @@ namespace ManageATenancyAPI.Tests.Actions
             return attendanceObject;
         }
 
-        #region Get ETRA Issues
+        #region GetAsync ETRA Issues
         [Fact]
         public async Task get_tenancy_incident_details_based_on_id_and_user_type()
         {

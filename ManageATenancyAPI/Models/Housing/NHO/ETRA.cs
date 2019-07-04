@@ -103,6 +103,7 @@ namespace ManageATenancyAPI.Models.Housing.NHO
     {
         public string Id { get; set; }
         public bool IsFinalised { get; set; }
+        public DateTime SignOffDate { get; set; }
     }
 
 }

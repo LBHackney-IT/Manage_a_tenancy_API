@@ -29,7 +29,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
         {
            try
             {
-                _logger.LogInformation($"Get TRAs for a patch requested Started");
+                _logger.LogInformation($"GetAsync TRAs for a patch requested Started");
 
                 List<TRA> TRAResults = _traRepository.FindTRAsForPatch(patchId);
 
@@ -57,7 +57,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
         {
             try
             {
-                _logger.LogInformation($"Get TRAs for a patch requested Started");
+                _logger.LogInformation($"GetAsync TRAs for a patch requested Started");
 
                 TRAInformation TRAResults = _traRepository.FindTRAInformation(TRAId);
 

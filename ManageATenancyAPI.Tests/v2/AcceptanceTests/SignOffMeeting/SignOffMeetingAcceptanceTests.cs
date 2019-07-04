@@ -8,6 +8,7 @@ using ManageATenancyAPI.Tests.v2.Helper;
 using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
+using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SignOffMeeting
         private TRAController _classUnderTest;
         private IGetEtraMeetingUseCase _useCase;
         private ISaveEtraMeetingUseCase _saveEtraMeetingUseCase;
+        private ISignOffMeetingUseCase _signOffMeetingUseCase;
         private IJWTService _jwtService;
 
         public SignOffMeetingAcceptanceTests()
@@ -30,7 +32,8 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SignOffMeeting
             _jwtService = serviceProvider.GetService<IJWTService>();
             _useCase = serviceProvider.GetService<IGetEtraMeetingUseCase>();
             _saveEtraMeetingUseCase = serviceProvider.GetService<ISaveEtraMeetingUseCase>();
-            _classUnderTest = new TRAController(_jwtService, _saveEtraMeetingUseCase, _useCase, null);
+            _signOffMeetingUseCase = serviceProvider.GetService<ISignOffMeetingUseCase>();
+            _classUnderTest = new TRAController(_jwtService, _saveEtraMeetingUseCase, _useCase, _signOffMeetingUseCase);
 
             _classUnderTest.ControllerContext = new ControllerContext
             {

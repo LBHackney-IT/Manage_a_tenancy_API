@@ -17,6 +17,8 @@ namespace ManageATenancyAPI.UseCases.Meeting.Boundary
         IList<MeetingIssueOutputModel> Issues { get; set; }
         MeetingAttendees Attendees { get; set; }
         SignOff SignOff { get; set; }
+        DateTime CreatedOn { get; set; }
+        bool IsEmailSent { get; set; }
         bool IsSignedOff { get; set; }
     }
 }

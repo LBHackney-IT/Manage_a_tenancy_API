@@ -4,21 +4,21 @@
         <name>ManageATenancyAPI</name>
     </assembly>
     <members>
-        <member name="M:ManageATenancyAPI.Controllers.AccountsController.GetTagReferencenumber(System.String)">
+        <member name="M:ManageATenancyAPI.Controllers.AccountsController.GetAsyncTagReferencenumber(System.String)">
             <summary>
-            GetTagReferencenumber.
+            GetAsyncTagReferencenumber.
             </summary>
             <param name="hackneyhomesId">Payment reference number for Account</param>
             <returns>Returns tag reference number</returns>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.AccountsController.GetAccountDetailsByPaymentorTagReference(System.String)">
+        <member name="M:ManageATenancyAPI.Controllers.AccountsController.GetAsyncAccountDetailsByPaymentorTagReference(System.String)">
             <summary>
-            Get account details by tag reference or paris ref
+            GetAsync account details by tag reference or paris ref
             </summary>
             <param name="referencenumber">Payment reference or tag reference number for Account</param>
             <returns>Returns account details in Json Object</returns>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.AccountsController.GetAccountDetailsByContactId(System.String)">
+        <member name="M:ManageATenancyAPI.Controllers.AccountsController.GetAsyncAccountDetailsByContactId(System.String)">
             <summary>
             Verify Housing Account Details by Payment Reference and postcode.
             </summary>
@@ -37,6 +37,13 @@
             </summary>
             <returns>Returns the updated information</returns>
         </member>
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.EstateController.GetAsyncEstatesByTra(System.Int32)">
+            <summary>
+            Location of Issue - list
+            </summary>
+            <param name="traId"></param>
+            <returns></returns>
+        </member>
         <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.Post(ManageATenancyAPI.Models.Housing.NHO.ETRAIssue)">
             <summary>
             Creates an ETRA meeting
@@ -44,25 +51,92 @@
             <returns>A JSON object for a successfully created ETRA meeting request</returns>
             <response code="201">A successfully created ETRA meeting request</response>
         </member>
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.RecordAttendance(System.String,ManageATenancyAPI.Models.Housing.NHO.RecordETRAMeetingAttendanceRequest)">
+            <summary>
+            Records the people who attended an ETRA meeting.
+            </summary>
+            <param name="id">Meeting id.</param>
+            <param name="request">Object containing the councillors, other staff and total attendance of the meeting.</param>
+            <returns>Whether the meeting attendance has been successfully recorded</returns>
+            <response code="200">Successfully recorded meeting attendance</response>
+            <response code="404">No meeting with the specified id found</response>
+            <response code="400">Null or empty id or null request</response>
+        </member>
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.AddIssueResponse(System.String,ManageATenancyAPI.Models.Housing.NHO.ETRAIssueResponseRequest)">
+            <summary>
+            Records a response from a service area to an ETRA issue.
+            </summary>
+            <param name="id">Issue id.</param>
+            <param name="request">Object containing the required data to record the response.</param>
+            <returns>Whether the issue response has been successfully recorded</returns>
+            <response code="200">Successfully recorded issue response</response>
+            <response code="400">Null or empty id or null request</response>
+        </member>
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.RejectResponse(System.String,ManageATenancyAPI.Models.Housing.NHO.ETRAIssueRejectResponseRequest)">
+            <summary>
+            Rejects the response to an issue from a service area.
+            </summary>
+            <param name="issueId">Issue id.</param>
+            <param name="request">Object containing the required data to reject the response.</param>
+            <returns>Whether the issue response has been successfully rejected</returns>
+            <response code="200">Successfully recorded issue response</response>
+            <response code="400">Null or empty id or null request</response>
+        </member>
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.CloseIncident(System.Guid,System.String)">
+            <summary>
+            Closes an incident in the CRM.
+            </summary>
+            <param name="id">The incident id.</param>
+            <param name="note">An optional note to store when closing the incident.</param>
+            <returns>Whether the incident has been successfully closed</returns>
+            <response code="200">Successfully closed the incident</response>
+            <response code="400">Empty id</response>
+        </member>
         <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.FinaliseMeeting(System.String,ManageATenancyAPI.Models.Housing.NHO.FinaliseETRAMeetingRequest)">
             <summary>
             Finalises ETRA Meetings by meeting id, and optionally a signatory with their role.
             </summary>
-            <param name="id">Interaction id.</param>
-            <param name="request">Object containing the guid reference of the signature and the string with the signatory's role.</param>
+            <param name="id">Meeting id.</param>
+            <param name="request">(Optional) Object containing the guid reference of the signature and the string with the signatory's role.</param>
             <returns>Whether the meeting has been successfully finalised</returns>
             <response code="200">Successfully finalised meeting</response>
             <response code="404">No meeting with the specified id found</response>
             <response code="403">Meeting has already been finalised</response>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.GetETRAISsues(System.String,System.Boolean)">
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.GetAsyncMeetingDetails(System.Guid)">
             <summary>
-            Gets ETRA Issues by TRA ID or parent interaction. Used to retrieve issue for a TRA or for a specific ETRA meeting.
+            GetAsyncs the details of an ETRA meeting.
+            </summary>
+            <param name="id">Meeting id.</param>
+            <returns>The details of the meeting</returns>
+            <response code="200">Successfully recorded issue response</response>
+            <response code="400">Empty id</response>
+            <response code="404">No such meeting exists</response>
+        </member>
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.GetAsyncETRAISsues(System.String,System.Boolean)">
+            <summary>
+            GetAsyncs ETRA Issues by TRA ID or parent interaction. Used to retrieve issue for a TRA or for a specific ETRA meeting.
             </summary>
             <param name="id">TRA Id for issues per TRA or Parent Interaction ID for issues per meeting</param>
             <param name="retrieveETRAMeetingIssues">True if meeting specific issues are to be retrieved. False if all issues per TRA are to be retrieved.</param>
             <returns>A list of ETRA issue for a TRA or a specific ETRA meeting</returns>
             <response code="200">Successfully retrieved ETRA issues request</response>
+        </member>
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.GetAsyncETRAMeetingsByTRA(System.String)">
+            <summary>
+            GetAsyncs all meetings for a specified TRA.
+            </summary>
+            <param name="id">TRA id.</param>
+            <returns>A list of ETRA meetings</returns>
+            <response code="200">Successfully returned meetings</response>
+            <response code="400">Null or empty id</response>
+        </member>
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.TenancyController.GetAsyncNewTenancies">
+            <summary>
+            GetAsyncs new tenancies recorded in the CRM since the last run, or in the last day where it hasn't been run before.
+            </summary>
+            <returns>A list of new tenancies. This could be an empty list.</returns>
+            <response code="200">Successfully returned any new tenancies</response>
         </member>
         <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.TenancyManagementInteractionsController.Post(ManageATenancyAPI.Models.Housing.NHO.TenancyManagement)">
             <summary>
@@ -92,9 +166,9 @@
             <returns>A JSON object for a successfully created TenancyManagement request</returns>
             <response code="200">A successfully created repair request</response>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.TenancyManagementInteractionsController.GetAreaTrayIneractions(System.String)">
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.TenancyManagementInteractionsController.GetAsyncAreaTrayIneractions(System.String)">
             <summary>
-            Get group Tray 
+            GetAsync group Tray 
             </summary>
             <param name="OfficeId">OfficeId of the Group Tray</param>
             <returns>A JSON object for a successfully returns for Group Tray TenancyManagement request</returns>
@@ -118,6 +192,29 @@
             </summary>
             <returns>Officers Id, FirstName, LastName, UserName</returns>
         </member>
+        <member name="M:ManageATenancyAPI.Controllers.v2.TRAController.Post(ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.SaveETRAMeetingInputModel)">
+            <summary>
+            Creates an ETRA meeting
+            If the signoff object is provided then it will complete the meeting in one go
+            If the signoff object is null then it will send out an email to the TRA representative stored in the database
+            with a link to signoff the meeting with their name.
+            In the second flow please post the signoff object via the Patch HttpMethod to complete the meeting
+            </summary>
+            <returns>A JSON object for a successfully created ETRA meeting request</returns>
+            <response code="200">A successfully created ETRA meeting request</response>
+        </member>
+        <member name="M:ManageATenancyAPI.Controllers.v2.TRAController.GetAsync">
+            <summary>
+            GetAsyncs an ETRA meeting
+            </summary>
+            <returns>A JSON object for a successfully created ETRA meeting request</returns>
+        </member>
+        <member name="M:ManageATenancyAPI.Controllers.v2.TRAController.Patch(ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary.SignOffMeetingInputModel)">
+            <summary>
+            GetAsyncs an ETRA meeting
+            </summary>
+            <returns>A JSON object for a successfully created ETRA meeting request</returns>
+        </member>
         <member name="T:ManageATenancyAPI.Helpers.EmailUtils">
             <summary>
             Summary description for EmailUtils
@@ -128,6 +225,232 @@
         </member>
         <member name="F:ManageATenancyAPI.Helpers.SqlConnectionOwnership.External">
             <summary>Connection is owned and managed by the caller</summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.CRMServiceRequest.Id">
+            <summary>
+            IGNORE - AUTO GENERATED BY CRM
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.CRMServiceRequest.Title">
+            <summary>
+            IGNORE - NOT REQUIRED 
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.CRMServiceRequest.Description">
+            <summary>
+            Issue.Notes for ETRA Issues
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.CRMServiceRequest.ContactId">
+            <summary>
+            IGNORE - Customer from the Contacts Entity - Can be ignored for ETRA as has it's own Account 
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.CRMServiceRequest.ParentCaseId">
+            <summary>
+            IGNORE - NOT USED FOR ETRA
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.CRMServiceRequest.Subject">
+            <summary>
+            CRM Subjects Entity Table, List of Values in Ticket
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.CRMServiceRequest.CreatedDate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.CRMServiceRequest.TicketNumber">
+            <summary>
+            Autogenerated by CRM
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.CRMServiceRequest.RequestCallback">
+            <summary>
+            Old requirement - not used anymore
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.CRMServiceRequest.Transferred">
+            <summary>
+            For transferring tickets to other Housing Officers
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.CRMServiceRequest.CreatedBy">
+            <summary>
+            Officer Id
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.Housing.NHO.ETRAIssue.subject">
+            <summary>
+            CRM ENtity Subjects.subjectid 72873b3e-5255-e911-a97a-002248072cc3
+            Generic subject id is used to Creating Meeting = c1f72d01-28dc-e711-8115-70106faa6a11" (dev)
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.Housing.NHO.ETRAIssue.officerPatchId">
+            <summary>
+            Patch - ID - Can be swapped , still links to AREA ID
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.Housing.NHO.ETRAIssue.areaName">
+            <summary>
+            AreaId - AREA ID Taken from Login information
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.Housing.NHO.ETRAIssue.processType">
+            <summary>
+            ALWAYS 3
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.Housing.NHO.ETRAIssue.issueLocation">
+            <summary>
+            Name of TRA block within an estate or the estate itself
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.Housing.NHO.ETRAIssue.parentInteractionId">
+            <summary>
+            Tenancy Management Interaction Id for Meeting
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.Housing.NHO.ETRAIssue.natureOfEnquiry">
+            <summary>
+            ALWAYS 28 - ETRA
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.Models.Housing.NHO.ETRAIssue.enquirySubject">
+            Issue Type Id - 10000111 - NOT NAME
+        </member>
+        <member name="T:ManageATenancyAPI.Services.JWT.IJWTService">
+            <summary>
+            Service to Decrypt JWT tokens sent from Outsystems
+            </summary>
+        </member>
+        <member name="M:ManageATenancyAPI.Services.JWT.IJWTService.GetAsyncManageATenancyClaims(System.String,System.String)">
+            <summary>
+            Validates claims against signing key with secret and returns data in a nicely formatted manner.
+            </summary>
+            <param name="token"></param>
+            <param name="secret"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ManageATenancyAPI.Services.JWT.JWTService.GetAsyncManageATenancyClaims(System.String,System.String)">
+            <summary>
+            Validates claims against signing key with secret and returns data in a nicely formatted manner.
+            </summary>
+            <param name="token"></param>
+            <param name="secret"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ManageATenancyAPI.Services.JWT.JWTService.GetAsyncMeetingIdClaims(System.String,System.String)">
+            <summary>
+            Validates claims against signing key with secret and returns data in a nicely formatted manner.
+            </summary>
+            <param name="token"></param>
+            <param name="secret"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ManageATenancyAPI.UseCases.Meeting.Boundary.IMeetingOutputModel">
+            <summary>
+            Interface Output model for a meeting
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.Boundary.IMeetingOutputModel.Id">
+            <summary>
+            Refers to the TenancyInteractionId in Dynamics 365
+            </summary>
+        </member>
+        <member name="T:ManageATenancyAPI.UseCases.Meeting.GetAsyncMeeting.GetAsyncEtraMeetingInputModel">
+            <summary>
+            InputModel for getting a meeting
+            </summary>
+        </member>
+        <member name="T:ManageATenancyAPI.UseCases.Meeting.GetAsyncMeeting.GetAsyncEtraMeetingOutputModel">
+            <summary>
+            Output model for getting a meeting
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.GetAsyncMeeting.GetAsyncEtraMeetingOutputModel.Id">
+            <summary>
+            Refers to the TenancyInteractionId in Dynamics 365
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.IETRAMeeting.processType">
+            <summary>
+            0 - ManageTenancy Interaction - requests that aren't process
+            1 - ETRA Meeting
+            2 - Post Visit action
+            3 - ETRA Issue
+            </summary>
+        </member>
+        <member name="T:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.MeetingAttendees">
+            <summary>
+            Interface describing attendees of a meeting
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.MeetingAttendees.Councillors">
+            <summary>
+            Optional ideally comma separated list of Councillors as a record of who attended
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.MeetingAttendees.HackneyStaff">
+            <summary>
+            Optional ideally comma seperated list of Hackney staff as a record of who attended 
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.MeetingAttendees.Attendees">
+            <summary>
+            Number of attendees to the meeting that aren't Councillors or Hackney staff, must be greater than 1
+            </summary>
+        </member>
+        <member name="T:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.MeetingIssue">
+            <summary>
+            Interface representing a meeting issue
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.MeetingIssue.IssueTypeId">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.MeetingIssueOutputModel">
+            <summary>
+            Class representing a meeting issue after it's been saved
+            </summary>
+        </member>
+        <member name="T:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.SaveETRAMeetingInputModel">
+            <summary>
+            Input Model for Save etra meeting use case
+            </summary>
+        </member>
+        <member name="T:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.SaveEtraMeetingOutputModel">
+            <summary>
+            Output model for saving a meeting
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.SaveEtraMeetingOutputModel.Id">
+            <summary>
+            Refers to the TenancyInteractionId in Dynamics 365
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.SignOff.Signature">
+            <summary>
+            Base 64 encoded signature image
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.SignOff.Name">
+            <summary>
+            Name of TRA rep
+            </summary>
+        </member>
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.SignOff.Role">
+            <summary>
+            TRA role
+            </summary>
+        </member>
+        <member name="T:ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary.SignOffMeetingOutputModel">
+            <summary>
+            Input Model for signing off a meeting
+            </summary>
         </member>
         <member name="T:LBH.Utils.SqlHelper">
             <summary>
@@ -170,7 +493,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteNonQuery(System.String,System.Data.CommandType,System.String)">
             <summary>
-            Execute a SqlCommand (that returns no resultset and takes no parameters) against the database specified in 
+            ExecuteAsync a SqlCommand (that returns no resultset and takes no parameters) against the database specified in 
             the connection string. 
             </summary>
             <remarks>
@@ -184,7 +507,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteNonQuery(System.String,System.Data.CommandType,System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Execute a SqlCommand (that returns no resultset) against the database specified in the connection string 
+            ExecuteAsync a SqlCommand (that returns no resultset) against the database specified in the connection string 
             using the provided parameters.
             </summary>
             <remarks>
@@ -199,7 +522,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteNonQuery(System.String,System.String,System.Object[])">
             <summary>
-            Execute a stored procedure via a SqlCommand (that returns no resultset) against the database specified in 
+            ExecuteAsync a stored procedure via a SqlCommand (that returns no resultset) against the database specified in 
             the connection string using the provided parameter values.  This method will query the database to discover the parameters for the 
             stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
             </summary>
@@ -216,7 +539,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteNonQuery(System.Data.SqlClient.SqlConnection,System.Data.CommandType,System.String)">
             <summary>
-            Execute a SqlCommand (that returns no resultset and takes no parameters) against the provided SqlConnection. 
+            ExecuteAsync a SqlCommand (that returns no resultset and takes no parameters) against the provided SqlConnection. 
             </summary>
             <remarks>
             e.g.:  
@@ -229,7 +552,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteNonQuery(System.Data.SqlClient.SqlConnection,System.Data.CommandType,System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Execute a SqlCommand (that returns no resultset) against the specified SqlConnection 
+            ExecuteAsync a SqlCommand (that returns no resultset) against the specified SqlConnection 
             using the provided parameters.
             </summary>
             <remarks>
@@ -244,7 +567,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteNonQuery(System.Data.SqlClient.SqlConnection,System.String,System.Object[])">
             <summary>
-            Execute a stored procedure via a SqlCommand (that returns no resultset) against the specified SqlConnection 
+            ExecuteAsync a stored procedure via a SqlCommand (that returns no resultset) against the specified SqlConnection 
             using the provided parameter values.  This method will query the database to discover the parameters for the 
             stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
             </summary>
@@ -261,7 +584,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteNonQuery(System.Data.SqlClient.SqlTransaction,System.Data.CommandType,System.String)">
             <summary>
-            Execute a SqlCommand (that returns no resultset and takes no parameters) against the provided SqlTransaction. 
+            ExecuteAsync a SqlCommand (that returns no resultset and takes no parameters) against the provided SqlTransaction. 
             </summary>
             <remarks>
             e.g.:  
@@ -274,12 +597,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteNonQuery(System.Data.SqlClient.SqlTransaction,System.Data.CommandType,System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Execute a SqlCommand (that returns no resultset) against the specified SqlTransaction
+            ExecuteAsync a SqlCommand (that returns no resultset) against the specified SqlTransaction
             using the provided parameters.
             </summary>
             <remarks>
             e.g.:  
-             int result = ExecuteNonQuery(trans, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
+             int result = ExecuteNonQuery(trans, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -289,7 +612,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteNonQuery(System.Data.SqlClient.SqlTransaction,System.String,System.Object[])">
             <summary>
-            Execute a stored procedure via a SqlCommand (that returns no resultset) against the specified 
+            ExecuteAsync a stored procedure via a SqlCommand (that returns no resultset) against the specified 
             SqlTransaction using the provided parameter values.  This method will query the database to discover the parameters for the 
             stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
             </summary>
@@ -306,12 +629,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteDataset(System.String,System.Data.CommandType,System.String)">
             <summary>
-            Execute a SqlCommand (that returns a resultset and takes no parameters) against the database specified in 
+            ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the database specified in 
             the connection string. 
             </summary>
             <remarks>
             e.g.:  
-             DataSet ds = ExecuteDataset(connString, CommandType.StoredProcedure, "GetOrders");
+             DataSet ds = ExecuteDataset(connString, CommandType.StoredProcedure, "GetAsyncOrders");
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -320,12 +643,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteDataset(System.String,System.Data.CommandType,System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Execute a SqlCommand (that returns a resultset) against the database specified in the connection string 
+            ExecuteAsync a SqlCommand (that returns a resultset) against the database specified in the connection string 
             using the provided parameters.
             </summary>
             <remarks>
             e.g.:  
-             DataSet ds = ExecuteDataset(connString, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
+             DataSet ds = ExecuteDataset(connString, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -335,7 +658,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteDataset(System.String,System.String,System.Object[])">
             <summary>
-            Execute a stored procedure via a SqlCommand (that returns a resultset) against the database specified in 
+            ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the database specified in 
             the connection string using the provided parameter values.  This method will query the database to discover the parameters for the 
             stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
             </summary>
@@ -343,7 +666,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             DataSet ds = ExecuteDataset(connString, "GetOrders", 24, 36);
+             DataSet ds = ExecuteDataset(connString, "GetAsyncOrders", 24, 36);
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="spName">the name of the stored procedure</param>
@@ -352,11 +675,11 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteDataset(System.Data.SqlClient.SqlConnection,System.Data.CommandType,System.String)">
             <summary>
-            Execute a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlConnection. 
+            ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlConnection. 
             </summary>
             <remarks>
             e.g.:  
-             DataSet ds = ExecuteDataset(conn, CommandType.StoredProcedure, "GetOrders");
+             DataSet ds = ExecuteDataset(conn, CommandType.StoredProcedure, "GetAsyncOrders");
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -365,12 +688,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteDataset(System.Data.SqlClient.SqlConnection,System.Data.CommandType,System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Execute a SqlCommand (that returns a resultset) against the specified SqlConnection 
+            ExecuteAsync a SqlCommand (that returns a resultset) against the specified SqlConnection 
             using the provided parameters.
             </summary>
             <remarks>
             e.g.:  
-             DataSet ds = ExecuteDataset(conn, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
+             DataSet ds = ExecuteDataset(conn, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -380,7 +703,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteDataset(System.Data.SqlClient.SqlConnection,System.String,System.Object[])">
             <summary>
-            Execute a stored procedure via a SqlCommand (that returns a resultset) against the specified SqlConnection 
+            ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the specified SqlConnection 
             using the provided parameter values.  This method will query the database to discover the parameters for the 
             stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
             </summary>
@@ -388,7 +711,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             DataSet ds = ExecuteDataset(conn, "GetOrders", 24, 36);
+             DataSet ds = ExecuteDataset(conn, "GetAsyncOrders", 24, 36);
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="spName">the name of the stored procedure</param>
@@ -397,11 +720,11 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteDataset(System.Data.SqlClient.SqlTransaction,System.Data.CommandType,System.String)">
             <summary>
-            Execute a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlTransaction. 
+            ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlTransaction. 
             </summary>
             <remarks>
             e.g.:  
-             DataSet ds = ExecuteDataset(trans, CommandType.StoredProcedure, "GetOrders");
+             DataSet ds = ExecuteDataset(trans, CommandType.StoredProcedure, "GetAsyncOrders");
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -410,12 +733,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteDataset(System.Data.SqlClient.SqlTransaction,System.Data.CommandType,System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Execute a SqlCommand (that returns a resultset) against the specified SqlTransaction
+            ExecuteAsync a SqlCommand (that returns a resultset) against the specified SqlTransaction
             using the provided parameters.
             </summary>
             <remarks>
             e.g.:  
-             DataSet ds = ExecuteDataset(trans, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
+             DataSet ds = ExecuteDataset(trans, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -425,7 +748,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteDataset(System.Data.SqlClient.SqlTransaction,System.String,System.Object[])">
             <summary>
-            Execute a stored procedure via a SqlCommand (that returns a resultset) against the specified 
+            ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the specified 
             SqlTransaction using the provided parameter values.  This method will query the database to discover the parameters for the 
             stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
             </summary>
@@ -433,7 +756,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             DataSet ds = ExecuteDataset(trans, "GetOrders", 24, 36);
+             DataSet ds = ExecuteDataset(trans, "GetAsyncOrders", 24, 36);
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="spName">the name of the stored procedure</param>
@@ -471,12 +794,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteReader(System.String,System.Data.CommandType,System.String)">
             <summary>
-            Execute a SqlCommand (that returns a resultset and takes no parameters) against the database specified in 
+            ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the database specified in 
             the connection string. 
             </summary>
             <remarks>
             e.g.:  
-             SqlDataReader dr = ExecuteReader(connString, CommandType.StoredProcedure, "GetOrders");
+             SqlDataReader dr = ExecuteReader(connString, CommandType.StoredProcedure, "GetAsyncOrders");
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -485,12 +808,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteReader(System.String,System.Data.CommandType,System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Execute a SqlCommand (that returns a resultset) against the database specified in the connection string 
+            ExecuteAsync a SqlCommand (that returns a resultset) against the database specified in the connection string 
             using the provided parameters.
             </summary>
             <remarks>
             e.g.:  
-             SqlDataReader dr = ExecuteReader(connString, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
+             SqlDataReader dr = ExecuteReader(connString, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -500,7 +823,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteReader(System.String,System.String,System.Object[])">
             <summary>
-            Execute a stored procedure via a SqlCommand (that returns a resultset) against the database specified in 
+            ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the database specified in 
             the connection string using the provided parameter values.  This method will query the database to discover the parameters for the 
             stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
             </summary>
@@ -508,7 +831,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             SqlDataReader dr = ExecuteReader(connString, "GetOrders", 24, 36);
+             SqlDataReader dr = ExecuteReader(connString, "GetAsyncOrders", 24, 36);
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="spName">the name of the stored procedure</param>
@@ -517,11 +840,11 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteReader(System.Data.SqlClient.SqlConnection,System.Data.CommandType,System.String)">
             <summary>
-            Execute a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlConnection. 
+            ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlConnection. 
             </summary>
             <remarks>
             e.g.:  
-             SqlDataReader dr = ExecuteReader(conn, CommandType.StoredProcedure, "GetOrders");
+             SqlDataReader dr = ExecuteReader(conn, CommandType.StoredProcedure, "GetAsyncOrders");
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -530,12 +853,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteReader(System.Data.SqlClient.SqlConnection,System.Data.CommandType,System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Execute a SqlCommand (that returns a resultset) against the specified SqlConnection 
+            ExecuteAsync a SqlCommand (that returns a resultset) against the specified SqlConnection 
             using the provided parameters.
             </summary>
             <remarks>
             e.g.:  
-             SqlDataReader dr = ExecuteReader(conn, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
+             SqlDataReader dr = ExecuteReader(conn, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -545,7 +868,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteReader(System.Data.SqlClient.SqlConnection,System.String,System.Object[])">
             <summary>
-            Execute a stored procedure via a SqlCommand (that returns a resultset) against the specified SqlConnection 
+            ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the specified SqlConnection 
             using the provided parameter values.  This method will query the database to discover the parameters for the 
             stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
             </summary>
@@ -553,7 +876,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             SqlDataReader dr = ExecuteReader(conn, "GetOrders", 24, 36);
+             SqlDataReader dr = ExecuteReader(conn, "GetAsyncOrders", 24, 36);
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="spName">the name of the stored procedure</param>
@@ -562,11 +885,11 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteReader(System.Data.SqlClient.SqlTransaction,System.Data.CommandType,System.String)">
             <summary>
-            Execute a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlTransaction. 
+            ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlTransaction. 
             </summary>
             <remarks>
             e.g.:  
-             SqlDataReader dr = ExecuteReader(trans, CommandType.StoredProcedure, "GetOrders");
+             SqlDataReader dr = ExecuteReader(trans, CommandType.StoredProcedure, "GetAsyncOrders");
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -575,12 +898,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteReader(System.Data.SqlClient.SqlTransaction,System.Data.CommandType,System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Execute a SqlCommand (that returns a resultset) against the specified SqlTransaction
+            ExecuteAsync a SqlCommand (that returns a resultset) against the specified SqlTransaction
             using the provided parameters.
             </summary>
             <remarks>
             e.g.:  
-              SqlDataReader dr = ExecuteReader(trans, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
+              SqlDataReader dr = ExecuteReader(trans, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -590,7 +913,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteReader(System.Data.SqlClient.SqlTransaction,System.String,System.Object[])">
             <summary>
-            Execute a stored procedure via a SqlCommand (that returns a resultset) against the specified
+            ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the specified
             SqlTransaction using the provided parameter values.  This method will query the database to discover the parameters for the 
             stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
             </summary>
@@ -598,7 +921,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             SqlDataReader dr = ExecuteReader(trans, "GetOrders", 24, 36);
+             SqlDataReader dr = ExecuteReader(trans, "GetAsyncOrders", 24, 36);
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="spName">the name of the stored procedure</param>
@@ -607,12 +930,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteScalar(System.String,System.Data.CommandType,System.String)">
             <summary>
-            Execute a SqlCommand (that returns a 1x1 resultset and takes no parameters) against the database specified in 
+            ExecuteAsync a SqlCommand (that returns a 1x1 resultset and takes no parameters) against the database specified in 
             the connection string. 
             </summary>
             <remarks>
             e.g.:  
-             int orderCount = (int)ExecuteScalar(connString, CommandType.StoredProcedure, "GetOrderCount");
+             int orderCount = (int)ExecuteScalar(connString, CommandType.StoredProcedure, "GetAsyncOrderCount");
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -621,12 +944,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteScalar(System.String,System.Data.CommandType,System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Execute a SqlCommand (that returns a 1x1 resultset) against the database specified in the connection string 
+            ExecuteAsync a SqlCommand (that returns a 1x1 resultset) against the database specified in the connection string 
             using the provided parameters.
             </summary>
             <remarks>
             e.g.:  
-             int orderCount = (int)ExecuteScalar(connString, CommandType.StoredProcedure, "GetOrderCount", new SqlParameter("@prodid", 24));
+             int orderCount = (int)ExecuteScalar(connString, CommandType.StoredProcedure, "GetAsyncOrderCount", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -636,7 +959,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteScalar(System.String,System.String,System.Object[])">
             <summary>
-            Execute a stored procedure via a SqlCommand (that returns a 1x1 resultset) against the database specified in 
+            ExecuteAsync a stored procedure via a SqlCommand (that returns a 1x1 resultset) against the database specified in 
             the connection string using the provided parameter values.  This method will query the database to discover the parameters for the 
             stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
             </summary>
@@ -644,7 +967,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             int orderCount = (int)ExecuteScalar(connString, "GetOrderCount", 24, 36);
+             int orderCount = (int)ExecuteScalar(connString, "GetAsyncOrderCount", 24, 36);
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="spName">the name of the stored procedure</param>
@@ -653,11 +976,11 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteScalar(System.Data.SqlClient.SqlConnection,System.Data.CommandType,System.String)">
             <summary>
-            Execute a SqlCommand (that returns a 1x1 resultset and takes no parameters) against the provided SqlConnection. 
+            ExecuteAsync a SqlCommand (that returns a 1x1 resultset and takes no parameters) against the provided SqlConnection. 
             </summary>
             <remarks>
             e.g.:  
-             int orderCount = (int)ExecuteScalar(conn, CommandType.StoredProcedure, "GetOrderCount");
+             int orderCount = (int)ExecuteScalar(conn, CommandType.StoredProcedure, "GetAsyncOrderCount");
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -666,12 +989,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteScalar(System.Data.SqlClient.SqlConnection,System.Data.CommandType,System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Execute a SqlCommand (that returns a 1x1 resultset) against the specified SqlConnection 
+            ExecuteAsync a SqlCommand (that returns a 1x1 resultset) against the specified SqlConnection 
             using the provided parameters.
             </summary>
             <remarks>
             e.g.:  
-             int orderCount = (int)ExecuteScalar(conn, CommandType.StoredProcedure, "GetOrderCount", new SqlParameter("@prodid", 24));
+             int orderCount = (int)ExecuteScalar(conn, CommandType.StoredProcedure, "GetAsyncOrderCount", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -681,7 +1004,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteScalar(System.Data.SqlClient.SqlConnection,System.String,System.Object[])">
             <summary>
-            Execute a stored procedure via a SqlCommand (that returns a 1x1 resultset) against the specified SqlConnection 
+            ExecuteAsync a stored procedure via a SqlCommand (that returns a 1x1 resultset) against the specified SqlConnection 
             using the provided parameter values.  This method will query the database to discover the parameters for the 
             stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
             </summary>
@@ -689,7 +1012,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             int orderCount = (int)ExecuteScalar(conn, "GetOrderCount", 24, 36);
+             int orderCount = (int)ExecuteScalar(conn, "GetAsyncOrderCount", 24, 36);
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="spName">the name of the stored procedure</param>
@@ -698,11 +1021,11 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteScalar(System.Data.SqlClient.SqlTransaction,System.Data.CommandType,System.String)">
             <summary>
-            Execute a SqlCommand (that returns a 1x1 resultset and takes no parameters) against the provided SqlTransaction. 
+            ExecuteAsync a SqlCommand (that returns a 1x1 resultset and takes no parameters) against the provided SqlTransaction. 
             </summary>
             <remarks>
             e.g.:  
-             int orderCount = (int)ExecuteScalar(trans, CommandType.StoredProcedure, "GetOrderCount");
+             int orderCount = (int)ExecuteScalar(trans, CommandType.StoredProcedure, "GetAsyncOrderCount");
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -711,12 +1034,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteScalar(System.Data.SqlClient.SqlTransaction,System.Data.CommandType,System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Execute a SqlCommand (that returns a 1x1 resultset) against the specified SqlTransaction
+            ExecuteAsync a SqlCommand (that returns a 1x1 resultset) against the specified SqlTransaction
             using the provided parameters.
             </summary>
             <remarks>
             e.g.:  
-             int orderCount = (int)ExecuteScalar(trans, CommandType.StoredProcedure, "GetOrderCount", new SqlParameter("@prodid", 24));
+             int orderCount = (int)ExecuteScalar(trans, CommandType.StoredProcedure, "GetAsyncOrderCount", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -726,7 +1049,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteScalar(System.Data.SqlClient.SqlTransaction,System.String,System.Object[])">
             <summary>
-            Execute a stored procedure via a SqlCommand (that returns a 1x1 resultset) against the specified
+            ExecuteAsync a stored procedure via a SqlCommand (that returns a 1x1 resultset) against the specified
             SqlTransaction using the provided parameter values.  This method will query the database to discover the parameters for the 
             stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
             </summary>
@@ -734,7 +1057,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             int orderCount = (int)ExecuteScalar(trans, "GetOrderCount", 24, 36);
+             int orderCount = (int)ExecuteScalar(trans, "GetAsyncOrderCount", 24, 36);
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="spName">the name of the stored procedure</param>
@@ -743,11 +1066,11 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteXmlReader(System.Data.SqlClient.SqlConnection,System.Data.CommandType,System.String)">
             <summary>
-            Execute a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlConnection. 
+            ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlConnection. 
             </summary>
             <remarks>
             e.g.:  
-             XmlReader r = ExecuteXmlReader(conn, CommandType.StoredProcedure, "GetOrders");
+             XmlReader r = ExecuteXmlReader(conn, CommandType.StoredProcedure, "GetAsyncOrders");
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -756,12 +1079,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteXmlReader(System.Data.SqlClient.SqlConnection,System.Data.CommandType,System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Execute a SqlCommand (that returns a resultset) against the specified SqlConnection 
+            ExecuteAsync a SqlCommand (that returns a resultset) against the specified SqlConnection 
             using the provided parameters.
             </summary>
             <remarks>
             e.g.:  
-             XmlReader r = ExecuteXmlReader(conn, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
+             XmlReader r = ExecuteXmlReader(conn, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -771,7 +1094,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteXmlReader(System.Data.SqlClient.SqlConnection,System.String,System.Object[])">
             <summary>
-            Execute a stored procedure via a SqlCommand (that returns a resultset) against the specified SqlConnection 
+            ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the specified SqlConnection 
             using the provided parameter values.  This method will query the database to discover the parameters for the 
             stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
             </summary>
@@ -779,7 +1102,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             XmlReader r = ExecuteXmlReader(conn, "GetOrders", 24, 36);
+             XmlReader r = ExecuteXmlReader(conn, "GetAsyncOrders", 24, 36);
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="spName">the name of the stored procedure using "FOR XML AUTO"</param>
@@ -788,11 +1111,11 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteXmlReader(System.Data.SqlClient.SqlTransaction,System.Data.CommandType,System.String)">
             <summary>
-            Execute a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlTransaction. 
+            ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlTransaction. 
             </summary>
             <remarks>
             e.g.:  
-             XmlReader r = ExecuteXmlReader(trans, CommandType.StoredProcedure, "GetOrders");
+             XmlReader r = ExecuteXmlReader(trans, CommandType.StoredProcedure, "GetAsyncOrders");
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -801,12 +1124,12 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteXmlReader(System.Data.SqlClient.SqlTransaction,System.Data.CommandType,System.String,System.Data.SqlClient.SqlParameter[])">
             <summary>
-            Execute a SqlCommand (that returns a resultset) against the specified SqlTransaction
+            ExecuteAsync a SqlCommand (that returns a resultset) against the specified SqlTransaction
             using the provided parameters.
             </summary>
             <remarks>
             e.g.:  
-             XmlReader r = ExecuteXmlReader(trans, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
+             XmlReader r = ExecuteXmlReader(trans, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -816,7 +1139,7 @@
         </member>
         <member name="M:LBH.Utils.SqlHelper.ExecuteXmlReader(System.Data.SqlClient.SqlTransaction,System.String,System.Object[])">
             <summary>
-            Execute a stored procedure via a SqlCommand (that returns a resultset) against the specified 
+            ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the specified 
             SqlTransaction using the provided parameter values.  This method will query the database to discover the parameters for the 
             stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
             </summary>
@@ -824,7 +1147,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             XmlReader r = ExecuteXmlReader(trans, "GetOrders", 24, 36);
+             XmlReader r = ExecuteXmlReader(trans, "GetAsyncOrders", 24, 36);
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="spName">the name of the stored procedure</param>
@@ -854,7 +1177,7 @@
             <param name="commandText">the stored procedure name or T-SQL command</param>
             <param name="commandParameters">an array of SqlParamters to be cached</param>
         </member>
-        <member name="M:LBH.Utils.SqlHelperParameterCache.GetCachedParameterSet(System.String,System.String)">
+        <member name="M:LBH.Utils.SqlHelperParameterCache.GetAsyncCachedParameterSet(System.String,System.String)">
             <summary>
             retrieve a parameter array from the cache
             </summary>
@@ -862,7 +1185,7 @@
             <param name="commandText">the stored procedure name or T-SQL command</param>
             <returns>an array of SqlParamters</returns>
         </member>
-        <member name="M:LBH.Utils.SqlHelperParameterCache.GetSpParameterSet(System.String,System.String)">
+        <member name="M:LBH.Utils.SqlHelperParameterCache.GetAsyncSpParameterSet(System.String,System.String)">
             <summary>
             Retrieves the set of SqlParameters appropriate for the stored procedure
             </summary>
@@ -873,7 +1196,7 @@
             <param name="spName">the name of the stored procedure</param>
             <returns>an array of SqlParameters</returns>
         </member>
-        <member name="M:LBH.Utils.SqlHelperParameterCache.GetSpParameterSet(System.String,System.String,System.Boolean)">
+        <member name="M:LBH.Utils.SqlHelperParameterCache.GetAsyncSpParameterSet(System.String,System.String,System.Boolean)">
             <summary>
             Retrieves the set of SqlParameters appropriate for the stored procedure
             </summary>

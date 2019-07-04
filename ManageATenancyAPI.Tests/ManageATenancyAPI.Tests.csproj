@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="v1\Scripts\manage-a-tenancy-schema.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -69,7 +73,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="v2\UseCases\SignOffMeeting\" />
+    <Folder Include="v2\AcceptanceTests\SendETraEmailConfirmation\" />
+    <Folder Include="v2\Gateways\SendEtraMeetingEmailConfirmation\" />
   </ItemGroup>
 
 </Project>

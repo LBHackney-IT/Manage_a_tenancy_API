@@ -27,7 +27,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
         {
             return await _traRepository.Find(traName);
         }
-        public async Task<TRA> Get(int traId)
+        public async Task<TRA> GetAsync(int traId)
         {
             return await _traRepository.Get(traId);
         }

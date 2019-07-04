@@ -11,7 +11,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
         Task<bool> Exists(string traName);
         Task<bool> Exists(int traid);
 
-        Task<TRA> Get(int traId);
+        Task<TRA> GetAsync(int traId);
         Task<TRA> Create(string name, string notes, string email, int areaId, Guid patchId);
 
         void UpdateNotes(int traId, string notes);

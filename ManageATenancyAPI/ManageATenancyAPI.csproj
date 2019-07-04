@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Work\GitHub\ManageATenanancyAPI_NetCore\ManageATenancyAPI\ManageATenancyAPI\ManageATenancyAPI.xml</DocumentationFile>
+    <DocumentationFile>ManageATenancyAPI.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -19,7 +19,6 @@
     <Folder Include="Plugins\" />
     <Folder Include="Services\S3\" />
     <Folder Include="Tests\Controllers\" />
-    <Folder Include="UseCases\Meeting\GetMeeting\Boundary\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -28,12 +27,16 @@
     <PackageReference Include="Bogus" Version="24.3.1" />
     <PackageReference Include="Dapper.Contrib" Version="1.50.5" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.0.1916590" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="Sentry.AspNetCore" Version="1.1.2" />
+    <PackageReference Include="NewRelic.Agent" Version="8.13.798" />
     <PackageReference Include="Moq" Version="4.10.0" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.7.0" />
+    <PackageReference Include="Notify" Version="2.5.1"  />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="3.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="3.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="3.0.0" />

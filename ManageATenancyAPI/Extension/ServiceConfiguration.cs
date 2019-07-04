@@ -15,10 +15,13 @@ using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting;
 using ManageATenancyAPI.Helpers;
 using ManageATenancyAPI.Repository.Interfaces;
+using ManageATenancyAPI.Services.Email;
 using ManageATenancyAPI.Services.Interfaces;
 using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.Tests;
+using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
+using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting;
 
 namespace ManageATenancyAPI.Extension
 {
@@ -79,8 +82,16 @@ namespace ManageATenancyAPI.Extension
             services.AddScoped<ISaveEtraMeetingAttendanceGateway, SaveEtraMeetingAttendanceGateway>();
             services.AddScoped<ISaveEtraMeetingSignOffMeetingGateway, SaveEtraMeetingSignOffMeetingGateway>();
 
+            services.AddScoped<IGetEtraMeetingUseCase, GetEtraMeetingUseCase>();
+
+            services.AddScoped<ISignOffMeetingUseCase, SignOffMeetingUseCase>();
+
             services.AddScoped<IJpegPersistenceService, JpegPersistenceService>();
 
+            services.AddScoped<ISendTraConfirmationEmailGateway, SendTraConfirmationEmailGateway>();
+
+            services.AddScoped<INotificationClient, GovNotificationClient>();
+            
         }
     }
 }

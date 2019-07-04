@@ -37,7 +37,7 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting
             }
 
             var response = await _etraMeetingsAction.FinaliseMeeting(meetingId.ToString(), finaliseMeetingRequest).ConfigureAwait(false);
-            
+            signOff.SignOffDate = response.SignOffDate;
             return new SignOffMeetingOutputModel
             {
                 Id = meetingId,

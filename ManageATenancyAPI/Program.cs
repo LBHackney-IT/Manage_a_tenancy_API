@@ -37,6 +37,7 @@ namespace ManageATenancyAPI
                     config.AddCommandLine(args);
                 })
                 .UseStartup<Startup>()
+                .UseSentry(Environment.GetEnvironmentVariable("SENTRY_URL"))
                 .Build();
     }
 }

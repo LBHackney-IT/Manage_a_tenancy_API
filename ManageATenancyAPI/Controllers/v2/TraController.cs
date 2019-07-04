@@ -10,6 +10,7 @@ using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary;
 
 namespace ManageATenancyAPI.Controllers.v2
 {
+    [ApiVersion("2.0")]
     [Produces("application/json")]
     [Route("v2/tra/meeting")]
     public class TRAController : BaseClaimsController
@@ -75,7 +76,7 @@ namespace ManageATenancyAPI.Controllers.v2
         /// Gets an ETRA meeting
         /// </summary>
         /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
-        [HttpGet]
+        [HttpPatch]
         [ProducesResponseType(typeof(SignOffMeetingOutputModel), 200)]
         [ProducesResponseType(typeof(UnauthorizedResult), 401)]
         public async Task<IActionResult> Patch([FromBody]SignOffMeetingInputModel inputModel)

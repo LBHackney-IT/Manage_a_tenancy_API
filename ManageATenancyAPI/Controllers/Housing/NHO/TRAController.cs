@@ -26,7 +26,8 @@ using Newtonsoft.Json.Linq;
 
 namespace ManageATenancyAPI.Controllers.Housing.NHO
 {
-    [Authorize]
+    
+    //[Authorize]
     [Produces("application/json")]
     [Route("v1/[controller]")]
     public class TRAController : Controller
@@ -127,7 +128,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
                     _traAction.UpdateNotes(traId, tra.Notes);
                 }
 
-                var traUpdated = _traAction.Get(traId);
+                var traUpdated = _traAction.GetAsync(traId);
 
                 return Ok(HackneyResult<TRA>.Create(traUpdated));
             }

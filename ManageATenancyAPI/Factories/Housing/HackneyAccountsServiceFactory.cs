@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using ManageATenancyAPI.Actions;
 using ManageATenancyAPI.Interfaces;
 using ManageATenancyAPI.Interfaces.Housing;
+using ManageATenancyAPI.Logging;
 using ManageATenancyAPI.Services.Housing;
 using ManageATenancyAPI.Tests;
+using Microsoft.Extensions.Logging;
 
 namespace ManageATenancyAPI.Factories.Housing
 {
@@ -16,7 +18,7 @@ namespace ManageATenancyAPI.Factories.Housing
         {
             if (TestStatus.IsRunningInTests == false)
             {
-                return new HackneyHousingAPICall();
+                return new HackneyHousingAPICall(new LoggerAdapter<HackneyHousingAPICall>(new Logger<HackneyHousingAPICall>(new LoggerFactory())));
             }
             else
             {

@@ -103,7 +103,6 @@ namespace ManageATenancyAPI.Controllers.v2
         /// return options
         /// </summary>
         [HttpOptions]
-        [Authorize]
         public IActionResult Options()
         {
             return Ok();

@@ -7,5 +7,6 @@
         public static string MeetingUrl => "meetingUrl";
         public static string OfficerName => "officerName";
         public static string OfficerAddress => "officerAddress";
+        public static string TraName => "traName";
     }
 }

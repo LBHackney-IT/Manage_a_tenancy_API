@@ -91,7 +91,7 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
             {
                 MeetingAttendance = new MeetingAttendees
                 {
-                    Attendees = 1
+                    NumberOfAttendees = 1
                 },
                 Issues = new List<MeetingIssue>
                 {
@@ -137,7 +137,7 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
             {
                 MeetingAttendance = new MeetingAttendees
                 {
-                    Attendees = 1
+                    NumberOfAttendees = 1
                 },
                 Issues = new List<MeetingIssue>
                 {
@@ -221,7 +221,7 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
 
                 MeetingAttendance = new MeetingAttendees
                 {
-                    Attendees = attendees,
+                    NumberOfAttendees = attendees,
                     Councillors = councillors,
                     HackneyStaff = hackneyStaff
                 },

@@ -13,7 +13,7 @@ namespace ManageATenancyAPI.Tests.v2.Helper
             {
                 MeetingAttendance = new MeetingAttendees
                 {
-                    Attendees = 1
+                    NumberOfAttendees = 1
                 },
                 Issues = new List<MeetingIssue>
                 {

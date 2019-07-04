@@ -52,7 +52,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.GetEtraMeeting
                 MeetingName = "New ETRA meeting",
                 MeetingAttendance = new MeetingAttendees
                 {
-                    Attendees = 1
+                    NumberOfAttendees = 1
                 },
                 Issues = new List<MeetingIssue>
                 {

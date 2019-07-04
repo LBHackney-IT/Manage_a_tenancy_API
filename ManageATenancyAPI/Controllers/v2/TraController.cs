@@ -98,5 +98,15 @@ namespace ManageATenancyAPI.Controllers.v2
             var outputModel = await _signOffEtraMeetingUseCase.ExecuteAsync(inputModel, Request.GetCancellationToken()).ConfigureAwait(false);
             return Ok(outputModel);
         }
+
+        /// <summary>
+        /// return options
+        /// </summary>
+        [HttpOptions]
+        [Authorize]
+        public IActionResult Options()
+        {
+            return Ok();
+        }
     }
 }

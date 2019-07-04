@@ -64,8 +64,8 @@ namespace ManageATenancyAPI.Services.Housing
         public async Task<HttpResponseMessage> postHousingAPI(HttpClient client, string query, JObject jObject)
         {
             var response = new HttpResponseMessage();
-            try
-            {
+            //try
+            //{
                 var content = new StringContent(jObject.ToString(), Encoding.UTF8, "application/json");
                 response = await client.PostAsync(query, content).ConfigureAwait(false) ;
                
@@ -73,13 +73,13 @@ namespace ManageATenancyAPI.Services.Housing
                 {
                     throw new ServiceException();
                 }
-            }
-            catch (Exception ex)
-            {
+            //}
+            //catch (Exception ex)
+            //{
                 
-                response.StatusCode = HttpStatusCode.BadRequest;
-                throw new ServiceException();
-            }
+            //    response.StatusCode = HttpStatusCode.BadRequest;
+            //    throw new ServiceException();
+            //}
             return response;
 
         }

@@ -192,7 +192,7 @@ namespace ManageATenancyAPI.Helpers.Housing
         {
             return "/api/data/v8.2/hackney_tenancymanagementinteractionses(" + new Guid(interactionId.Trim()) + ")";
         }
-
+       
         public static string getTenancyInteractionDeatils(string contactId, string personType)
         {
             StringBuilder query = new StringBuilder();
@@ -217,6 +217,8 @@ namespace ManageATenancyAPI.Helpers.Housing
                 <attribute name='hackney_transferred' />
                 <attribute name='hackney_process_stage' />
                 <attribute name='hackney_household_interactionid' />
+                <attribute name='hackney_parent_interactionid' />
+
                 <filter>";
             if (personType == "contact")
             {

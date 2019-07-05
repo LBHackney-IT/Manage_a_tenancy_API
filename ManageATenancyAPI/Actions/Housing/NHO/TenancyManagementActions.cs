@@ -444,8 +444,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
                 _client.DefaultRequestHeaders.Add("Prefer", "odata.include-annotations=\"OData.Community.Display.V1.FormattedValue\"");
 
-                var query = HousingAPIQueryBuilder.getTenancyInteractionDeatils(contactId, personType);
-
+                  var query = HousingAPIQueryBuilder.getTenancyInteractionDeatils(contactId, personType);
+               // var query = HousingAPIQueryBuilder.updateInteractionQuery11();
                 result = _ManageATenancyAPI.getHousingAPIResponse(_client, query, contactId).Result;
                 if (result != null)
                 {
@@ -779,8 +779,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      contactLarn = response["contact3_x002e_hackney_larn"],
                                      contactUPRN = response["contact3_x002e_hackney_uprn"],
                                      householdID = response["_hackney_household_interactionid_value"],
-                                     accountCreatedOn=response["accountCreatedOn"]
-
+                                     accountCreatedOn=response["accountCreatedOn"],
+                                     parentInteractionId=response["_hackney_parent_interactionid_value"]
                                  } into grp
                                  select new
                                  {
@@ -823,6 +823,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      grp.Key.contactUPRN,
                                      grp.Key.householdID,
                                      grp.Key.accountCreatedOn,
+                                     grp.Key.parentInteractionId,
                                      Annotation = grp.ToList()
 
                                  });
@@ -871,6 +872,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 tenancyObj.contactUPRN = response.contactUPRN;
                 tenancyObj.householdID = response.householdID;
                 tenancyObj.accountCreatedOn = response.accountCreatedOn!=null? response.accountCreatedOn.ToString("yyyy-MM-dd HH:mm:ss") : null;
+                tenancyObj.parentInteractionId = response.parentInteractionId;
                 tenancyObj.AnnotationList = new List<ExpandoObject>();
 
                 foreach (var annotationResponse in response.Annotation)

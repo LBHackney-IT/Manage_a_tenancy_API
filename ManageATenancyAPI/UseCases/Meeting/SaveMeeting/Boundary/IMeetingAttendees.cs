@@ -18,10 +18,10 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
         public string HackneyStaff { get; set; }
 
         /// <summary>
-        /// Number of attendees to the meeting that aren't Councillors or Hackney staff, must be greater than 1
+        /// Number of attendees to the meeting that aren't Councillors or Hackney staff, must be greater than 0
         /// </summary>
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please enter a value bigger than {1}")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please enter a value bigger than 0")]
         public int NumberOfAttendees { get; set; }
 
     }

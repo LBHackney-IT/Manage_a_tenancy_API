@@ -21,7 +21,7 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting
         {
             var etraIssue = new ETRAIssue
             {
-                estateOfficerId = manageATenancyClaims.EstateOfficerLoginId.ToString(),
+                estateOfficerId = manageATenancyClaims.OfficerId.ToString(),
                 subject = "c1f72d01-28dc-e711-8115-70106faa6a11",
                 estateOfficerName = manageATenancyClaims.FullName,
 

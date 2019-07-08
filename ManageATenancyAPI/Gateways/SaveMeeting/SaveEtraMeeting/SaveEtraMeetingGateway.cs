@@ -21,7 +21,7 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting
         {
             var etraIssue = new ETRAIssue
             {
-                estateOfficerId = manageATenancyClaims.EstateOfficerLoginId.ToString(),
+                estateOfficerId = manageATenancyClaims.OfficerPatchId.ToString(),
                 subject = "c1f72d01-28dc-e711-8115-70106faa6a11",
                 estateOfficerName = manageATenancyClaims.FullName,
 
@@ -39,7 +39,7 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting
                     //In the Subjects Custom Entities... table
                     //Which relates to Tenancy Management interactions... I don't know..
                     Subject = "c1f72d01-28dc-e711-8115-70106faa6a11",
-                    CreatedBy = manageATenancyClaims.EstateOfficerLoginId.ToString()
+                    CreatedBy = manageATenancyClaims.OfficerId.ToString()
                 },
 
                 TRAId = meeting.TraId.ToString(),

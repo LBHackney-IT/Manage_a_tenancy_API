@@ -38,6 +38,7 @@ namespace ManageATenancyAPI.Services.Email
             {
                 {EmailKeys.EmailAddress, tra.Email},
                 {EmailKeys.Subject, $"{tra.Name} meeting notes confirmation" },
+                {EmailKeys.TraName, tra.Name },
                 {EmailKeys.MeetingUrl, $"{_config?.Value.FrontEndAppUrl}?traToken={token}"},
                 {EmailKeys.OfficerName, $"{inputModel.OfficerName}"},
                 {EmailKeys.OfficerAddress, $"{inputModel.OfficerAddress}"}

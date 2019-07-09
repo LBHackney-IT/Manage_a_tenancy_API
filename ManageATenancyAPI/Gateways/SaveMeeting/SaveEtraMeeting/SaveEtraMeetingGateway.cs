@@ -21,7 +21,7 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting
         {
             var etraIssue = new ETRAIssue
             {
-                estateOfficerId = manageATenancyClaims.OfficerPatchId.ToString(),
+                estateOfficerId = manageATenancyClaims.OfficerId.ToString(),
                 subject = "c1f72d01-28dc-e711-8115-70106faa6a11",
                 estateOfficerName = manageATenancyClaims.FullName,
 
@@ -39,12 +39,15 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting
                     //In the Subjects Custom Entities... table
                     //Which relates to Tenancy Management interactions... I don't know..
                     Subject = "c1f72d01-28dc-e711-8115-70106faa6a11",
-                    CreatedBy = manageATenancyClaims.OfficerId.ToString()
+                    //  CreatedBy = manageATenancyClaims.OfficerId.ToString()
                 },
 
                 TRAId = meeting.TraId.ToString(),
                 ///ETRA - Values are in Dynamics 365 - some lookup table?
                 natureOfEnquiry = "28",
+
+                //meeting enquiry subject in the CRM option set hackney_enquirysubject the value for the meeting is 100000219
+                enquirySubject = "100000219",
                 // todo: comment what this process type is??
                 processType = "1"
             };

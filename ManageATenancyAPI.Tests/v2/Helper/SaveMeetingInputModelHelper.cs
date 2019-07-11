@@ -19,16 +19,28 @@ namespace ManageATenancyAPI.Tests.v2.Helper
                 {
                     new MeetingIssue
                     {
-                        IssueTypeId = "100000501",
-                        IssueLocationName = "De Beauvoir Estate  1-126 Fermain Court",
-                        IssueNote = "Bad things have happened please fix"
+                        IssueType = new IssueType
+                        { IssueId= "100000501",
+                        },
+                        Location=new Location
+                        {
+                            Name="De Beauvoir Estate  1-126 Fermain Court",
+                        },
+                        Notes = "Bad things have happened please fix"
                     },
                     new MeetingIssue
                     {
-                        IssueTypeId = "100000501",
-                        IssueLocationName = "De Beauvoir Estate  1-126 Fermain Court",
-                        IssueNote = "Bad things have happened please fix 2"
+                         IssueType = new IssueType
+                        { IssueId="100000501",
+                        },
+                        Location=new Location
+                        {
+                            Name= "De Beauvoir Estate  1-126 Fermain Court",
+                        },
+                        Notes ="Bad things have happened please fix 2"
+
                     }
+                  
                 },
                 SignOff = new SignOff
                 {

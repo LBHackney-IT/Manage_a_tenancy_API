@@ -81,15 +81,26 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
                 {
                     new MeetingIssue
                     {
-                        IssueTypeId = issueTypeId,
-                        IssueLocationName = issueLocationName,
-                        IssueNote = note
+                        IssueType = new IssueType
+                        { IssueId=issueTypeId
+                        },
+                        Location=new Location
+                        {
+                            Name=issueLocationName
+                        },
+                        Notes = note
                     },
                     new MeetingIssue
                     {
-                        IssueTypeId = issueTypeId,
-                        IssueLocationName = $"{issueLocationName} 2",
-                        IssueNote = $"{note} 2"
+                         IssueType = new IssueType
+                        { IssueId=issueTypeId
+                        },
+                        Location=new Location
+                        {
+                            Name= $"{issueLocationName} 2",
+                        },
+                        Notes = $"{note} 2"
+
                     }
                 },
             };
@@ -108,9 +119,9 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
                 var issue = outputModel.Issues[i];
 
                 issue.Id.Should().NotBeEmpty();
-                issue.IssueLocationName.Should().Be(expectedIssue.IssueLocationName);
-                issue.IssueTypeId.Should().Be(expectedIssue.IssueTypeId);
-                issue.IssueNote.Should().Be(expectedIssue.IssueNote);
+                issue.Location.Should().Be(expectedIssue.Location);
+                issue.IssueType.Should().Be(expectedIssue.IssueType);
+                issue.Notes.Should().Be(expectedIssue.Notes);
             }
         }
 

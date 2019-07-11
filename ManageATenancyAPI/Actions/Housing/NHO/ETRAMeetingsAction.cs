@@ -310,9 +310,14 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                         list = issuesRetrievedList.Select(s => new MeetingIssueOutputModel
                         {
                             Id = s["hackney_tenancymanagementinteractionsid"].ToObject<Guid>(),
-                            IssueLocationName = s["hackney_issuelocation"].ToString(),
-                            IssueTypeId = s["hackney_enquirysubject"].ToString(),
-                            IssueNote = s["annotation2_x002e_notetext"].ToString()
+                            Location=new Location
+                            { Name = s["hackney_issuelocation"].ToString() },
+                          
+                            IssueType=new IssueType
+                            {  IssueId= s["hackney_enquirysubject"].ToString()
+                            },
+
+                            Notes = s["annotation2_x002e_notetext"].ToString()
                         }).ToList();
 
                         return list;

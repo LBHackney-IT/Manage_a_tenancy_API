@@ -62,15 +62,26 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SignOffMeeting
                 {
                     new MeetingIssue
                     {
-                        IssueTypeId = issueTypeId,
-                        IssueLocationName = issueLocationName,
-                        IssueNote = note
+                        IssueType = new IssueType
+                        { IssueId=issueTypeId
+                        },
+                        Location=new Location
+                        {
+                            Name=issueLocationName
+                        },
+                        Notes = note
                     },
                     new MeetingIssue
                     {
-                        IssueTypeId = issueTypeId,
-                        IssueLocationName = $"{issueLocationName} 2",
-                        IssueNote = $"{note} 2"
+                         IssueType = new IssueType
+                        { IssueId=issueTypeId
+                        },
+                        Location=new Location
+                        {
+                            Name= $"{issueLocationName} 2",
+                        },
+                        Notes = $"{note} 2"
+                      
                     }
                 },
 

@@ -97,15 +97,26 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
                 {
                     new MeetingIssue
                     {
-                        IssueTypeId = issueTypeId,
-                        IssueLocationName = issueLocationName,
-                        IssueNote = note
+                        IssueType = new IssueType
+                        { IssueId=issueTypeId
+                        },
+                        Location=new Location
+                        {
+                            Name=issueLocationName
+                        },
+                        Notes = note
                     },
                     new MeetingIssue
                     {
-                        IssueTypeId = issueTypeId,
-                        IssueLocationName = $"{issueLocationName} 2",
-                        IssueNote = $"{note} 2"
+                         IssueType = new IssueType
+                        { IssueId=issueTypeId
+                        },
+                        Location=new Location
+                        {
+                            Name= $"{issueLocationName} 2",
+                        },
+                        Notes = $"{note} 2"
+
                     }
                 },
                 SignOff = new SignOff
@@ -141,17 +152,28 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
                 },
                 Issues = new List<MeetingIssue>
                 {
-                    new MeetingIssue
+                   new MeetingIssue
                     {
-                        IssueTypeId = issueTypeId,
-                        IssueLocationName = issueLocationName,
-                        IssueNote = note
+                        IssueType = new IssueType
+                        { IssueId=issueTypeId
+                        },
+                        Location=new Location
+                        {
+                            Name=issueLocationName
+                        },
+                        Notes = note
                     },
                     new MeetingIssue
                     {
-                        IssueTypeId = issueTypeId,
-                        IssueLocationName = $"{issueLocationName} 2",
-                        IssueNote = $"{note} 2"
+                         IssueType = new IssueType
+                        { IssueId=issueTypeId
+                        },
+                        Location=new Location
+                        {
+                            Name= $"{issueLocationName} 2",
+                        },
+                        Notes = $"{note} 2"
+
                     }
                 },
                 SignOff = new SignOff
@@ -174,9 +196,9 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
                 .ReturnsAsync(new MeetingIssueOutputModel
                 {
                     Id = Guid.NewGuid(),
-                    IssueNote = inputModel.Issues[0].IssueNote,
-                    IssueTypeId = inputModel.Issues[0].IssueTypeId,
-                    IssueLocationName = inputModel.Issues[0].IssueLocationName
+                    Notes = inputModel.Issues[0].Notes,
+                    IssueType = inputModel.Issues[0].IssueType,
+                    Location = inputModel.Issues[0].Location
                 });
 
             _mockSaveMeetingIssueGateway.Setup(s => s.CreateEtraMeetingIssue(It.IsAny<ETRAMeeting>(),
@@ -186,9 +208,9 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
                 .ReturnsAsync(new MeetingIssueOutputModel
                 {
                     Id = Guid.NewGuid(),
-                    IssueNote = inputModel.Issues[1].IssueNote,
-                    IssueTypeId = inputModel.Issues[1].IssueTypeId,
-                    IssueLocationName = inputModel.Issues[1].IssueLocationName
+                    Notes = inputModel.Issues[1].Notes,
+                    IssueType = inputModel.Issues[1].IssueType,
+                    Location = inputModel.Issues[1].Location
                 });
 
             //act
@@ -204,9 +226,9 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
                 var issue = outputModel.Issues[i];
 
                 issue.Id.Should().NotBeEmpty();
-                issue.IssueLocationName.Should().Be(expectedIssue.IssueLocationName);
-                issue.IssueTypeId.Should().Be(expectedIssue.IssueTypeId);
-                issue.IssueNote.Should().Be(expectedIssue.IssueNote);
+                issue.Location.Name.Should().Be(expectedIssue.Location.Name);
+                issue.IssueType.Should().Be(expectedIssue.IssueType);
+                issue.Notes.Should().Be(expectedIssue.Notes);
             }
         }
 

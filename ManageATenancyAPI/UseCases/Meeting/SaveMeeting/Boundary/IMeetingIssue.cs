@@ -8,8 +8,18 @@
         /// <summary>
         ///
         /// </summary>
-        public string IssueTypeId { get; set; }
-        public string IssueLocationName { get; set; }
-        public string IssueNote { get; set; }
+        public IssueType IssueType { get; set; }
+        public Location Location { get; set; }
+        public string Notes { get; set; }
+    }
+
+    public class IssueType
+    {
+        public string IssueId{ get; set; }
+    }
+
+    public class Location
+    {
+        public string Name { get; set; }
     }
 }

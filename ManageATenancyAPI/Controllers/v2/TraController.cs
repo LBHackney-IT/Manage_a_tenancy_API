@@ -53,7 +53,7 @@ namespace ManageATenancyAPI.Controllers.v2
         /// Gets an ETRA meeting
         /// </summary>
         /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
-        [HttpPatch]
+        [HttpGet]
         [ProducesResponseType(typeof(GetEtraMeetingOutputModel), 200)]
         [ProducesResponseType(typeof(UnauthorizedResult), 401)]
         public async Task<IActionResult> Get()
@@ -75,7 +75,7 @@ namespace ManageATenancyAPI.Controllers.v2
         /// Gets an ETRA meeting
         /// </summary>
         /// <returns>A JSON object for a successfully created ETRA meeting request</returns>
-        [HttpGet]
+        [HttpPatch]
         [ProducesResponseType(typeof(SignOffMeetingOutputModel), 200)]
         [ProducesResponseType(typeof(UnauthorizedResult), 401)]
         public async Task<IActionResult> Patch([FromBody]SignOffMeetingInputModel inputModel)

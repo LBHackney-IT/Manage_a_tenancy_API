@@ -12,6 +12,8 @@ commands:
         type: string
       service-name:
         type: string
+      task-name:
+        type: string
       image-tag:
         type: string
     steps:
@@ -28,6 +30,7 @@ commands:
             --secret-access-key $AWS_SECRET_KEY \
             --timeout 1800 \
             --region $AWS_REGION \
+            --task << parameters.task-name >> \
             << parameters.cluster-name >> \
             << parameters.service-name >> \
             -t << parameters.image-tag >>
@@ -74,6 +77,7 @@ jobs:
       - deploy-env:
           cluster-name: 'hackney-apps-development'
           service-name: 'man-a-tenancy-development'
+          task-name: 'task-manage-a-tenancy-api-development'
           image-tag: "$CIRCLE_SHA1"
 
   deploy-to-staging:
@@ -83,6 +87,7 @@ jobs:
       - deploy-env:
           cluster-name: 'hackney-apps-staging'
           service-name:  'man-a-tenancy-staging'
+          task-name: 'task-manage-a-tenancy-api-staging'
           image-tag: "$CIRCLE_SHA1"
 
   deploy-to-production:
@@ -92,6 +97,7 @@ jobs:
       - deploy-env:
           cluster-name: 'ecs-hackney-apps'
           service-name:  'man-a-tenancy-production'
+          task-name: 'task-manage-a-tenancy-api-production'
           image-tag: "$CIRCLE_SHA1"
 
 workflows:

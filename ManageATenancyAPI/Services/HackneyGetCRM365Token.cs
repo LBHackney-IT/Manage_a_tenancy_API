@@ -32,7 +32,7 @@ namespace ManageATenancyAPI.Services
 
                 var tokenJsonResponse = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
                 var token = tokenJsonResponse["result"].ToString();
-                return token;
+                  return token;
             }
             catch (Exception ex)
             {

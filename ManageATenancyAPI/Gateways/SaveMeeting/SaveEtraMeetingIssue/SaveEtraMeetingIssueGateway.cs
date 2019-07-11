@@ -34,7 +34,7 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue
 
                 ServiceRequest = new CRMServiceRequest
                 {
-                    Description = meetingIssue.IssueNote,
+                    Description = meetingIssue.Notes,
                     //Generic Subject Id from Dynamics 365 list of subjects..............
                     //In the Subjects Custom Entities... table
                     //Which relates to Tenancy Management interactions... I don't know..
@@ -51,8 +51,8 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue
                 //ETRA I think - Check Dynamics 365 reference tables... which one.. not sure
                 processType = "3",
 
-                enquirySubject = meetingIssue.IssueTypeId,
-                issueLocation = meetingIssue.IssueLocationName
+                enquirySubject = meetingIssue.IssueType.IssueId,
+                issueLocation = meetingIssue.Location.Name
             };
 
             var response = await _etraMeetingsAction.CreateETRAMeeting(etraIssue).ConfigureAwait(false);
@@ -60,9 +60,9 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue
             return new MeetingIssueOutputModel
             {
                 Id = response.InteractionId.GetValueOrDefault(),
-                IssueNote = meetingIssue.IssueNote,
-                IssueTypeId = meetingIssue.IssueTypeId,
-                IssueLocationName = meetingIssue.IssueLocationName,
+                Notes = meetingIssue.Notes,
+                IssueType = meetingIssue.IssueType,
+                Location = meetingIssue.Location,
             };
         }
     }

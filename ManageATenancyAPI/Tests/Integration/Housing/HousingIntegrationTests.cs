@@ -701,6 +701,10 @@ namespace ManageATenancyAPI.Tests.Integration
             json.Append("\"123\",");
             json.Append("\"contactEmailAddress\":");
             json.Append("\"test@test.com\",");
+            json.Append("\"contactCautionaryAlert\":");
+            json.Append("false,");
+            json.Append("\"contactPropertyCautionaryAlert\":");
+            json.Append("false,");
             json.Append("\"contactLarn\":");
             json.Append("\"LARN834210\",");
             json.Append("\"contactUPRN\":");
@@ -709,6 +713,8 @@ namespace ManageATenancyAPI.Tests.Integration
             json.Append("null,");
             json.Append("\"accountCreatedOn\":");
             json.Append("null,");
+            json.Append("\"parentInteractionId\":");
+            json.Append("parentInteractionId01,");
             json.Append("\"AnnotationList\":");
             json.Append("["); json.Append("{"); 
 

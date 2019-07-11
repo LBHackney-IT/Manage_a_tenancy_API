@@ -24,6 +24,7 @@ commands:
           command: |
             ecs deploy \
             --no-deregister \
+            --use-latest-task-def \
             --access-key-id $AWS_ID_KEY \
             --secret-access-key $AWS_SECRET_KEY \
             --timeout 1800 \

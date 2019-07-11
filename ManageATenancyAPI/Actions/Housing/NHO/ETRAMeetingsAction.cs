@@ -125,8 +125,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             {
                 JObject tmiJObject = await CreateTenancyManagementInteractionJObject(meetingInfo, incidentid, ticketnumber);
 
-                //try
-                //{
+                try
+                {
                     _logger.LogInformation($"Create Tenancy Management Interaction");
                     var incidentquery = HousingAPIQueryBuilder.PostETRAMeetingQuery();
                     var createResponseInteraction = await _ManageATenancyAPI.postHousingAPI(_client, incidentquery, tmiJObject);
@@ -156,11 +156,11 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                         _logger.LogError($" Tenancy Management Interaction could not be created for ticket {ticketnumber} ");
                         throw new MissingTenancyInteractionRequestException();
                     }
-                //}
-                //catch (Exception e)
-                //{
-                //    throw e;
-                //}
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
             }
             else
             {

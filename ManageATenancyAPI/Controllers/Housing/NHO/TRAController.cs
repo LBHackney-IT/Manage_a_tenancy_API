@@ -27,7 +27,7 @@ using Newtonsoft.Json.Linq;
 namespace ManageATenancyAPI.Controllers.Housing.NHO
 {
     
-    //[Authorize]
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/[controller]")]
     public class TRAController : Controller

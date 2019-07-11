@@ -7,9 +7,11 @@ using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ManageATenancyAPI.Controllers.v2
 {
+    [Authorize]
     [ApiVersion("2.0")]
     [Produces("application/json")]
     [Route("v2/tra/meeting")]

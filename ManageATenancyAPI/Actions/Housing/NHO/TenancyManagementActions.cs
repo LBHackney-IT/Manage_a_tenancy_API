@@ -445,7 +445,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 _client.DefaultRequestHeaders.Add("Prefer", "odata.include-annotations=\"OData.Community.Display.V1.FormattedValue\"");
 
                   var query = HousingAPIQueryBuilder.getTenancyInteractionDeatils(contactId, personType);
-               // var query = HousingAPIQueryBuilder.updateInteractionQuery11();
+            
                 result = _ManageATenancyAPI.getHousingAPIResponse(_client, query, contactId).Result;
                 if (result != null)
                 {

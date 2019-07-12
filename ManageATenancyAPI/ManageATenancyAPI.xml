@@ -4,21 +4,21 @@
         <name>ManageATenancyAPI</name>
     </assembly>
     <members>
-        <member name="M:ManageATenancyAPI.Controllers.AccountsController.GetAsyncTagReferencenumber(System.String)">
+        <member name="M:ManageATenancyAPI.Controllers.AccountsController.GetTagReferencenumber(System.String)">
             <summary>
-            GetAsyncTagReferencenumber.
+            GetTagReferencenumber.
             </summary>
             <param name="hackneyhomesId">Payment reference number for Account</param>
             <returns>Returns tag reference number</returns>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.AccountsController.GetAsyncAccountDetailsByPaymentorTagReference(System.String)">
+        <member name="M:ManageATenancyAPI.Controllers.AccountsController.GetAccountDetailsByPaymentorTagReference(System.String)">
             <summary>
             GetAsync account details by tag reference or paris ref
             </summary>
             <param name="referencenumber">Payment reference or tag reference number for Account</param>
             <returns>Returns account details in Json Object</returns>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.AccountsController.GetAsyncAccountDetailsByContactId(System.String)">
+        <member name="M:ManageATenancyAPI.Controllers.AccountsController.GetAccountDetailsByContactId(System.String)">
             <summary>
             Verify Housing Account Details by Payment Reference and postcode.
             </summary>
@@ -37,7 +37,7 @@
             </summary>
             <returns>Returns the updated information</returns>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.EstateController.GetAsyncEstatesByTra(System.Int32)">
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.EstateController.GetEstatesByTra(System.Int32)">
             <summary>
             Location of Issue - list
             </summary>
@@ -103,9 +103,9 @@
             <response code="404">No meeting with the specified id found</response>
             <response code="403">Meeting has already been finalised</response>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.GetAsyncMeetingDetails(System.Guid)">
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.GetMeetingDetails(System.Guid)">
             <summary>
-            GetAsyncs the details of an ETRA meeting.
+            Gets the details of an ETRA meeting.
             </summary>
             <param name="id">Meeting id.</param>
             <returns>The details of the meeting</returns>
@@ -113,27 +113,27 @@
             <response code="400">Empty id</response>
             <response code="404">No such meeting exists</response>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.GetAsyncETRAISsues(System.String,System.Boolean)">
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.GetETRAISsues(System.String,System.Boolean)">
             <summary>
-            GetAsyncs ETRA Issues by TRA ID or parent interaction. Used to retrieve issue for a TRA or for a specific ETRA meeting.
+            Gets ETRA Issues by TRA ID or parent interaction. Used to retrieve issue for a TRA or for a specific ETRA meeting.
             </summary>
             <param name="id">TRA Id for issues per TRA or Parent Interaction ID for issues per meeting</param>
             <param name="retrieveETRAMeetingIssues">True if meeting specific issues are to be retrieved. False if all issues per TRA are to be retrieved.</param>
             <returns>A list of ETRA issue for a TRA or a specific ETRA meeting</returns>
             <response code="200">Successfully retrieved ETRA issues request</response>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.GetAsyncETRAMeetingsByTRA(System.String)">
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.ETRAController.GetETRAMeetingsByTRA(System.String)">
             <summary>
-            GetAsyncs all meetings for a specified TRA.
+            Gets all meetings for a specified TRA.
             </summary>
             <param name="id">TRA id.</param>
             <returns>A list of ETRA meetings</returns>
             <response code="200">Successfully returned meetings</response>
             <response code="400">Null or empty id</response>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.TenancyController.GetAsyncNewTenancies">
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.TenancyController.GetNewTenancies">
             <summary>
-            GetAsyncs new tenancies recorded in the CRM since the last run, or in the last day where it hasn't been run before.
+            Gets new tenancies recorded in the CRM since the last run, or in the last day where it hasn't been run before.
             </summary>
             <returns>A list of new tenancies. This could be an empty list.</returns>
             <response code="200">Successfully returned any new tenancies</response>
@@ -166,7 +166,7 @@
             <returns>A JSON object for a successfully created TenancyManagement request</returns>
             <response code="200">A successfully created repair request</response>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.TenancyManagementInteractionsController.GetAsyncAreaTrayIneractions(System.String)">
+        <member name="M:ManageATenancyAPI.Controllers.Housing.NHO.TenancyManagementInteractionsController.GetAreaTrayIneractions(System.String)">
             <summary>
             GetAsync group Tray 
             </summary>
@@ -203,15 +203,15 @@
             <returns>A JSON object for a successfully created ETRA meeting request</returns>
             <response code="200">A successfully created ETRA meeting request</response>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.v2.TRAController.GetAsync">
+        <member name="M:ManageATenancyAPI.Controllers.v2.TRAController.Get">
             <summary>
-            GetAsyncs an ETRA meeting
+            Gets an ETRA meeting
             </summary>
             <returns>A JSON object for a successfully created ETRA meeting request</returns>
         </member>
         <member name="M:ManageATenancyAPI.Controllers.v2.TRAController.Patch(ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary.SignOffMeetingInputModel)">
             <summary>
-            GetAsyncs an ETRA meeting
+            Gets an ETRA meeting
             </summary>
             <returns>A JSON object for a successfully created ETRA meeting request</returns>
         </member>
@@ -325,7 +325,7 @@
             Service to Decrypt JWT tokens sent from Outsystems
             </summary>
         </member>
-        <member name="M:ManageATenancyAPI.Services.JWT.IJWTService.GetAsyncManageATenancyClaims(System.String,System.String)">
+        <member name="M:ManageATenancyAPI.Services.JWT.IJWTService.GetManageATenancyClaims(System.String,System.String)">
             <summary>
             Validates claims against signing key with secret and returns data in a nicely formatted manner.
             </summary>
@@ -333,7 +333,7 @@
             <param name="secret"></param>
             <returns></returns>
         </member>
-        <member name="M:ManageATenancyAPI.Services.JWT.JWTService.GetAsyncManageATenancyClaims(System.String,System.String)">
+        <member name="M:ManageATenancyAPI.Services.JWT.JWTService.GetManageATenancyClaims(System.String,System.String)">
             <summary>
             Validates claims against signing key with secret and returns data in a nicely formatted manner.
             </summary>
@@ -341,7 +341,7 @@
             <param name="secret"></param>
             <returns></returns>
         </member>
-        <member name="M:ManageATenancyAPI.Services.JWT.JWTService.GetAsyncMeetingIdClaims(System.String,System.String)">
+        <member name="M:ManageATenancyAPI.Services.JWT.JWTService.GetMeetingIdClaims(System.String,System.String)">
             <summary>
             Validates claims against signing key with secret and returns data in a nicely formatted manner.
             </summary>
@@ -359,17 +359,17 @@
             Refers to the TenancyInteractionId in Dynamics 365
             </summary>
         </member>
-        <member name="T:ManageATenancyAPI.UseCases.Meeting.GetAsyncMeeting.GetAsyncEtraMeetingInputModel">
+        <member name="T:ManageATenancyAPI.UseCases.Meeting.GetMeeting.GetEtraMeetingInputModel">
             <summary>
             InputModel for getting a meeting
             </summary>
         </member>
-        <member name="T:ManageATenancyAPI.UseCases.Meeting.GetAsyncMeeting.GetAsyncEtraMeetingOutputModel">
+        <member name="T:ManageATenancyAPI.UseCases.Meeting.GetMeeting.GetEtraMeetingOutputModel">
             <summary>
             Output model for getting a meeting
             </summary>
         </member>
-        <member name="P:ManageATenancyAPI.UseCases.Meeting.GetAsyncMeeting.GetAsyncEtraMeetingOutputModel.Id">
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.GetMeeting.GetEtraMeetingOutputModel.Id">
             <summary>
             Refers to the TenancyInteractionId in Dynamics 365
             </summary>
@@ -602,7 +602,7 @@
             </summary>
             <remarks>
             e.g.:  
-             int result = ExecuteNonQuery(trans, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
+             int result = ExecuteNonQuery(trans, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -634,7 +634,7 @@
             </summary>
             <remarks>
             e.g.:  
-             DataSet ds = ExecuteDataset(connString, CommandType.StoredProcedure, "GetAsyncOrders");
+             DataSet ds = ExecuteDataset(connString, CommandType.StoredProcedure, "GetOrders");
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -648,7 +648,7 @@
             </summary>
             <remarks>
             e.g.:  
-             DataSet ds = ExecuteDataset(connString, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
+             DataSet ds = ExecuteDataset(connString, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -666,7 +666,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             DataSet ds = ExecuteDataset(connString, "GetAsyncOrders", 24, 36);
+             DataSet ds = ExecuteDataset(connString, "GetOrders", 24, 36);
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="spName">the name of the stored procedure</param>
@@ -679,7 +679,7 @@
             </summary>
             <remarks>
             e.g.:  
-             DataSet ds = ExecuteDataset(conn, CommandType.StoredProcedure, "GetAsyncOrders");
+             DataSet ds = ExecuteDataset(conn, CommandType.StoredProcedure, "GetOrders");
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -693,7 +693,7 @@
             </summary>
             <remarks>
             e.g.:  
-             DataSet ds = ExecuteDataset(conn, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
+             DataSet ds = ExecuteDataset(conn, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -711,7 +711,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             DataSet ds = ExecuteDataset(conn, "GetAsyncOrders", 24, 36);
+             DataSet ds = ExecuteDataset(conn, "GetOrders", 24, 36);
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="spName">the name of the stored procedure</param>
@@ -724,7 +724,7 @@
             </summary>
             <remarks>
             e.g.:  
-             DataSet ds = ExecuteDataset(trans, CommandType.StoredProcedure, "GetAsyncOrders");
+             DataSet ds = ExecuteDataset(trans, CommandType.StoredProcedure, "GetOrders");
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -738,7 +738,7 @@
             </summary>
             <remarks>
             e.g.:  
-             DataSet ds = ExecuteDataset(trans, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
+             DataSet ds = ExecuteDataset(trans, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -756,7 +756,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             DataSet ds = ExecuteDataset(trans, "GetAsyncOrders", 24, 36);
+             DataSet ds = ExecuteDataset(trans, "GetOrders", 24, 36);
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="spName">the name of the stored procedure</param>
@@ -799,7 +799,7 @@
             </summary>
             <remarks>
             e.g.:  
-             SqlDataReader dr = ExecuteReader(connString, CommandType.StoredProcedure, "GetAsyncOrders");
+             SqlDataReader dr = ExecuteReader(connString, CommandType.StoredProcedure, "GetOrders");
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -813,7 +813,7 @@
             </summary>
             <remarks>
             e.g.:  
-             SqlDataReader dr = ExecuteReader(connString, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
+             SqlDataReader dr = ExecuteReader(connString, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -831,7 +831,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             SqlDataReader dr = ExecuteReader(connString, "GetAsyncOrders", 24, 36);
+             SqlDataReader dr = ExecuteReader(connString, "GetOrders", 24, 36);
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="spName">the name of the stored procedure</param>
@@ -844,7 +844,7 @@
             </summary>
             <remarks>
             e.g.:  
-             SqlDataReader dr = ExecuteReader(conn, CommandType.StoredProcedure, "GetAsyncOrders");
+             SqlDataReader dr = ExecuteReader(conn, CommandType.StoredProcedure, "GetOrders");
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -858,7 +858,7 @@
             </summary>
             <remarks>
             e.g.:  
-             SqlDataReader dr = ExecuteReader(conn, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
+             SqlDataReader dr = ExecuteReader(conn, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -876,7 +876,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             SqlDataReader dr = ExecuteReader(conn, "GetAsyncOrders", 24, 36);
+             SqlDataReader dr = ExecuteReader(conn, "GetOrders", 24, 36);
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="spName">the name of the stored procedure</param>
@@ -889,7 +889,7 @@
             </summary>
             <remarks>
             e.g.:  
-             SqlDataReader dr = ExecuteReader(trans, CommandType.StoredProcedure, "GetAsyncOrders");
+             SqlDataReader dr = ExecuteReader(trans, CommandType.StoredProcedure, "GetOrders");
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -903,7 +903,7 @@
             </summary>
             <remarks>
             e.g.:  
-              SqlDataReader dr = ExecuteReader(trans, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
+              SqlDataReader dr = ExecuteReader(trans, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -921,7 +921,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             SqlDataReader dr = ExecuteReader(trans, "GetAsyncOrders", 24, 36);
+             SqlDataReader dr = ExecuteReader(trans, "GetOrders", 24, 36);
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="spName">the name of the stored procedure</param>
@@ -935,7 +935,7 @@
             </summary>
             <remarks>
             e.g.:  
-             int orderCount = (int)ExecuteScalar(connString, CommandType.StoredProcedure, "GetAsyncOrderCount");
+             int orderCount = (int)ExecuteScalar(connString, CommandType.StoredProcedure, "GetOrderCount");
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -949,7 +949,7 @@
             </summary>
             <remarks>
             e.g.:  
-             int orderCount = (int)ExecuteScalar(connString, CommandType.StoredProcedure, "GetAsyncOrderCount", new SqlParameter("@prodid", 24));
+             int orderCount = (int)ExecuteScalar(connString, CommandType.StoredProcedure, "GetOrderCount", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -967,7 +967,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             int orderCount = (int)ExecuteScalar(connString, "GetAsyncOrderCount", 24, 36);
+             int orderCount = (int)ExecuteScalar(connString, "GetOrderCount", 24, 36);
             </remarks>
             <param name="connectionString">a valid connection string for a SqlConnection</param>
             <param name="spName">the name of the stored procedure</param>
@@ -980,7 +980,7 @@
             </summary>
             <remarks>
             e.g.:  
-             int orderCount = (int)ExecuteScalar(conn, CommandType.StoredProcedure, "GetAsyncOrderCount");
+             int orderCount = (int)ExecuteScalar(conn, CommandType.StoredProcedure, "GetOrderCount");
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -994,7 +994,7 @@
             </summary>
             <remarks>
             e.g.:  
-             int orderCount = (int)ExecuteScalar(conn, CommandType.StoredProcedure, "GetAsyncOrderCount", new SqlParameter("@prodid", 24));
+             int orderCount = (int)ExecuteScalar(conn, CommandType.StoredProcedure, "GetOrderCount", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -1012,7 +1012,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             int orderCount = (int)ExecuteScalar(conn, "GetAsyncOrderCount", 24, 36);
+             int orderCount = (int)ExecuteScalar(conn, "GetOrderCount", 24, 36);
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="spName">the name of the stored procedure</param>
@@ -1025,7 +1025,7 @@
             </summary>
             <remarks>
             e.g.:  
-             int orderCount = (int)ExecuteScalar(trans, CommandType.StoredProcedure, "GetAsyncOrderCount");
+             int orderCount = (int)ExecuteScalar(trans, CommandType.StoredProcedure, "GetOrderCount");
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -1039,7 +1039,7 @@
             </summary>
             <remarks>
             e.g.:  
-             int orderCount = (int)ExecuteScalar(trans, CommandType.StoredProcedure, "GetAsyncOrderCount", new SqlParameter("@prodid", 24));
+             int orderCount = (int)ExecuteScalar(trans, CommandType.StoredProcedure, "GetOrderCount", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -1057,7 +1057,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             int orderCount = (int)ExecuteScalar(trans, "GetAsyncOrderCount", 24, 36);
+             int orderCount = (int)ExecuteScalar(trans, "GetOrderCount", 24, 36);
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="spName">the name of the stored procedure</param>
@@ -1070,7 +1070,7 @@
             </summary>
             <remarks>
             e.g.:  
-             XmlReader r = ExecuteXmlReader(conn, CommandType.StoredProcedure, "GetAsyncOrders");
+             XmlReader r = ExecuteXmlReader(conn, CommandType.StoredProcedure, "GetOrders");
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -1084,7 +1084,7 @@
             </summary>
             <remarks>
             e.g.:  
-             XmlReader r = ExecuteXmlReader(conn, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
+             XmlReader r = ExecuteXmlReader(conn, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -1102,7 +1102,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             XmlReader r = ExecuteXmlReader(conn, "GetAsyncOrders", 24, 36);
+             XmlReader r = ExecuteXmlReader(conn, "GetOrders", 24, 36);
             </remarks>
             <param name="connection">a valid SqlConnection</param>
             <param name="spName">the name of the stored procedure using "FOR XML AUTO"</param>
@@ -1115,7 +1115,7 @@
             </summary>
             <remarks>
             e.g.:  
-             XmlReader r = ExecuteXmlReader(trans, CommandType.StoredProcedure, "GetAsyncOrders");
+             XmlReader r = ExecuteXmlReader(trans, CommandType.StoredProcedure, "GetOrders");
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -1129,7 +1129,7 @@
             </summary>
             <remarks>
             e.g.:  
-             XmlReader r = ExecuteXmlReader(trans, CommandType.StoredProcedure, "GetAsyncOrders", new SqlParameter("@prodid", 24));
+             XmlReader r = ExecuteXmlReader(trans, CommandType.StoredProcedure, "GetOrders", new SqlParameter("@prodid", 24));
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="commandType">the CommandType (stored procedure, text, etc.)</param>
@@ -1147,7 +1147,7 @@
             This method provides no access to output parameters or the stored procedure's return value parameter.
             
             e.g.:  
-             XmlReader r = ExecuteXmlReader(trans, "GetAsyncOrders", 24, 36);
+             XmlReader r = ExecuteXmlReader(trans, "GetOrders", 24, 36);
             </remarks>
             <param name="transaction">a valid SqlTransaction</param>
             <param name="spName">the name of the stored procedure</param>
@@ -1177,7 +1177,7 @@
             <param name="commandText">the stored procedure name or T-SQL command</param>
             <param name="commandParameters">an array of SqlParamters to be cached</param>
         </member>
-        <member name="M:LBH.Utils.SqlHelperParameterCache.GetAsyncCachedParameterSet(System.String,System.String)">
+        <member name="M:LBH.Utils.SqlHelperParameterCache.GetCachedParameterSet(System.String,System.String)">
             <summary>
             retrieve a parameter array from the cache
             </summary>
@@ -1185,7 +1185,7 @@
             <param name="commandText">the stored procedure name or T-SQL command</param>
             <returns>an array of SqlParamters</returns>
         </member>
-        <member name="M:LBH.Utils.SqlHelperParameterCache.GetAsyncSpParameterSet(System.String,System.String)">
+        <member name="M:LBH.Utils.SqlHelperParameterCache.GetSpParameterSet(System.String,System.String)">
             <summary>
             Retrieves the set of SqlParameters appropriate for the stored procedure
             </summary>
@@ -1196,7 +1196,7 @@
             <param name="spName">the name of the stored procedure</param>
             <returns>an array of SqlParameters</returns>
         </member>
-        <member name="M:LBH.Utils.SqlHelperParameterCache.GetAsyncSpParameterSet(System.String,System.String,System.Boolean)">
+        <member name="M:LBH.Utils.SqlHelperParameterCache.GetSpParameterSet(System.String,System.String,System.Boolean)">
             <summary>
             Retrieves the set of SqlParameters appropriate for the stored procedure
             </summary>

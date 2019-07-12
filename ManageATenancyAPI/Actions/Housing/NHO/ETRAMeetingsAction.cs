@@ -584,7 +584,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 {
                     Id = id,
                     Name = name,
-                    Attendees = attendees,
+                    MeetingAttendance = attendees,
                     CreatedOn = createdOn,
                     SignOff = signOff,
                     IsSignedOff = signOff != null ? true:false

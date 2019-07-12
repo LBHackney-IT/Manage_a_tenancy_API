@@ -16,7 +16,7 @@ COPY . .
 RUN dotnet publish ./ManageATenancyAPI/ManageATenancyAPI.csproj -c Release -o out
 
 # swap to a smallar image to reduce file size
-FROM mcr.microsoft.com/dotnet/core/sdk:2.1
+FROM mcr.microsoft.com/dotnet/core/runtime:2.1
 
 # set required envs for New Relic
 ENV CORECLR_ENABLE_PROFILING=1 \

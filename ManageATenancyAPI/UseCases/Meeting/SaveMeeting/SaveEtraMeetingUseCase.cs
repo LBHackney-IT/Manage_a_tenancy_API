@@ -64,7 +64,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
 
             var successfullySavedAttendees = await _saveEtraMeetingAttendanceGateway.CreateEtraAttendance(etraMeeting, request.MeetingAttendance, cancellationToken).ConfigureAwait(false);
             if(successfullySavedAttendees)
-                outputModel.Attendees = request.MeetingAttendance;
+                outputModel.MeetingAttendance = request.MeetingAttendance;
 
             if (request.SignOff != null)
             {

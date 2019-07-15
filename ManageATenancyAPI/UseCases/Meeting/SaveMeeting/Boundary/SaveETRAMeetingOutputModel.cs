@@ -17,7 +17,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
         public string Name { get; set; }
 
         public IList<MeetingIssueOutputModel> Issues { get; set; }
-        public MeetingAttendees Attendees { get; set; }
+        public MeetingAttendees MeetingAttendance { get; set; }
         public SignOff SignOff { get; set; }
         public DateTime CreatedOn { get; set; }
         public bool IsEmailSent { get; set; }

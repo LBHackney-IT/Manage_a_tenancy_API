@@ -103,7 +103,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.GetEtraMeeting
             getMeetingResponseOutputModel.Id.Should().Be(outputModel.Id);
             getMeetingResponseOutputModel.Name.Should().Be(outputModel.Name);
             
-            getMeetingResponseOutputModel.Attendees.Should().BeEquivalentTo(outputModel.Attendees);
+            getMeetingResponseOutputModel.MeetingAttendance.Should().BeEquivalentTo(outputModel.MeetingAttendance);
             getMeetingResponseOutputModel.Issues.Should().BeEquivalentTo(outputModel.Issues);
 
             getMeetingResponseOutputModel.SignOff.Signature.Should().Be(outputModel.SignOff.Signature);

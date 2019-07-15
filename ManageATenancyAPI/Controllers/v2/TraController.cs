@@ -90,6 +90,8 @@ namespace ManageATenancyAPI.Controllers.v2
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            inputModel.MeetingId = claims.MeetingId;
+
             var outputModel = await _signOffEtraMeetingUseCase.ExecuteAsync(inputModel, Request.GetCancellationToken()).ConfigureAwait(false);
             return Ok(outputModel);
         }

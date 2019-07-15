@@ -56,7 +56,7 @@ namespace ManageATenancyAPI.Tests.v2.Controllers.Tra
             });
             var inputModel = new SignOffMeetingInputModel
             {
-                MeetingId = _meetingId
+                MeetingId = Guid.Empty
             };
             //act
             await _classUnderTest.Patch(inputModel).ConfigureAwait(false);

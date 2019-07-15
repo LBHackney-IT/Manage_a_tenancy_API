@@ -13,7 +13,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests
         {
             IServiceCollection collection = new ServiceCollection();
             IConfiguration config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.json", true)
                 .Build();
 
             var startup = new Startup(config, new HostingEnvironment());

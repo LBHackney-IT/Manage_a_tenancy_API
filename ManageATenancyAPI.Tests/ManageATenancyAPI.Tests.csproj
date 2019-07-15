@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="appsettings.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="v1\Scripts\manage-a-tenancy-schema.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

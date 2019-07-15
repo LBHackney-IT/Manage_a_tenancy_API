@@ -21,6 +21,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
         {
             //arrange
             _token = "eyJhbGciOiJIUzI1NiIsImtpZCI6IkhTMjU2IiwidHlwIjoiSldUIn0.eyJzdWIiOiJtaG9sZGVuIiwianRpIjoiIiwiQ3JlYXRlIG1lZXRpbmciOiJ7XCJlc3RhdGVPZmZpY2VyTG9naW5JZFwiOlwiMWYxYmI3MjctY2UxYi1lODExLTgxMTgtNzAxMDZmYWE2YTMxXCIsXCJvZmZpY2VySWRcIjpcIjFmMWJiNzI3LWNlMWItZTgxMS04MTE4LTcwMTA2ZmFhNmEzMVwiLFwidXNlcm5hbWVcIjpcIm1ob2xkZW5cIixcImZ1bGxOYW1lXCI6XCJNZWdhbiBIb2xkZW5cIixcImFyZWFNYW5hZ2VySWRcIjpcIjU1MTJjNDczLTk5NTMtZTgxMS04MTI2LTcwMTA2ZmFhZjhjMVwiLFwib2ZmaWNlclBhdGNoSWRcIjpcIjhlOTU4YTM3LTg2NTMtZTgxMS04MTI2LTcwMTA2ZmFhZjhjMVwiLFwiYXJlYUlkXCI6XCI2XCJ9IiwibmJmIjowLCJleHAiOjE1OTMwNzY2MjYsImlhdCI6MTU2MTQ1NDIyNiwiaXNzIjoiT3V0c3lzdGVtcyIsImF1ZCI6Ik1hbmFnZUFUZW5hbmN5In0.d7e_bDz1JnZdXjDASng67HWmC7s466lfQEDK-weyXCQ";
+
             //act
             var claims = _classUnderTest.GetManageATenancyClaims(_token, _secret);
             //assert
@@ -33,7 +34,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             //arrange 
             Guid id = Guid.NewGuid();
             //act
-            var token = _classUnderTest.CreateManageATenancySingleMeetingToken(id, _secret);
+            var token = _classUnderTest.CreateManageATenancySingleMeetingToken(id, "", 0, _secret);
             //assert
             token.Should().NotBeNull();
         }
@@ -43,11 +44,39 @@ namespace ManageATenancyAPI.Tests.Unit.Services
         {
             //arrange 
             Guid id = Guid.NewGuid();
-            var token = _classUnderTest.CreateManageATenancySingleMeetingToken(id, _secret);
+            var token = _classUnderTest.CreateManageATenancySingleMeetingToken(id, "",0, _secret);
             //act
             var meetingClaims = _classUnderTest.GetMeetingIdClaims(token, _secret);
             //assert
             meetingClaims.MeetingId.Should().NotBeEmpty();
+        }
+
+        [Theory]
+        [InlineData("Jeff Pinkham")]
+        [InlineData("I can't think of anything better")]
+        public void can_read_officer_name(string officerName)
+        {
+            //arrange 
+            Guid id = Guid.NewGuid();
+            var token = _classUnderTest.CreateManageATenancySingleMeetingToken(id,officerName,0, _secret);
+            //act
+            var meetingClaims = _classUnderTest.GetMeetingIdClaims(token, _secret);
+            //assert
+            meetingClaims.OfficerName.Should().NotBeEmpty();
+        }
+
+        [Theory]
+        [InlineData(60)]
+        [InlineData(61)]
+        public void can_read_tra_id(int traId)
+        {
+            //arrange 
+            Guid id = Guid.NewGuid();
+            var token = _classUnderTest.CreateManageATenancySingleMeetingToken(id,"",traId, _secret);
+            //act
+            var meetingClaims = _classUnderTest.GetMeetingIdClaims(token, _secret);
+            //assert
+            meetingClaims.TraId.Should().Be(traId);
         }
     }
 }

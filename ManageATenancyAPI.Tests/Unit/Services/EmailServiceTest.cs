@@ -69,7 +69,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             {
                 {EmailKeys.EmailAddress,email},
                 {EmailKeys.Subject, $"{traName} meeting notes confirmation" },
-                {EmailKeys.MeetingUrl, $"{_emailConfiguration?.Value.FrontEndAppUrl}#traToken={token}"},
+                {EmailKeys.MeetingUrl, $"{_emailConfiguration?.Value.FrontEndAppUrl}meeting/?existingMeeting=true#traToken={token}"},
                 {EmailKeys.OfficerName, $"{officerName}"},
                 {EmailKeys.OfficerAddress, $"{officerAddress}"}
             };

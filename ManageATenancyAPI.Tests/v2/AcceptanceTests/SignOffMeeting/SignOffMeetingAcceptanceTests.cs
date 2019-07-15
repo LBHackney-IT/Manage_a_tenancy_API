@@ -92,7 +92,6 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SignOffMeeting
             _classUnderTest.SetTokenHeader(jwtToken);
             var signOffInputModel = new SignOffMeetingInputModel
             {
-                MeetingId = outputModel.Id,
                 SignOff = new SignOff
                 {
                     Name = name,

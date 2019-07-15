@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting;
 using ManageATenancyAPI.Services.Email;
+using ManageATenancyAPI.Services.JWT.Models;
 using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary;
 
 namespace ManageATenancyAPI.UseCases.Meeting.SignOffMeeting
@@ -18,21 +19,21 @@ namespace ManageATenancyAPI.UseCases.Meeting.SignOffMeeting
             _sendTraConfirmationEmailGateway = sendTraConfirmationEmailGateway;
         }
 
-        public async Task<SignOffMeetingOutputModel> ExecuteAsync(SignOffMeetingInputModel request, CancellationToken cancellationToken)
+        public async Task<SignOffMeetingOutputModel> ExecuteAsync(SignOffMeetingInputModel request, IMeetingClaims claims, CancellationToken cancellationToken)
         {
 
-            var outputModel = await _saveEtraMeetingSignOffMeetingGateway.SignOffMeetingAsync(request.MeetingId, request?.SignOff, cancellationToken).ConfigureAwait(false);
+            var outputModel = await _saveEtraMeetingSignOffMeetingGateway.SignOffMeetingAsync(claims.MeetingId, request?.SignOff, cancellationToken).ConfigureAwait(false);
 
-            //var inputModel = new SendTraConfirmationEmailInputModel
-            //{
-            //    MeetingId = request.MeetingId,
-            //    OfficerName = claims?.FullName,
-            //    TraId = request.TRAId
-            //};
+            var inputModel = new SendTraConfirmationEmailInputModel
+            {
+                MeetingId = claims.MeetingId,
+                OfficerName = claims.OfficerName,
+                TraId = claims.TraId
+            };
 
-            //var sendTraConfirmationEmailOutputModel = await _sendTraConfirmationEmailGateway.SendTraConfirmationEmailAsync(inputModel, cancellationToken).ConfigureAwait(false);
+            var sendTraConfirmationEmailOutputModel = await _sendTraConfirmationEmailGateway.SendTraConfirmationEmailAsync(inputModel, cancellationToken).ConfigureAwait(false);
 
-            //outputModel.IsEmailSent = sendTraConfirmationEmailOutputModel?.IsSent ?? false;
+            outputModel.IsEmailSent = sendTraConfirmationEmailOutputModel?.IsSent ?? false;
 
             return outputModel;
         }

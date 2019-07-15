@@ -7,8 +7,6 @@ namespace ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary
     public class SignOffMeetingInputModel
     {
         [Required]
-        public Guid MeetingId { get; set; }
-        [Required]
         public SignOff SignOff { get; set; }
     }
 }

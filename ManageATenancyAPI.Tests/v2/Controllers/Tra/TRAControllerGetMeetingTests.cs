@@ -31,7 +31,7 @@ namespace ManageATenancyAPI.Tests.v2.Controllers.Tra
 
             _meetingId = Guid.NewGuid();
 
-            var token = _jwtService.CreateManageATenancySingleMeetingToken(_meetingId,
+            var token = _jwtService.CreateManageATenancySingleMeetingToken(_meetingId, "Jeff Pinkham", 60,
                 Environment.GetEnvironmentVariable("HmacSecret"));
 
             var headers = new KeyValuePair<string, StringValues>("Authorization", $"Bearer {token}");

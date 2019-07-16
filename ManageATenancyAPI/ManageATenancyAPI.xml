@@ -407,7 +407,7 @@
             Interface representing a meeting issue
             </summary>
         </member>
-        <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.MeetingIssue.IssueTypeId">
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.MeetingIssue.IssueType">
              <summary>
             
              </summary>

@@ -60,13 +60,15 @@ namespace ManageATenancyAPI.Services.JWT
             var claims = handler.ValidateToken(token, validations, out var tokenSecure);
 
             IMeetingClaims manageATenancyClaims =  new MeetingClaims{
-                MeetingId = new Guid(claims.Claims.ToList()[0].Value)
+                MeetingId = new Guid(claims.Claims.ToList()[0].Value),
+                OfficerName =  claims.Claims.ToList()[1].Value,
+                TraId = int.Parse(claims.Claims.ToList()[2].Value),
             };
 
             return manageATenancyClaims;
         }
 
-        public string CreateManageATenancySingleMeetingToken(Guid traMeetingId, string secret)
+        public string CreateManageATenancySingleMeetingToken(Guid traMeetingId, string officerName, int traId, string secret)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secret);
@@ -74,7 +76,9 @@ namespace ManageATenancyAPI.Services.JWT
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim("meetingId", traMeetingId.ToString())
+                    new Claim("meetingId", traMeetingId.ToString()),
+                    new Claim("officerName", officerName),
+                    new Claim("traId", traId.ToString()),
                 }),
                 Expires = DateTime.UtcNow.AddDays(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

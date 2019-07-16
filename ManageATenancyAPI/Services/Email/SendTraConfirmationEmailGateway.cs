@@ -27,7 +27,7 @@ namespace ManageATenancyAPI.Services.Email
 
         public async Task<SendTraConfirmationEmailOutputModel> SendTraConfirmationEmailAsync(SendTraConfirmationEmailInputModel inputModel, CancellationToken cancellationToken)
         {
-            var token = _jwtService.CreateManageATenancySingleMeetingToken(inputModel.MeetingId,
+            var token = _jwtService.CreateManageATenancySingleMeetingToken(inputModel.MeetingId, inputModel.OfficerName, inputModel.TraId,
                 Environment.GetEnvironmentVariable("HmacSecret"));
 
             var tra = await _traAction.GetAsync(inputModel.TraId).ConfigureAwait(false);

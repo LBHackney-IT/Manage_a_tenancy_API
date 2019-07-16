@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using ManageATenancyAPI.Controllers.v2;
 using ManageATenancyAPI.Services.JWT;
+using ManageATenancyAPI.Services.JWT.Models;
 using ManageATenancyAPI.Tests.v2.Helper;
 using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting;
@@ -33,7 +34,7 @@ namespace ManageATenancyAPI.Tests.v2.Controllers.Tra
 
             _meetingId = Guid.NewGuid();
 
-            var token = _jwtService.CreateManageATenancySingleMeetingToken(_meetingId,
+            var token = _jwtService.CreateManageATenancySingleMeetingToken(_meetingId, "Jeff Pinkham", 60,
                 Environment.GetEnvironmentVariable("HmacSecret"));
 
             var headers = new KeyValuePair<string, StringValues>("Authorization", $"Bearer {token}");
@@ -49,19 +50,22 @@ namespace ManageATenancyAPI.Tests.v2.Controllers.Tra
         public async Task can_get_meeting_id_from_token()
         {
             //arrange
-            _mockUseCase.Setup(s => s.ExecuteAsync(It.Is<SignOffMeetingInputModel>(m => m.MeetingId == _meetingId),
+            _mockUseCase.Setup(s => s.ExecuteAsync(
+                It.IsAny<SignOffMeetingInputModel>(),
+                It.IsAny<IMeetingClaims>(),
                 It.IsAny<CancellationToken>())).ReturnsAsync(new SignOffMeetingOutputModel
             {
                 Id = _meetingId
             });
             var inputModel = new SignOffMeetingInputModel
             {
-                MeetingId = Guid.Empty
+                
             };
             //act
             await _classUnderTest.Patch(inputModel).ConfigureAwait(false);
             //assert
-            _mockUseCase.Verify(s => s.ExecuteAsync(It.Is<SignOffMeetingInputModel>(m => m.MeetingId == _meetingId),
+            _mockUseCase.Verify(s => s.ExecuteAsync(It.IsAny<SignOffMeetingInputModel>(),
+                It.Is<IMeetingClaims>(m => m.MeetingId == _meetingId),
                 It.IsAny<CancellationToken>()), Times.Once());
         }
 
@@ -69,15 +73,14 @@ namespace ManageATenancyAPI.Tests.v2.Controllers.Tra
         public async Task returns_output_model_from_use_case()
         {
             //arrange
-            _mockUseCase.Setup(s => s.ExecuteAsync(It.Is<SignOffMeetingInputModel>(m => m.MeetingId == _meetingId),
+            _mockUseCase.Setup(s => s.ExecuteAsync(
+                It.IsAny<SignOffMeetingInputModel>(),
+                It.IsAny<IMeetingClaims>(),
                 It.IsAny<CancellationToken>())).ReturnsAsync(new SignOffMeetingOutputModel
             {
                 Id = _meetingId
             });
-            var inputModel = new SignOffMeetingInputModel
-            {
-                MeetingId = _meetingId
-            };
+            var inputModel = new SignOffMeetingInputModel();
             //act
             var response = await _classUnderTest.Patch(inputModel);
             //assert

@@ -14,5 +14,6 @@ namespace ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary
         
         public SignOff SignOff { get; set; }
         public bool IsSignedOff { get; set; }
+        public bool IsEmailSent { get; set; }
     }
 }

@@ -52,7 +52,10 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             var token = Guid.NewGuid().ToString();
 
             _mockJWTService.Setup(s =>
-                s.CreateManageATenancySingleMeetingToken(It.Is<Guid>(m => m == inputModel.MeetingId),
+                s.CreateManageATenancySingleMeetingToken(
+                    It.Is<Guid>(m => m == inputModel.MeetingId), 
+                    It.Is<string>(m=> m.Equals(officerName)),
+                    It.Is<int>(m=> m == traId),
                     It.IsAny<string>())).Returns(token);
 
             _mockTraAction.Setup(s =>
@@ -66,7 +69,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             {
                 {EmailKeys.EmailAddress,email},
                 {EmailKeys.Subject, $"{traName} meeting notes confirmation" },
-                {EmailKeys.MeetingUrl, $"{_emailConfiguration?.Value.FrontEndAppUrl}#traToken={token}"},
+                {EmailKeys.MeetingUrl, $"{_emailConfiguration?.Value.FrontEndAppUrl}meeting/?existingMeeting=true#traToken={token}"},
                 {EmailKeys.OfficerName, $"{officerName}"},
                 {EmailKeys.OfficerAddress, $"{officerAddress}"}
             };
@@ -104,7 +107,7 @@ namespace ManageATenancyAPI.Tests.Unit.Services
             //act
             var outputModel = await _classUnderTest.SendTraConfirmationEmailAsync(inputModel, CancellationToken.None).ConfigureAwait(false);
             //assert
-            _mockJWTService.Verify(s=> s.CreateManageATenancySingleMeetingToken(It.Is<Guid>(m=> m== inputModel.MeetingId), It.IsAny<string>()));
+            _mockJWTService.Verify(s=> s.CreateManageATenancySingleMeetingToken(It.Is<Guid>(m=> m== inputModel.MeetingId), It.IsAny<string>(), It.IsAny<int>(),  It.IsAny<string>()));
         }
     }
 }

@@ -6,5 +6,7 @@ namespace ManageATenancyAPI.Services.JWT.Models
     {
 
         Guid MeetingId { get; set; }
+        string OfficerName { get; set; }
+        int TraId { get; set; }
     }
 }

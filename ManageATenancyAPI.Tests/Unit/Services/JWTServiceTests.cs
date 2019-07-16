@@ -52,8 +52,8 @@ namespace ManageATenancyAPI.Tests.Unit.Services
         }
 
         [Theory]
-        [InlineData("Jeff Pinkham")]
-        [InlineData("I can't think of anything better")]
+        [InlineData("Officer Name 1")]
+        [InlineData("Officer Name 2")]
         public void can_read_officer_name(string officerName)
         {
             //arrange 

@@ -70,6 +70,7 @@
 
   <ItemGroup>
     <Folder Include="v2\AcceptanceTests\SendETraEmailConfirmation\" />
+    <Folder Include="v2\Gateways\GetIssuesThatNeedEscalating\" />
     <Folder Include="v2\Gateways\SendEtraMeetingEmailConfirmation\" />
   </ItemGroup>
 

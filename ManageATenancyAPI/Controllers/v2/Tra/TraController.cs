@@ -1,15 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using ManageATenancyAPI.Helpers;
-using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
-using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
-using Microsoft.AspNetCore.Mvc;
 using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
+using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
+using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-namespace ManageATenancyAPI.Controllers.v2
+namespace ManageATenancyAPI.Controllers.v2.Tra
 {
     [Authorize]
     [ApiVersion("2.0")]

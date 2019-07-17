@@ -1,4 +1,4 @@
-using ManageATenancyAPI.Database.Models;
+using ManageATenancyAPI.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ManageATenancyAPI.Database

@@ -1087,6 +1087,17 @@ namespace ManageATenancyAPI.Helpers.Housing
                         <condition attribute='createdon' operator='ge' value='2019-07-05' />
                         <condition attribute='hackney_process_stage' operator='eq' value='0' />
                     </filter>
+                    <link-entity name='incident' from='incidentid' to='hackney_incidentid' link-type='inner' >
+                        <attribute name='housing_requestcallback' />
+                        <attribute name='incidentid' />
+                        <link-entity name='annotation' from='objectid' to='incidentid' link-type='outer' >
+                            <attribute name='subject' />
+                            <attribute name='createdby' />
+                            <attribute name='notetext' />
+                            <attribute name='createdon' />
+                            <attribute name='annotationid' />
+                        </link-entity>
+                    </link-entity>   
                 </entity>
             </fetch>";
             query.Append("/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=" + HttpUtility.UrlEncode(fetchXml.Trim()));

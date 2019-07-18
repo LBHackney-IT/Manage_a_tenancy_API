@@ -8,6 +8,7 @@ using ManageATenancyAPI.Gateways.GetTraIssuesThatNeedEscalating;
 using ManageATenancyAPI.Gateways.SendEscalationEmailGateway;
 using ManageATenancyAPI.UseCases.Meeting.EscalateIssues;
 using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
+using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using Moq;
 using Xunit;
 
@@ -70,13 +71,13 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
                 {
                     Successful = true
                 });
-            var getEtraMeetingOutputModel = new GetEtraMeetingOutputModel
+            var getEtraMeetingOutputModel = new MeetingIssueOutputModel
             {
                 Id = Guid.NewGuid()
             };
             _mockGetTraIssuesThatNeedEscalatingGateway
                 .Setup(s => s.GetTraIssuesThatNeedEscalating(It.IsAny<CancellationToken>())).ReturnsAsync(
-                    new List<GetEtraMeetingOutputModel>
+                    new List<MeetingIssueOutputModel>
                     {
                         getEtraMeetingOutputModel,
                         getEtraMeetingOutputModel,
@@ -84,18 +85,14 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
             //act
             await _classUnderTest.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
             //assert
-            _mockEscalateIssueGateway.Verify(s => s.EscalateIssueAsync(It.Is<EscalateIssueInputModel>(m=> m.Issue.Id == getEtraMeetingOutputModel.Id),It.IsAny<CancellationToken>()), Times.Exactly(2));
+            _mockEscalateIssueGateway.Verify(s => s.EscalateIssueAsync(It.Is<EscalateIssueInputModel>(m=> m.Issue.Issue.Id == getEtraMeetingOutputModel.Id),It.IsAny<CancellationToken>()), Times.Exactly(2));
         }
 
         [Fact]
         public async Task calls_email_service_twice()
         {
             //arrange
-            var traIssue = new TRAIssue
-            {
-                Id = Guid.NewGuid()
-            };
-            var getEtraMeetingOutputModel = new GetEtraMeetingOutputModel
+            var getEtraMeetingOutputModel = new MeetingIssueOutputModel
             {
                 Id = Guid.NewGuid()
             };
@@ -108,7 +105,7 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
                 });
             _mockGetTraIssuesThatNeedEscalatingGateway
                 .Setup(s => s.GetTraIssuesThatNeedEscalating(It.IsAny<CancellationToken>())).ReturnsAsync(
-                    new List<GetEtraMeetingOutputModel>
+                    new List<MeetingIssueOutputModel>
                     {
                         getEtraMeetingOutputModel,
                         getEtraMeetingOutputModel

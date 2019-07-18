@@ -730,7 +730,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 List<JToken> issuesRetrievedList = response["value"].ToList();
 
                 IList<MeetingIssueOutputModel> list = null;
-                list = issuesRetrievedList.Select(s => new MeetingIssueOutputModel
+                list = issuesRetrievedList?.Select(s => new MeetingIssueOutputModel
                 {
                     Id = s["hackney_tenancymanagementinteractionsid"].ToObject<Guid>(),
                     Location = new Location

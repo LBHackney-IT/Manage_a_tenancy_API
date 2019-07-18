@@ -45,6 +45,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.EscalateIssues
                 await _sendEscalationEmailGateway.SendEscalationEmailAsync(new SendEscalationEmailInputModel
                 {
                     Issue = issue,
+                    ServiceArea = serviceAreaEmails.Where(w=> w.IssueId.ToString().Equals(issue.IssueType.IssueId)).FirstOrDefault()
                 }, cancellationToken).ConfigureAwait(false);
             }
             

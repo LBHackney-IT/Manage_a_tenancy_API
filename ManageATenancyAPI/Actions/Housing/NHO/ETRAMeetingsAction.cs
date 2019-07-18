@@ -444,7 +444,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
             var noteText = $"Response from: {request.ServiceAreaName}\r\n\r\n{request.ResponseText}\r\n\r\n{completionDateText}Responder: {request.ResponderName} on {DateTime.Now}";
 
-            var annotationId = await CreateAnnotation(noteText, request.IssueIncidentId.ToString(), request.AnnotationSubjectId.ToString());
+            var annotationId = await CreateAnnotationAsync(noteText, request.IssueIncidentId.ToString(), request.AnnotationSubjectId.ToString());
 
             var updateIssueIntractionQuery = HousingAPIQueryBuilder.updateIssueQuery(id);
 
@@ -479,7 +479,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
             var noteText = $"Response rejected\r\n\r\n{request.ResponseText}Responder: {request.ResponderName} on {DateTime.Now}";
 
-            var annotationId = await CreateAnnotation(noteText, request.IssueIncidentId.ToString(), request.AnnotationSubjectId.ToString());
+            var annotationId = await CreateAnnotationAsync(noteText, request.IssueIncidentId.ToString(), request.AnnotationSubjectId.ToString());
 
             var updateIssueIntractionQuery = HousingAPIQueryBuilder.updateIssueQuery(id);
 
@@ -743,7 +743,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                         IssueId = s["hackney_enquirysubject"].ToString()
                     },
 
-                    Notes = s["annotation2_x002e_notetext"].ToString()
+                    Notes = s["annotation2_x002e_notetext"].ToString(),
+                    ServiceRequestId = s["_hackney_incidentid_value"].ToObject<Guid>()
                 }).ToList();
 
                 var outputModel = new GetAllEtraIssuesThatNeedEscalatingOutputModel
@@ -755,6 +756,28 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             return null;
         }
 
+        public async Task<bool> EscalateIssue(MeetingIssueOutputModel issue, CancellationToken cancellationToken)
+        {
+            var signOffDate = DateTime.Now;
+            var confirmation = new JObject {
+                { "hackney_process_stage", (int)HackneyProcessStage.Escalated }
+            };
+
+            var updateIssueIntractionQuery = HousingAPIQueryBuilder.updateIssueQuery(issue.Id.ToString());
+            var token = await _crmAccessToken.getCRM365AccessToken();
+            _client = await _hackneyAccountApiBuilder.CreateRequest(token);
+
+            var updateIntractionResponse = await _ManageATenancyAPI.SendAsJsonAsync(_client, HttpMethod.Patch, updateIssueIntractionQuery, confirmation);
+
+            if (!updateIntractionResponse.IsSuccessStatusCode)
+            {
+                return false;
+            }
+
+            await CreateAnnotationAsync($"This issue was automatically escalated on {DateTime.Now.ToString("R")} because a response wasn't issued within 15 working days.", issue.ServiceRequestId.ToString(), null);
+
+            return true;
+        }
 
 
         #region Private methods
@@ -928,10 +951,10 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
         private async Task<string> CreateAnnotation(string notes, string estateOfficer, string serviceRequestId, string annotationSubjectId)
         {
             string descriptionText = $"{notes}";
-            return await CreateAnnotation(descriptionText, serviceRequestId, annotationSubjectId);
+            return await CreateAnnotationAsync(descriptionText, serviceRequestId, annotationSubjectId);
         }
 
-        private async Task<string> CreateAnnotation(string notes, string serviceRequestId, string annotationSubjectId)
+        private async Task<string> CreateAnnotationAsync(string notes, string serviceRequestId, string annotationSubjectId)
         {
             try
             {

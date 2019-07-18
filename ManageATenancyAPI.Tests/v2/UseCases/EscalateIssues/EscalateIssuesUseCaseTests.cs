@@ -85,7 +85,7 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
             //act
             await _classUnderTest.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
             //assert
-            _mockEscalateIssueGateway.Verify(s => s.EscalateIssueAsync(It.Is<EscalateIssueInputModel>(m=> m.Issue.Issue.Id == getEtraMeetingOutputModel.Id),It.IsAny<CancellationToken>()), Times.Exactly(2));
+            _mockEscalateIssueGateway.Verify(s => s.EscalateIssueAsync(It.Is<EscalateIssueInputModel>(m=> m.Issue.Id == getEtraMeetingOutputModel.Id),It.IsAny<CancellationToken>()), Times.Exactly(2));
         }
 
         [Fact]

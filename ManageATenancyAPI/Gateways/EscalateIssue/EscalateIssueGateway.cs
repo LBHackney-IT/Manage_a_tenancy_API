@@ -12,9 +12,13 @@ namespace ManageATenancyAPI.Gateways.EscalateIssue
         {
             _etraMeetingsAction = etraMeetingsAction;
         }
-        public Task<EscalateIssueOutputModel> EscalateIssueAsync(EscalateIssueInputModel inputModel, CancellationToken cancellationToken)
+        public async Task<EscalateIssueOutputModel> EscalateIssueAsync(EscalateIssueInputModel inputModel, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            var isSuccessful = await _etraMeetingsAction.EscalateIssue(inputModel?.Issue, cancellationToken).ConfigureAwait(false);
+            return new EscalateIssueOutputModel
+            {
+                Successful = isSuccessful
+            };
         }
     }
 }

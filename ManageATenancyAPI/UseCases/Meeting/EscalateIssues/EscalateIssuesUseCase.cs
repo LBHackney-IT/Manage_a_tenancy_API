@@ -36,13 +36,12 @@ namespace ManageATenancyAPI.UseCases.Meeting.EscalateIssues
             await EscalateIssues(cancellationToken, issues, outputModel);
 
 
-            for (int i = 0; i < issues.Count; i++)
+            for (int i = 0; i < outputModel?.SuccessfullyEscalatedIssues.Count; i++)
             {
                 var issue = issues.ElementAtOrDefault(i);
                 await _sendEscalationEmailGateway.SendEscalationEmailAsync(new SendEscalationEmailInputModel
                 {
-                    //Issue = issue,
-
+                    Issue = issue,
                 }, cancellationToken).ConfigureAwait(false);
             }
             
@@ -59,14 +58,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.EscalateIssues
                 var escalateIssueOutputModel = await _escalateIssueGateway.EscalateIssueAsync(
                     new EscalateIssueInputModel
                     {
-                        Issue = new TRAIssue
-                        {
-                            Issue = issue,
-                            ServiceArea = new TRAIssueServiceArea
-                            {
-                                
-                            }
-                        }
+                        Issue = issue
                     }, cancellationToken).ConfigureAwait(false);
 
                 if (escalateIssueOutputModel.Successful)

@@ -19,6 +19,8 @@ namespace ManageATenancyAPI.Helpers
         [Description("not completed")]
         NotCompleted = 0,
         [Description("completed")]
-        Completed = 8
+        Completed = 8,
+        [Description("escalated")]
+        Escalated = 9
     }
 }

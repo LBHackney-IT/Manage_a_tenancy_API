@@ -23,7 +23,7 @@ namespace ManageATenancyAPI.Gateways.GetTraIssuesThatNeedEscalating
 
         public async Task<IList<MeetingIssueOutputModel>> GetTraIssuesThatNeedEscalating(CancellationToken cancellationToken)
         {
-            var fifteenWorkingDaysAgo = _getWorkingDaysGateway.GetPreviousWorkingDaysFromToday(0);
+            var fifteenWorkingDaysAgo = _getWorkingDaysGateway.GetPreviousWorkingDaysFromToday(15);
             var outputModel = await _etraMeetingsAction.GetAllEtraIssuesThatNeedEscalatingAsync(fifteenWorkingDaysAgo, cancellationToken).ConfigureAwait(false);
             return outputModel?.IssuesThatNeedEscalating;
         }

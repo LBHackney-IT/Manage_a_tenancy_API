@@ -1,9 +1,10 @@
 ﻿using ManageATenancyAPI.UseCases.Meeting.EscalateIssues;
+using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 
 namespace ManageATenancyAPI.Gateways.EscalateIssue
 {
     public class EscalateIssueInputModel
     {
-        public TRAIssue Issue { get; set; }
+        public MeetingIssueOutputModel Issue { get; set; }
     }
 }

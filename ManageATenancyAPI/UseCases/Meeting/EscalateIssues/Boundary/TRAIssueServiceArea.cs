@@ -2,8 +2,13 @@
 {
     public class TRAIssueServiceArea
     {
-        public string Name { get; set; }
-        public ServiceAreaOfficer ServiceAreaOfficer { get; set; }
-        public ServiceAreaManager ServiceAreaManager { get; set; }
+        public int IssueId { get; set; }
+        public string IssueType { get; set; }
+
+        public string ServiceAreaOfficer { get; set; }
+        public string ServiceAreaOfficerEmail { get; set; }
+
+        public string ServiceAreaManager { get; set; }
+        public string ServiceAreaManagerEmail { get; set; }
     }
 }

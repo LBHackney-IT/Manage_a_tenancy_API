@@ -56,4 +56,10 @@
     <ProjectReference Include="..\ManageATenancyAPI.Database\ManageATenancyAPI.Database.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="service-area-emails.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

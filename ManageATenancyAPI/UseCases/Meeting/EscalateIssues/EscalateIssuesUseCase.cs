@@ -16,12 +16,14 @@ namespace ManageATenancyAPI.UseCases.Meeting.EscalateIssues
         private readonly IGetTraIssuesThatNeedEscalatingGateway _getTraIssuesThatNeedEscalatingGateway;
         private readonly IEscalateIssueGateway _escalateIssueGateway;
         private readonly ISendEscalationEmailGateway _sendEscalationEmailGateway;
+        private readonly IGetServiceAreaInformationGateway _getServiceAreaInformationGateway;
 
-        public EscalateIssuesUseCase(IGetTraIssuesThatNeedEscalatingGateway getTraIssuesThatNeedEscalatingGateway, IEscalateIssueGateway escalateIssueGateway, IGetWorkingDaysGateway getWorkingDaysGateway, ISendEscalationEmailGateway sendEscalationEmailGateway)
+        public EscalateIssuesUseCase(IGetTraIssuesThatNeedEscalatingGateway getTraIssuesThatNeedEscalatingGateway, IEscalateIssueGateway escalateIssueGateway, IGetWorkingDaysGateway getWorkingDaysGateway, ISendEscalationEmailGateway sendEscalationEmailGateway, IGetServiceAreaInformationGateway getServiceAreaInformationGateway)
         {
             _getTraIssuesThatNeedEscalatingGateway = getTraIssuesThatNeedEscalatingGateway;
             _escalateIssueGateway = escalateIssueGateway;
             _sendEscalationEmailGateway = sendEscalationEmailGateway;
+            _getServiceAreaInformationGateway = getServiceAreaInformationGateway;
         }
 
         public async Task<EscalateIssuesOutputModel> ExecuteAsync(CancellationToken cancellationToken)
@@ -35,6 +37,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.EscalateIssues
 
             await EscalateIssues(cancellationToken, issues, outputModel);
 
+            var serviceAreaEmails = await _getServiceAreaInformationGateway.GetServiceAreaEmails(cancellationToken).ConfigureAwait(false);
 
             for (int i = 0; i < outputModel?.SuccessfullyEscalatedIssues.Count; i++)
             {

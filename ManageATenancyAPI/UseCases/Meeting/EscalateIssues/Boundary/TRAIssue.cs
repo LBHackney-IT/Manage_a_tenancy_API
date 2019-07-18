@@ -1,21 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 
 namespace ManageATenancyAPI.UseCases.Meeting.EscalateIssues
 {
     public class TRAIssue
     {
-        public Guid Id { get; set; }
+        public MeetingIssueOutputModel Issue { get; set; }
 
-        [MaxLength(32)]
-        public string IssueId { get; set; }
-
-        [MaxLength(64)]
-        public string IssueType { get; set; }
-
-        [MaxLength(128)]
-        public string Location { get; set; }
-
-        private TRAIssueServiceArea ServiceArea { get; set; }
+        public TRAIssueServiceArea ServiceArea { get; set; }
     }
 }

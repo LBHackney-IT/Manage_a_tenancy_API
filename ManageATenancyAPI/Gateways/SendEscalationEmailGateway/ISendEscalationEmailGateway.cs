@@ -6,6 +6,6 @@ namespace ManageATenancyAPI.Gateways.SendEscalationEmailGateway
 {
     public interface ISendEscalationEmailGateway
     {
-        Task SendEscalationEmailAsync(SendEscalationEmailInputModel inputModel, CancellationToken cancellationToken);
+        Task<SendEscalationEmailOutputModel> SendEscalationEmailAsync(SendEscalationEmailInputModel inputModel, CancellationToken cancellationToken);
     }
 }

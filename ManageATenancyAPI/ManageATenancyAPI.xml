@@ -192,6 +192,12 @@
             </summary>
             <returns>Officers Id, FirstName, LastName, UserName</returns>
         </member>
+        <member name="M:ManageATenancyAPI.Controllers.v2.Tra.TRAIssuesController.Post">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:ManageATenancyAPI.Controllers.v2.Tra.TRAController.Post(ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.SaveETRAMeetingInputModel)">
             <summary>
             Creates an ETRA meeting
@@ -214,12 +220,6 @@
             Gets an ETRA meeting
             </summary>
             <returns>A JSON object for a successfully created ETRA meeting request</returns>
-        </member>
-        <member name="M:ManageATenancyAPI.Controllers.v2.Tra.TRAIssuesController.Post">
-            <summary>
-            
-            </summary>
-            <returns></returns>
         </member>
         <member name="T:ManageATenancyAPI.Helpers.EmailUtils">
             <summary>

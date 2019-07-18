@@ -7,6 +7,7 @@ using ManageATenancyAPI.Controllers.v2.Tra;
 using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.Tests.v2.Helper;
 using ManageATenancyAPI.UseCases.Meeting.EscalateIssues;
+using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -61,9 +62,9 @@ namespace ManageATenancyAPI.Tests.v2.Controllers.Tra.Issues
             var id = Guid.NewGuid();
             _mockUseCase.Setup(s => s.ExecuteAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new EscalateIssuesOutputModel
             {
-                SuccessfullyEscalatedIssues = new List<TRAIssue>
+                SuccessfullyEscalatedIssues = new List<GetEtraMeetingOutputModel>
                 {
-                    new TRAIssue
+                    new GetEtraMeetingOutputModel
                     {
                         Id = id
                     }

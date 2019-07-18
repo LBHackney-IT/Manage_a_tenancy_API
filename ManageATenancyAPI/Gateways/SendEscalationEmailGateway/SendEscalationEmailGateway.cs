@@ -6,7 +6,7 @@ namespace ManageATenancyAPI.Gateways.SendEscalationEmailGateway
 {
     public class SendEscalationEmailGateway : ISendEscalationEmailGateway
     {
-        public Task SendEscalationEmailAsync(SendEscalationEmailInputModel inputModel, CancellationToken cancellationToken)
+        public Task<SendEscalationEmailOutputModel> SendEscalationEmailAsync(SendEscalationEmailInputModel inputModel, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

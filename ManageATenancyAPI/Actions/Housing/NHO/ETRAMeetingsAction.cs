@@ -14,6 +14,7 @@ using ManageATenancyAPI.Interfaces.Housing;
 using ManageATenancyAPI.Models;
 using ManageATenancyAPI.Models.Housing.NHO;
 using ManageATenancyAPI.Services.Housing;
+using ManageATenancyAPI.UseCases.Meeting.EscalateIssues;
 using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using Microsoft.Extensions.Options;
@@ -221,7 +222,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
 
             tmiJObject.Add("hackney_processtype", meetingInfo.processType);
-            tmiJObject.Add("hackney_process_stage", meetingInfo.processType);
+            tmiJObject.Add("hackney_process_stage", (int)HackneyProcessStage.NotCompleted);
             tmiJObject.Add("hackney_traid", meetingInfo.TRAId);
             return tmiJObject;
         }
@@ -578,7 +579,6 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
                 var name = crmMeeting["incident1_x002e_description"].ToString();
                 var createdOn = crmMeeting["createdon"].ToObject<DateTime>();
-                
 
                 var outputModel = new GetEtraMeetingOutputModel
                 {
@@ -714,6 +714,48 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 Status = "Closed"
             };
         }
+
+        public async Task<GetAllEtraIssuesThatNeedEscalatingOutputModel> GetAllEtraIssuesThatNeedEscalatingAsync(DateTime fromDate, CancellationToken cancellationToken)
+        {
+            var token = await _crmAccessToken.getCRM365AccessToken();
+            _client = await _hackneyAccountApiBuilder.CreateRequest(token);
+            _client.DefaultRequestHeaders.Add("Prefer",
+                "odata.include-annotations=\"OData.Community.Display.V1.FormattedValue\"");
+            var getMeetingQuery = HousingAPIQueryBuilder.getIssuesThatNeedEscalating(fromDate);
+
+            var result = await _ManageATenancyAPI.getHousingAPIResponse(_client, getMeetingQuery, null);
+            JObject response = JsonConvert.DeserializeObject<JObject>(await result.Content.ReadAsStringAsync());
+            if (response?["value"] != null && response?["value"].Count() > 0)
+            {
+                List<JToken> issuesRetrievedList = response["value"].ToList();
+
+                IList<MeetingIssueOutputModel> list = null;
+                list = issuesRetrievedList.Select(s => new MeetingIssueOutputModel
+                {
+                    Id = s["hackney_tenancymanagementinteractionsid"].ToObject<Guid>(),
+                    Location = new Location
+                    {
+                        Name = s["hackney_issuelocation"].ToString()
+                    },
+
+                    IssueType = new IssueType
+                    {
+                        IssueId = s["hackney_enquirysubject"].ToString()
+                    },
+
+                    Notes = s["annotation2_x002e_notetext"].ToString()
+                }).ToList();
+
+                var outputModel = new GetAllEtraIssuesThatNeedEscalatingOutputModel
+                {
+                    IssuesThatNeedEscalating = list
+                };
+                return outputModel;
+            }
+            return null;
+        }
+
+
 
         #region Private methods
 

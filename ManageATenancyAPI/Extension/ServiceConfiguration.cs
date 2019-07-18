@@ -9,16 +9,20 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using ManageATenancyAPI.Actions.Housing.NHO;
 using ManageATenancyAPI.Database;
+using ManageATenancyAPI.Gateways.EscalateIssue;
+using ManageATenancyAPI.Gateways.GetTraIssuesThatNeedEscalating;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingAttendance;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting;
+using ManageATenancyAPI.Gateways.SendEscalationEmailGateway;
 using ManageATenancyAPI.Helpers;
 using ManageATenancyAPI.Repository.Interfaces;
 using ManageATenancyAPI.Services.Email;
 using ManageATenancyAPI.Services.Interfaces;
 using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.Tests;
+using ManageATenancyAPI.UseCases.Meeting.EscalateIssues;
 using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting;
@@ -91,7 +95,14 @@ namespace ManageATenancyAPI.Extension
             services.AddScoped<ISendTraConfirmationEmailGateway, SendTraConfirmationEmailGateway>();
 
             services.AddScoped<INotificationClient, GovNotificationClient>();
-            
+
+            services.AddScoped<IEscalateIssuesUseCase, EscalateIssuesUseCase>();
+
+            services.AddScoped<IEscalateIssueGateway, EscalateIssueGateway>();
+            services.AddScoped<IGetWorkingDaysGateway, GetWorkingDaysGateway>();
+            services.AddScoped<ISendEscalationEmailGateway, SendEscalationEmailGateway>();
+            services.AddScoped<IGetTraIssuesThatNeedEscalatingGateway, GetTraIssuesThatNeedEscalatingGateway>();
+
         }
     }
 }

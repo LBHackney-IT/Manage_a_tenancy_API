@@ -1048,6 +1048,51 @@ namespace ManageATenancyAPI.Helpers.Housing
             query.Append("/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=" + HttpUtility.UrlEncode(fetchXml.Trim()));
             return query.ToString();
         }
+
+        public static string getIssuesThatNeedEscalating(DateTime fromDate)
+        {
+            StringBuilder query = new StringBuilder();
+
+            var fetchXml = $@"
+            <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true'>
+                <entity name='hackney_tenancymanagementinteractions' >
+                    <attribute name='hackney_servicearea' />
+                    <attribute name='hackney_parent_interactionid' />
+                    <attribute name='hackney_estateofficerpatchid' />
+                    <attribute name='overriddencreatedon' />
+                    <attribute name='hackney_enquirysubjectname' />
+                    <attribute name='hackney_natureofenquiryname' />
+                    <attribute name='hackney_process_stage' />
+                    <attribute name='hackney_tenancymanagementinteractionsid' />
+                    <attribute name='hackney_serviceareaname' />
+                    <attribute name='hackney_incidentid' />
+                    <attribute name='hackney_areaname' />
+                    <attribute name='hackney_estateofficer_updatedbyidname' />
+                    <attribute name='hackney_estateofficerpatchidname' />
+                    <attribute name='hackney_incidentidname' />
+                    <attribute name='hackney_managerpropertypatchidname' />
+                    <attribute name='hackney_process_stagename' />
+                    <attribute name='modifiedon' />
+                    <attribute name='hackney_transferredname' />
+                    <attribute name='hackney_managerpropertypatchid' />
+                    <attribute name='hackney_subjectidname' />
+                    <attribute name='hackney_natureofenquiry' />
+                    <attribute name='hackney_enquirysubject' />
+                    <attribute name='hackney_name' />
+                    <attribute name='modifiedby' />
+                    <attribute name='hackney_issuelocation' />
+                    <filter type='and' >
+                        <condition attribute='hackney_natureofenquiry' operator='eq' value='28' />
+                        <condition attribute='hackney_enquirysubject' operator='neq' value='100000219' />
+                        <condition attribute='createdon' operator='ge' value='2019-07-05' />
+                        <condition attribute='hackney_process_stage' operator='eq' value='0' />
+                    </filter>
+                </entity>
+            </fetch>";
+            query.Append("/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=" + HttpUtility.UrlEncode(fetchXml.Trim()));
+            return query.ToString();
+        }
+
         public static string updateIssueQuery(string id)
         {
             return $"{GetActionById(id)}?$select=hackney_tenancymanagementinteractionsid";

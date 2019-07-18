@@ -25,5 +25,6 @@ namespace ManageATenancyAPI.Interfaces.Housing
         Task<ETRAUpdateResponse> RejectETRAIssueResponse(string id, ETRAIssueRejectResponseRequest request);
         Task<IEnumerable<ETRAMeeting>> GetETRAMeetingsForTRAId(string id);
         Task<IncidentClosedResponse> CloseIncident(string closingNotes, Guid incidentId);
+        Task<GetAllEtraIssuesThatNeedEscalatingOutputModel> GetAllEtraIssuesThatNeedEscalatingAsync(DateTime fromDate, CancellationToken cancellationToken);
     }
 }

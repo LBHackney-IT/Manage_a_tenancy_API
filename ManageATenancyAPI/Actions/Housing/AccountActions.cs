@@ -333,13 +333,18 @@ namespace ManageATenancyAPI.Actions
                                  group addressResponse by new
                                  {
                                      postCode = addressResponse["contact1_x002e_address1_postalcode"],
-                                     shortAddress = addressResponse["contact1_x002e_address1_line1"].ToString() +" "+ addressResponse["contact1_x002e_address1_line1"] != null ? addressResponse["contact1_x002e_address1_line1"].ToString().Trim() : "" + " " + addressResponse["contact1_x002e_address1_line3"].ToString(),
+                                     addressLine1 = addressResponse["contact1_x002e_address1_line1"]!=null? addressResponse["contact1_x002e_address1_line1"].ToString().Trim():string.Empty,
+                                     addressLine2=addressResponse["contact1_x002e_address1_line2"]!=null? addressResponse["contact1_x002e_address1_line2"].ToString().Trim():string.Empty,
+                                     addressLine3= addressResponse["contact1_x002e_address1_line3"]!=null? addressResponse["contact1_x002e_address1_line3"].ToString().Trim():string.Empty,
+                                    
                                      addressTypeCode = addressResponse["customeraddress2_x002e_addresstypecode"]
 
                                  }).Select(addressResponse => new
                                  {
                                      addressResponse.Key.postCode,
-                                     addressResponse.Key.shortAddress,
+                                     addressResponse.Key.addressLine1,
+                                     addressResponse.Key.addressLine2,
+                                     addressResponse.Key.addressLine3,
                                      addressResponse.Key.addressTypeCode,
 
                                  }),
@@ -375,11 +380,12 @@ namespace ManageATenancyAPI.Actions
 
 
                 }
+
                 foreach (var addressesResponse in response.Addresses)
                 {
                     dynamic addresses = new ExpandoObject();
                     addresses.postCode = addressesResponse.postCode;
-                    addresses.shortAddress = addressesResponse.shortAddress;
+                    addresses.shortAddress = addressesResponse.addressLine1 + " " + addressesResponse.addressLine2 + " "+ addressesResponse.addressLine3;
                     addresses.addressTypeCode = addressesResponse.addressTypeCode;
                     accountDetailsObj.ListOfAddresses.Add(addresses);
                 }

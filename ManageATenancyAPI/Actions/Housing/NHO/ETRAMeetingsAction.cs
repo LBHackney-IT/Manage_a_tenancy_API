@@ -431,11 +431,16 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             var token = await _crmAccessToken.getCRM365AccessToken();
             _client = await _hackneyAccountApiBuilder.CreateRequest(token);
 
-            var issueUpdateObject = new JObject
+            var issueUpdateObject = new JObject();
+
+            issueUpdateObject.Add("hackney_servicearea", request.ServiceAreaId);
+            issueUpdateObject.Add("hackney_process_stage", (int)request.IssueStage);
+
+            if(request.ProjectedCompletionDate!=null)
             {
-                { "hackney_servicearea", request.ServiceAreaId }, ///Repairs Team // Cleaning Team, CRM Entity Service Areas
-                { "hackney_process_stage", (int)request.IssueStage }
-            };
+                issueUpdateObject.Add("hackney_issuedeadlinedate", request.ProjectedCompletionDate);
+            }
+            
 
             var completionDateText = string.Empty;
             if (request.ProjectedCompletionDate.HasValue)

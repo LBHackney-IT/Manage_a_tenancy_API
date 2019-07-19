@@ -33,18 +33,27 @@ namespace ManageATenancyAPI.Gateways.SendEscalationEmailGateway
                 {EmailKeys.EscalationEmail.HousingOfficerName, inputModel.HousingOfficerName},
             };
 
-            if(!string.IsNullOrEmpty(inputModel?.ServiceArea.ServiceAreaManagerEmail))
+            var outputModel = new SendEscalationEmailOutputModel();
+
+            if (!string.IsNullOrEmpty(inputModel?.ServiceArea.ServiceAreaManagerEmail))
+            {
                 await _notificationClient.SendEmailAsync(inputModel?.ServiceArea.ServiceAreaManagerEmail, _config?.Value.EscalationTemplateId, personalization).ConfigureAwait(false);
+                outputModel.SentToServiceAreaOfficer = true;
+            }
+
             if (!string.IsNullOrEmpty(inputModel?.ServiceArea.ServiceAreaOfficerEmail))
-                await _notificationClient.SendEmailAsync(inputModel?.ServiceArea.ServiceAreaOfficer, _config?.Value.EscalationTemplateId, personalization).ConfigureAwait(false);
+            {
+                await _notificationClient.SendEmailAsync(inputModel?.ServiceArea.ServiceAreaOfficerEmail, _config?.Value.EscalationTemplateId, personalization).ConfigureAwait(false);
+                outputModel.SentToServiceAreaManager = true;
+            }
 
-            return null;
+            if (!string.IsNullOrEmpty(inputModel?.AreaManagerDetails.Email))
+            {
+                await _notificationClient.SendEmailAsync(inputModel?.AreaManagerDetails.Email, _config?.Value.EscalationTemplateId, personalization).ConfigureAwait(false);
+                outputModel.SentToServiceAreaManager = true;
+            }
 
-            //return new SendTraConfirmationEmailOutputModel
-            //{
-            //    IsSent = true,
-            //    MeetingUrl = personalization[EmailKeys.MeetingUrl].ToString()
-            //};
+            return outputModel;
         }
     }
 }

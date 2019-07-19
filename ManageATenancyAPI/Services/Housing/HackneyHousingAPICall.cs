@@ -47,7 +47,7 @@ namespace ManageATenancyAPI.Services.Housing
                 HttpRequestMessage request = new HttpRequestMessage(method, requestUri) { Content = new StringContent(content) };
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 response = await client.SendAsync(request).ConfigureAwait(false);
-                var responseContent = response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
                     throw new ServiceException();

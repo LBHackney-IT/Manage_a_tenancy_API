@@ -20,7 +20,9 @@ namespace ManageATenancyAPI.Services.Housing
             try
             {
                 response = httpClient.GetAsync(query).Result;
+                
                 var content = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"getHousingAPIResponse: {content}");
                 if (!response.IsSuccessStatusCode)
                 {
                     throw new ServiceException();

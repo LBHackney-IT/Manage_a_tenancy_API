@@ -21,6 +21,8 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
         private Mock<IEscalateIssueGateway> _mockEscalateIssueGateway;
         private Mock<IGetWorkingDaysGateway> _mockGetWorkingDaysGateway;
         private Mock<ISendEscalationEmailGateway> _mockEmailService;
+        private Mock<IGetServiceAreaInformationGateway> _mockGetServiceAreaInformationGateway;
+        private Mock<IGetAreaManagerInformationGateway> _mockGetAreaManagerDetailsGateway;
         private TRAIssue _traIssue;
 
         public EscalateIssuesUseCaseTests()
@@ -29,10 +31,16 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
             _mockEscalateIssueGateway = new Mock<IEscalateIssueGateway>();
             _mockGetWorkingDaysGateway = new Mock<IGetWorkingDaysGateway>();
             _mockEmailService = new Mock<ISendEscalationEmailGateway>();
-            
+            _mockGetServiceAreaInformationGateway = new Mock<IGetServiceAreaInformationGateway>();
             
 
-            _classUnderTest = new EscalateIssuesUseCase(_mockGetTraIssuesThatNeedEscalatingGateway.Object, _mockEscalateIssueGateway.Object,_mockGetWorkingDaysGateway.Object,  _mockEmailService.Object);
+            _classUnderTest = new EscalateIssuesUseCase(
+                _mockGetTraIssuesThatNeedEscalatingGateway.Object, 
+                _mockEscalateIssueGateway.Object,
+                _mockGetWorkingDaysGateway.Object,
+                _mockEmailService.Object,
+                _mockGetServiceAreaInformationGateway.Object,
+                _mockGetAreaManagerDetailsGateway.Object);
         }
 
         [Theory]
@@ -61,38 +69,34 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
         public async Task calls_escalate_issue_gateway_twice()
         {
             //arrange
-            //_traIssue = new TRAIssue
-            //{
-            //    Id = Guid.NewGuid()
-            //};
             _mockEscalateIssueGateway.Setup(s =>
                 s.EscalateIssueAsync(It.IsAny<EscalateIssueInputModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(
                 new EscalateIssueOutputModel
                 {
                     Successful = true
                 });
-            var getEtraMeetingOutputModel = new MeetingIssueOutputModel
+            var meetingIssueOutputModel = new EscalateMeetingIssueInputModel
             {
                 Id = Guid.NewGuid()
             };
             _mockGetTraIssuesThatNeedEscalatingGateway
                 .Setup(s => s.GetTraIssuesThatNeedEscalating(It.IsAny<CancellationToken>())).ReturnsAsync(
-                    new List<MeetingIssueOutputModel>
+                    new List<EscalateMeetingIssueInputModel>
                     {
-                        getEtraMeetingOutputModel,
-                        getEtraMeetingOutputModel,
+                        meetingIssueOutputModel,
+                        meetingIssueOutputModel,
                     });
             //act
             await _classUnderTest.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
             //assert
-            _mockEscalateIssueGateway.Verify(s => s.EscalateIssueAsync(It.Is<EscalateIssueInputModel>(m=> m.Issue.Id == getEtraMeetingOutputModel.Id),It.IsAny<CancellationToken>()), Times.Exactly(2));
+            _mockEscalateIssueGateway.Verify(s => s.EscalateIssueAsync(It.Is<EscalateIssueInputModel>(m=> m.Issue.Id == meetingIssueOutputModel.Id),It.IsAny<CancellationToken>()), Times.Exactly(2));
         }
 
         [Fact]
         public async Task calls_email_service_twice()
         {
             //arrange
-            var getEtraMeetingOutputModel = new MeetingIssueOutputModel
+            var getEtraMeetingOutputModel = new EscalateMeetingIssueInputModel
             {
                 Id = Guid.NewGuid()
             };
@@ -105,7 +109,7 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
                 });
             _mockGetTraIssuesThatNeedEscalatingGateway
                 .Setup(s => s.GetTraIssuesThatNeedEscalating(It.IsAny<CancellationToken>())).ReturnsAsync(
-                    new List<MeetingIssueOutputModel>
+                    new List<EscalateMeetingIssueInputModel>
                     {
                         getEtraMeetingOutputModel,
                         getEtraMeetingOutputModel

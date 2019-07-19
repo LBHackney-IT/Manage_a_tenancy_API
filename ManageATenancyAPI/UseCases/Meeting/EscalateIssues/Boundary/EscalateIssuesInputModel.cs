@@ -6,8 +6,8 @@ namespace ManageATenancyAPI.UseCases.Meeting.EscalateIssues
 {
     public class EscalateIssuesOutputModel
     {
-        public IList<MeetingIssueOutputModel> IssuesToEscalate { get; set; }
-        public IList<MeetingIssueOutputModel> SuccessfullyEscalatedIssues { get; set; }
-        public IList<MeetingIssueOutputModel> FailedToEscalateIssues { get; set; }
+        public IList<EscalateMeetingIssueInputModel> IssuesToEscalate { get; set; }
+        public IList<EscalateMeetingIssueInputModel> SuccessfullyEscalatedIssues { get; set; }
+        public IList<EscalateMeetingIssueInputModel> FailedToEscalateIssues { get; set; }
     }
 }

@@ -7,6 +7,6 @@ namespace ManageATenancyAPI.Interfaces.Housing
 {
     public class GetAllEtraIssuesThatNeedEscalatingOutputModel
     {
-        public IList<MeetingIssueOutputModel> IssuesThatNeedEscalating { get; set; }
+        public IList<EscalateMeetingIssueInputModel> IssuesThatNeedEscalating { get; set; }
     }
 }

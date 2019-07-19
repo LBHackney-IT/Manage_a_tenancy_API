@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="area-manager-emails.json" />
     <None Remove="service-area-emails.json" />
     <None Remove="v1\Scripts\Createdatabase.ps1" />
     <None Remove="v1\Scripts\manage-a-tenancy-data.sql" />
@@ -16,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="area-manager-emails.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="service-area-emails.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

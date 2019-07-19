@@ -9,6 +9,6 @@ namespace ManageATenancyAPI.Gateways.GetTraIssuesThatNeedEscalating
 {
     public interface IGetTraIssuesThatNeedEscalatingGateway
     {
-        Task<IList<MeetingIssueOutputModel>> GetTraIssuesThatNeedEscalating(CancellationToken cancellationToken);
+        Task<IList<EscalateMeetingIssueInputModel>> GetTraIssuesThatNeedEscalating(CancellationToken cancellationToken);
     }
 }

@@ -37,18 +37,24 @@ namespace ManageATenancyAPI.Extension
             if (TestStatus.IsRunningInTests == false)
             {
                 services.AddTransient(typeof(IHackneyHousingAPICall), typeof(HackneyHousingAPICall));
+                
+
             }
             else
             {
                 services.AddTransient(typeof(IHackneyHousingAPICall), typeof(FakeHousingAPICall));
+                
             }
+
+            //services.AddTransient<IHackneyGetCRM365Token, HackneyGetCRM365Token>();
+            services.AddTransient<IHackneyGetCRM365Token, GetHardcodedCrmToken>();
 
             services.AddSingleton<IClock, Clock>();
                                                 
             services.AddScoped(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
 
             services.AddTransient<IHackneyHousingAPICallBuilder, HackneyHousingAPICallBuilder>();
-            services.AddTransient<IHackneyGetCRM365Token, HackneyGetCRM365Token>();
+            
 
             services.AddTransient(typeof(IDBAccessRepository), typeof(DBAccessRepository));
             services.AddTransient(typeof(ICitizenIndexRepository), typeof(CitizenIndexRepository));
@@ -102,7 +108,9 @@ namespace ManageATenancyAPI.Extension
             services.AddScoped<IGetWorkingDaysGateway, GetWorkingDaysGateway>();
             services.AddScoped<ISendEscalationEmailGateway, SendEscalationEmailGateway>();
             services.AddScoped<IGetTraIssuesThatNeedEscalatingGateway, GetTraIssuesThatNeedEscalatingGateway>();
+            services.AddScoped<IGetServiceAreaInformationGateway, GetServiceAreaInformationGateway>();
 
+            services.AddScoped<IGetAreaManagerInformationGateway, GetAreaManagerInformationGateway>();
         }
     }
 }

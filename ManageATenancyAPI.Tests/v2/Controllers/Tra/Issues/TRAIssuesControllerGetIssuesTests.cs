@@ -63,9 +63,9 @@ namespace ManageATenancyAPI.Tests.v2.Controllers.Tra.Issues
             var id = Guid.NewGuid();
             _mockUseCase.Setup(s => s.ExecuteAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new EscalateIssuesOutputModel
             {
-                SuccessfullyEscalatedIssues = new List<MeetingIssueOutputModel>
+                SuccessfullyEscalatedIssues = new List<EscalateMeetingIssueInputModel>
                 {
-                    new MeetingIssueOutputModel
+                    new EscalateMeetingIssueInputModel
                     {
                         Id = id
                     }

@@ -729,8 +729,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             {
                 List<JToken> issuesRetrievedList = response["value"].ToList();
 
-                IList<MeetingIssueOutputModel> list = null;
-                list = issuesRetrievedList?.Select(s => new MeetingIssueOutputModel
+                IList<EscalateMeetingIssueInputModel> list = null;
+                list = issuesRetrievedList?.Select(s => new EscalateMeetingIssueInputModel
                 {
                     Id = s["hackney_tenancymanagementinteractionsid"].ToObject<Guid>(),
                     Location = new Location
@@ -744,7 +744,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     },
 
                     Notes = s["annotation2_x002e_notetext"].ToString(),
-                    ServiceRequestId = s["_hackney_incidentid_value"].ToObject<Guid>()
+                    ServiceRequestId = s["_hackney_incidentid_value"].ToObject<Guid>(),
+                    AreaId = s["hackney_areaname"].ToString()
                 }).ToList();
 
                 var outputModel = new GetAllEtraIssuesThatNeedEscalatingOutputModel
@@ -756,7 +757,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             return null;
         }
 
-        public async Task<bool> EscalateIssue(MeetingIssueOutputModel issue, CancellationToken cancellationToken)
+        public async Task<bool> EscalateIssue(EscalateMeetingIssueInputModel issue, CancellationToken cancellationToken)
         {
             var signOffDate = DateTime.Now;
             var confirmation = new JObject {

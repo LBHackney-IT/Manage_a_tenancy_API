@@ -21,9 +21,10 @@ namespace ManageATenancyAPI.Gateways.GetTraIssuesThatNeedEscalating
             _getWorkingDaysGateway = getWorkingDaysGateway;
         }
 
-        public async Task<IList<MeetingIssueOutputModel>> GetTraIssuesThatNeedEscalating(CancellationToken cancellationToken)
+        public async Task<IList<EscalateMeetingIssueInputModel>> GetTraIssuesThatNeedEscalating(CancellationToken cancellationToken)
         {
-            var fifteenWorkingDaysAgo = _getWorkingDaysGateway.GetPreviousWorkingDaysFromToday(15);
+            //todo: pull bank holidays and calculate 15 working days including bank holidays
+            var fifteenWorkingDaysAgo = _getWorkingDaysGateway.GetPreviousWorkingDaysFromToday(21);
             var outputModel = await _etraMeetingsAction.GetAllEtraIssuesThatNeedEscalatingAsync(fifteenWorkingDaysAgo, cancellationToken).ConfigureAwait(false);
             return outputModel?.IssuesThatNeedEscalating;
         }

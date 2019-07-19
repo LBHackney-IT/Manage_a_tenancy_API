@@ -17,13 +17,19 @@ namespace ManageATenancyAPI.UseCases.Meeting.EscalateIssues
         private readonly IEscalateIssueGateway _escalateIssueGateway;
         private readonly ISendEscalationEmailGateway _sendEscalationEmailGateway;
         private readonly IGetServiceAreaInformationGateway _getServiceAreaInformationGateway;
+        private readonly IGetAreaManagerInformationGateway _getAreaManagerInformationGateway;
 
-        public EscalateIssuesUseCase(IGetTraIssuesThatNeedEscalatingGateway getTraIssuesThatNeedEscalatingGateway, IEscalateIssueGateway escalateIssueGateway, IGetWorkingDaysGateway getWorkingDaysGateway, ISendEscalationEmailGateway sendEscalationEmailGateway, IGetServiceAreaInformationGateway getServiceAreaInformationGateway)
+        public EscalateIssuesUseCase(IGetTraIssuesThatNeedEscalatingGateway getTraIssuesThatNeedEscalatingGateway, 
+            IEscalateIssueGateway escalateIssueGateway, IGetWorkingDaysGateway getWorkingDaysGateway, 
+            ISendEscalationEmailGateway sendEscalationEmailGateway, 
+            IGetServiceAreaInformationGateway getServiceAreaInformationGateway, 
+            IGetAreaManagerInformationGateway getAreaManagerInformationGateway)
         {
             _getTraIssuesThatNeedEscalatingGateway = getTraIssuesThatNeedEscalatingGateway;
             _escalateIssueGateway = escalateIssueGateway;
             _sendEscalationEmailGateway = sendEscalationEmailGateway;
             _getServiceAreaInformationGateway = getServiceAreaInformationGateway;
+            _getAreaManagerInformationGateway = getAreaManagerInformationGateway;
         }
 
         public async Task<EscalateIssuesOutputModel> ExecuteAsync(CancellationToken cancellationToken)
@@ -37,7 +43,16 @@ namespace ManageATenancyAPI.UseCases.Meeting.EscalateIssues
 
             await EscalateIssues(cancellationToken, issues, outputModel);
 
-            var serviceAreaEmails = await _getServiceAreaInformationGateway.GetServiceAreaEmails(cancellationToken).ConfigureAwait(false);
+            await SendEcalationEmail(cancellationToken, outputModel, issues);
+
+            return null;
+        }
+
+        private async Task SendEcalationEmail(CancellationToken cancellationToken, EscalateIssuesOutputModel outputModel,
+            IList<EscalateMeetingIssueInputModel> issues)
+        {
+            var serviceAreaEmails = await _getServiceAreaInformationGateway.GetServiceAreaInformation(cancellationToken).ConfigureAwait(false);
+            var areaManagerDetails = await _getAreaManagerInformationGateway.GetAreaManagerDetails(cancellationToken).ConfigureAwait(false);
 
             for (int i = 0; i < outputModel?.SuccessfullyEscalatedIssues.Count; i++)
             {
@@ -45,15 +60,13 @@ namespace ManageATenancyAPI.UseCases.Meeting.EscalateIssues
                 await _sendEscalationEmailGateway.SendEscalationEmailAsync(new SendEscalationEmailInputModel
                 {
                     Issue = issue,
-                    ServiceArea = serviceAreaEmails.Where(w=> w.IssueId.ToString().Equals(issue.IssueType.IssueId)).FirstOrDefault()
+                    ServiceArea = serviceAreaEmails.Where(w => w.IssueId.ToString().Equals(issue.IssueType.IssueId)).FirstOrDefault(),
+                    AreaManagerDetails = areaManagerDetails.Where(w=> w.AreaId.ToString().Equals(issue.AreaId)).FirstOrDefault()
                 }, cancellationToken).ConfigureAwait(false);
             }
-            
-
-            return null;
         }
 
-        private async Task EscalateIssues(CancellationToken cancellationToken, IList<MeetingIssueOutputModel> issues,
+        private async Task EscalateIssues(CancellationToken cancellationToken, IList<EscalateMeetingIssueInputModel> issues,
             EscalateIssuesOutputModel outputModel)
         {
             for (int i = 0; i < issues.Count; i++)
@@ -68,16 +81,15 @@ namespace ManageATenancyAPI.UseCases.Meeting.EscalateIssues
                 if (escalateIssueOutputModel.Successful)
                 {
                     if(outputModel.SuccessfullyEscalatedIssues == null)
-                        outputModel.SuccessfullyEscalatedIssues = new List<MeetingIssueOutputModel>();
+                        outputModel.SuccessfullyEscalatedIssues = new List<EscalateMeetingIssueInputModel>();
                     outputModel.SuccessfullyEscalatedIssues.Add(issue);
                 }
                 else
                 {
                     if (outputModel.FailedToEscalateIssues == null)
-                        outputModel.FailedToEscalateIssues = new List<MeetingIssueOutputModel>();
+                        outputModel.FailedToEscalateIssues = new List<EscalateMeetingIssueInputModel>();
                     outputModel.FailedToEscalateIssues.Add(issue);
                 }
-                    
             }
         }
     }

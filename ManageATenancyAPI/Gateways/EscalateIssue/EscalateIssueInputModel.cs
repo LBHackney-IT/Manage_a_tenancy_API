@@ -5,6 +5,6 @@ namespace ManageATenancyAPI.Gateways.EscalateIssue
 {
     public class EscalateIssueInputModel
     {
-        public MeetingIssueOutputModel Issue { get; set; }
+        public EscalateMeetingIssueInputModel Issue { get; set; }
     }
 }

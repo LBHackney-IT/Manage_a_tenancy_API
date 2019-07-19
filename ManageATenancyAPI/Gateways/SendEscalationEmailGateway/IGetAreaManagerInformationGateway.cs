@@ -5,8 +5,8 @@ using ManageATenancyAPI.UseCases.Meeting.EscalateIssues;
 
 namespace ManageATenancyAPI.Gateways.SendEscalationEmailGateway
 {
-    public interface IGetServiceAreaInformationGateway
+    public interface IGetAreaManagerInformationGateway
     {
-        Task<IList<TRAIssueServiceArea>> GetServiceAreaInformation(CancellationToken cancellationToken);
+        Task<IList<AreaManagerDetails>> GetAreaManagerDetails(CancellationToken cancellationToken);
     }
 }

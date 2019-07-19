@@ -21,6 +21,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests
 
             var startup = new Startup(config, new HostingEnvironment());
             startup.ConfigureServices(collection);
+            
             var serviceProvider = collection.BuildServiceProvider();
             return serviceProvider;
         }

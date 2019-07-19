@@ -1,5 +1,4 @@
 ﻿using System;
-using Newtonsoft.Json;
 
 namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
 {
@@ -9,8 +8,5 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
     public class MeetingIssueOutputModel:MeetingIssue
     {
         public Guid Id { get; set; }
-
-        [JsonIgnore]
-        public Guid ServiceRequestId { get; set; }
     }
 }

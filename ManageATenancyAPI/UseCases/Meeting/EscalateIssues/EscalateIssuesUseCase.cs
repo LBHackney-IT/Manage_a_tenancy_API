@@ -45,7 +45,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.EscalateIssues
 
             await SendEcalationEmail(cancellationToken, outputModel, issues);
 
-            return null;
+            return outputModel;
         }
 
         private async Task SendEcalationEmail(CancellationToken cancellationToken, EscalateIssuesOutputModel outputModel,
@@ -57,12 +57,16 @@ namespace ManageATenancyAPI.UseCases.Meeting.EscalateIssues
             for (int i = 0; i < outputModel?.SuccessfullyEscalatedIssues.Count; i++)
             {
                 var issue = issues.ElementAtOrDefault(i);
-                await _sendEscalationEmailGateway.SendEscalationEmailAsync(new SendEscalationEmailInputModel
+                var sendEmailResponse = await _sendEscalationEmailGateway.SendEscalationEmailAsync(new SendEscalationEmailInputModel
                 {
                     Issue = issue,
                     ServiceArea = serviceAreaEmails.Where(w => w.IssueId.ToString().Equals(issue.IssueType.IssueId)).FirstOrDefault(),
                     AreaManagerDetails = areaManagerDetails.Where(w=> w.AreaId.ToString().Equals(issue.AreaId)).FirstOrDefault()
                 }, cancellationToken).ConfigureAwait(false);
+
+                outputModel.SuccessfullyEscalatedIssues[i].ServiceOfficerEmailSent = sendEmailResponse.SentToServiceAreaOfficer;
+                outputModel.SuccessfullyEscalatedIssues[i].ServiceAreaManagerEmailSent = sendEmailResponse.SentToServiceAreaManager;
+                outputModel.SuccessfullyEscalatedIssues[i].AreaHousingManagerEmailSent = sendEmailResponse.AreaHousingManager;
             }
         }
 

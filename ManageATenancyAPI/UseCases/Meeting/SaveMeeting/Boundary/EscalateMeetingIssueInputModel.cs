@@ -10,5 +10,9 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
         public Guid ServiceRequestId { get; set; }
 
         public string AreaId { get; set; }
+
+        public bool ServiceOfficerEmailSent { get; set; }
+        public bool ServiceAreaManagerEmailSent { get; set; }
+        public bool AreaHousingManagerEmailSent { get; set; }
     }
 }

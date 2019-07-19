@@ -57,6 +57,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="area-manager-emails.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="service-area-emails.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

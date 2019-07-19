@@ -1084,7 +1084,7 @@ namespace ManageATenancyAPI.Helpers.Housing
                     <filter type='and' >
                         <condition attribute='hackney_natureofenquiry' operator='eq' value='28' />
                         <condition attribute='hackney_enquirysubject' operator='neq' value='100000219' />
-                        <condition attribute='createdon' operator='le' value='{fromDate}' />
+                        <condition attribute='createdon' operator='le' value='{fromDate.ToString("YY-MM-dd")}' />
                         <condition attribute='hackney_process_stage' operator='eq' value='0' />
                     </filter>
                     <link-entity name='incident' from='incidentid' to='hackney_incidentid' link-type='inner' >

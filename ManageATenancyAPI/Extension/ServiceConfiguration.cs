@@ -46,8 +46,7 @@ namespace ManageATenancyAPI.Extension
                 
             }
 
-            //services.AddTransient<IHackneyGetCRM365Token, HackneyGetCRM365Token>();
-            services.AddTransient<IHackneyGetCRM365Token, GetHardcodedCrmToken>();
+            services.AddTransient<IHackneyGetCRM365Token, HackneyGetCRM365Token>();
 
             services.AddSingleton<IClock, Clock>();
                                                 

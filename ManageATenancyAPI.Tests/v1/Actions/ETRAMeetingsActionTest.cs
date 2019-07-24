@@ -66,13 +66,14 @@ namespace ManageATenancyAPI.Tests.Actions
 
             JObject createdServiceRequest = JsonConvert.DeserializeObject<JObject>(responsMessage.Content.ReadAsStringAsync().Result);
             var expectedResponse = new JObject();
-            expectedResponse.Add("interactionid", null);
-            expectedResponse.Add("incidentId", createdServiceRequest["incidentid"]);
-            expectedResponse.Add("ticketnumber", createdServiceRequest["ticketnumber"]);
-            expectedResponse.Add("annotationId", createdServiceRequest["annotationid"]);
+           
+            expectedResponse.Add("IncidentId", createdServiceRequest["incidentid"]);
+            expectedResponse.Add("InteractionId", createdServiceRequest["hackney_tenancymanagementinteractionsid"]);
+            expectedResponse.Add("TicketNumber", createdServiceRequest["ticketnumber"]);
+            expectedResponse.Add("AnnotationId", createdServiceRequest["annotationid"]);
 
 
-            Assert.Equal(JsonConvert.SerializeObject(actualResponse), JsonConvert.SerializeObject(HackneyResult<JObject>.Create(expectedResponse)));
+            Assert.Equal(JsonConvert.SerializeObject(actualResponse), JsonConvert.SerializeObject(expectedResponse));
         }
 
         [Fact]
@@ -124,13 +125,14 @@ namespace ManageATenancyAPI.Tests.Actions
 
             JObject createdServiceRequest = JsonConvert.DeserializeObject<JObject>(responsMessage.Content.ReadAsStringAsync().Result);
             var expectedResponse = new JObject();
-            expectedResponse.Add("interactionid", null);
-            expectedResponse.Add("incidentId", createdServiceRequest["incidentid"]);
-            expectedResponse.Add("ticketnumber", createdServiceRequest["ticketnumber"]);
-            expectedResponse.Add("annotationId", createdServiceRequest["annotationid"]);
+           
+            expectedResponse.Add("IncidentId", createdServiceRequest["incidentid"]);
+            expectedResponse.Add("InteractionId", createdServiceRequest["hackney_tenancymanagementinteractionsid"]);
+            expectedResponse.Add("TicketNumber", createdServiceRequest["ticketnumber"]);
+            expectedResponse.Add("AnnotationId", createdServiceRequest["annotationid"]);
 
 
-            Assert.Equal(JsonConvert.SerializeObject(actualResponse), JsonConvert.SerializeObject(HackneyResult<JObject>.Create(expectedResponse)));
+            Assert.Equal(JsonConvert.SerializeObject(actualResponse), JsonConvert.SerializeObject(expectedResponse));
         }
 
         [Fact]
@@ -371,6 +373,7 @@ namespace ManageATenancyAPI.Tests.Actions
             var serviceJObject = new JObject();
 
             serviceJObject.Add("description", fakeData.Random.String());
+            serviceJObject.Add("hackney_tenancymanagementinteractionsid", fakeData.Random.Guid());
             serviceJObject.Add("ticketnumber", fakeData.Random.String());
             serviceJObject.Add("title", fakeData.Random.String());
             serviceJObject["_subjectid_value"] = fakeData.Random.Guid();
@@ -551,6 +554,8 @@ namespace ManageATenancyAPI.Tests.Actions
             tenancyObj.nccOfficersId = "284216e9-d365-e711-80f9-70106aaaaaaa";
             tenancyObj.nccOfficerName = "Test Test";
             tenancyObj.createdon = "2017-12-14 09:58:49";
+            tenancyObj.deadlineDate = null;
+            tenancyObj.parentInteractionId = null;
             tenancyObj.nccOfficerUpdatedById = null;
             tenancyObj.nccOfficerUpdatedByName = null;
             tenancyObj.natureOfEnquiryId = "3";
@@ -566,6 +571,8 @@ namespace ManageATenancyAPI.Tests.Actions
             tenancyObj.traId = "1";
             tenancyObj.issueLocation = "test location";
             tenancyObj.processType = "1";
+            tenancyObj.serviceArea = null;
+            tenancyObj.serviceAreaName = null;
             tenancyObj.AnnotationList = new List<ExpandoObject>();
             dynamic annotation = new ExpandoObject();
             annotation.noteText = "Testing closure  at 21/12/2017 13:37:18 by  Test dev";

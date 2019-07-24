@@ -1074,6 +1074,7 @@ namespace ManageATenancyAPI.Helpers.Housing
                     <attribute name='hackney_process_stagename' />
                     <attribute name='modifiedon' />
                     <attribute name='hackney_transferredname' />
+                    <attribute name='hackney_issuedeadlinedate' />
                     <attribute name='hackney_managerpropertypatchid' />
                     <attribute name='hackney_subjectidname' />
                     <attribute name='hackney_natureofenquiry' />
@@ -1084,7 +1085,7 @@ namespace ManageATenancyAPI.Helpers.Housing
                     <filter type='and' >
                         <condition attribute='hackney_natureofenquiry' operator='eq' value='28' />
                         <condition attribute='hackney_enquirysubject' operator='neq' value='100000219' />
-                        <condition attribute='createdon' operator='on-or-before' value='{fromDate.ToString("yyyy-MM-dd")}' />
+                        <condition attribute='hackney_issuedeadlinedate' operator='on' value='{fromDate.ToString("yyyy-MM-dd")}' />
                         <condition attribute='hackney_process_stage' operator='eq' value='0' />
                     </filter>
                     <link-entity name='incident' from='incidentid' to='hackney_incidentid' link-type='inner' >

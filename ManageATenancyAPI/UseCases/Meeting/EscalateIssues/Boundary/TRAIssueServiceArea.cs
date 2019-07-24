@@ -2,7 +2,7 @@
 {
     public class TRAIssueServiceArea
     {
-        public int IssueId { get; set; }
+        public string IssueId { get; set; }
         public string IssueType { get; set; }
 
         public string ServiceAreaOfficer { get; set; }

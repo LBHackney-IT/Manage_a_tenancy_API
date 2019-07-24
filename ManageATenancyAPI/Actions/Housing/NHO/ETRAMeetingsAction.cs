@@ -730,23 +730,41 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 List<JToken> issuesRetrievedList = response["value"].ToList();
 
                 IList<EscalateMeetingIssueInputModel> list = null;
-                list = issuesRetrievedList?.Select(s => new EscalateMeetingIssueInputModel
-                {
-                    Id = s["hackney_tenancymanagementinteractionsid"].ToObject<Guid>(),
-                    Location = new Location
-                    {
-                        Name = s["hackney_issuelocation"].ToString()
-                    },
 
-                    IssueType = new IssueType
-                    {
-                        IssueId = s["hackney_enquirysubject"].ToString()
-                    },
+                list = (from dataresponse in issuesRetrievedList
+                        group dataresponse by new
+                        {
+                            Id = dataresponse["hackney_tenancymanagementinteractionsid"],
+                            Location = dataresponse["hackney_issuelocation"],
+                            IssueId = dataresponse["hackney_enquirysubject"],
+                            ServiceRequestId = dataresponse["_hackney_incidentid_value"],
+                            AreaId = dataresponse["hackney_areaname"],
+                            DueDate = dataresponse["hackney_issuedeadlinedate"]
+                        } into grp
+                        select new
+                        {
+                            item = grp.Key,
+                            annotations = grp.ToList().Select(si => si["annotation2_x002e_notetext"])
+                           
 
-                    Notes = s["annotation2_x002e_notetext"].ToString(),
-                    ServiceRequestId = s["_hackney_incidentid_value"].ToObject<Guid>(),
-                    AreaId = s["hackney_areaname"].ToString()
-                }).ToList();
+                        }).ToList().Select(x =>
+                        new EscalateMeetingIssueInputModel
+                        {
+                            Id = x.item.Id.ToObject<Guid>(),
+                            Location = new Location
+                            {
+                                Name = x.item.Location?.ToString()
+                            },
+                            IssueType = new IssueType
+                            {
+                                IssueId = x.item.IssueId?.ToString()
+                            },
+                            Notes = string.Join(", ", x.annotations),
+                            // Notes = string.Join(",", grp.ToList().ForEac = x["annotation2_x002e_notetext"]?.ToString()),
+                            AreaId = x.item.AreaId?.ToString(),
+                            ServiceRequestId = x.item.ServiceRequestId.ToObject<Guid>(),
+                            DueDate = x.item.DueDate?.ToObject<DateTime>()
+                        }).ToList();
 
                 var outputModel = new GetAllEtraIssuesThatNeedEscalatingOutputModel
                 {

@@ -874,7 +874,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 tenancyObj.accountCreatedOn = response.accountCreatedOn!=null? response.accountCreatedOn.ToString("yyyy-MM-dd HH:mm:ss") : null;
                 tenancyObj.parentInteractionId = response.parentInteractionId;
                 tenancyObj.AnnotationList = new List<ExpandoObject>();
-
+                
                 foreach (var annotationResponse in response.Annotation)
                 {
                     dynamic annotation = new ExpandoObject();

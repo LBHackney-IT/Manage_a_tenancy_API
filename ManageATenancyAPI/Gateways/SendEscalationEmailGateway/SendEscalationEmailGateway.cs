@@ -26,7 +26,7 @@ namespace ManageATenancyAPI.Gateways.SendEscalationEmailGateway
             {
                 {EmailKeys.EscalationEmail.ServiceAreaOfficerName, inputModel.ServiceArea.ServiceAreaOfficer},
                 {EmailKeys.EscalationEmail.ServiceAreaManagerName, inputModel.ServiceArea.ServiceAreaManager},
-                {EmailKeys.EscalationEmail.DateResponseWasDue, inputModel.DateResponseWasDue},
+                {EmailKeys.EscalationEmail.DateResponseWasDue, inputModel.Issue.DueDate},
                 {EmailKeys.EscalationEmail.IssueType, inputModel.Issue.IssueType},
                 {EmailKeys.EscalationEmail.Location, inputModel.Issue.Location},
                 {EmailKeys.EscalationEmail.IssueNotes, inputModel.Issue.Notes},

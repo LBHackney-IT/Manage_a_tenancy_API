@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace ManageATenancyAPI.Services.JWT
 {
-    public class JWTService: IJWTService
+    public class JWTService : IJWTService
     {
         /// <summary>
         /// Validates claims against signing key with secret and returns data in a nicely formatted manner.
@@ -20,7 +20,7 @@ namespace ManageATenancyAPI.Services.JWT
         {
             var key = Encoding.ASCII.GetBytes(secret);
             var handler = new JwtSecurityTokenHandler();
-            
+
             var jwt = handler.ReadJwtToken(token);
 
             var validations = new TokenValidationParameters
@@ -58,14 +58,12 @@ namespace ManageATenancyAPI.Services.JWT
                 ValidateAudience = false
             };
             var claims = handler.ValidateToken(token, validations, out var tokenSecure);
-            var claimlist = claims.Claims.ToList();
-            var meetingid= (from kvp in claimlist where kvp.Type.ToLower() == "meetingid" select kvp.Value).SingleOrDefault();
-            var traid = (from kvp in claimlist where kvp.Type.ToLower() == "traid" select kvp.Value).SingleOrDefault();
-            var officername = (from kvp in claimlist where kvp.Type.ToLower() == "officername" select kvp.Value).SingleOrDefault();
-            IMeetingClaims manageATenancyClaims =  new MeetingClaims{
-                MeetingId = new Guid(meetingid),
-                OfficerName = officername,
-                TraId = int.Parse(traid),
+
+            IMeetingClaims manageATenancyClaims = new MeetingClaims
+            {
+                MeetingId = new Guid(claims.Claims.ToList()[0].Value),
+                OfficerName = claims.Claims.ToList()[1].Value,
+                TraId = int.Parse(claims.Claims.ToList()[2].Value),
             };
 
             return manageATenancyClaims;

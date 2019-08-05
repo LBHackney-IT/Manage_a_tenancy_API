@@ -218,7 +218,8 @@ namespace ManageATenancyAPI.Helpers.Housing
                 <attribute name='hackney_process_stage' />
                 <attribute name='hackney_household_interactionid' />
                 <attribute name='hackney_parent_interactionid' />
-
+                <attribute name='hackney_traid' />
+                <attribute name='hackney_issuelocation' />
                 <filter>";
             if (personType == "contact")
             {

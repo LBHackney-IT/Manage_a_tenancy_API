@@ -33,10 +33,10 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
             _mockGetWorkingDaysGateway = new Mock<IGetWorkingDaysGateway>();
             _mockEmailService = new Mock<ISendEscalationEmailGateway>();
             _mockJsonPersistanceService = new Mock<IJsonPersistanceService>();
-            
+
 
             _classUnderTest = new EscalateIssuesUseCase(
-                _mockGetTraIssuesThatNeedEscalatingGateway.Object, 
+                _mockGetTraIssuesThatNeedEscalatingGateway.Object,
                 _mockEscalateIssueGateway.Object,
                 _mockGetWorkingDaysGateway.Object,
                 _mockEmailService.Object,
@@ -78,8 +78,15 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
                 });
             var meetingIssueOutputModel = new EscalateMeetingIssueInputModel
             {
-                Id = Guid.NewGuid()
+                Id = Guid.NewGuid(),
+                IssueType=new IssueType
+                {
+                    IssueId ="12345"
+                },
+                AreaId="1"
+               
             };
+
             _mockGetTraIssuesThatNeedEscalatingGateway
                 .Setup(s => s.GetTraIssuesThatNeedEscalating(It.IsAny<CancellationToken>())).ReturnsAsync(
                     new List<EscalateMeetingIssueInputModel>
@@ -88,23 +95,40 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
                         meetingIssueOutputModel,
                     });
 
-            _mockJsonPersistanceService.Setup(s => s.DeserializeStream<object>(It.IsAny<string>())).ReturnsAsync(
+            _mockJsonPersistanceService.Setup(s => s.DeserializeStream<List<AreaManagerDetails>>(It.IsAny<string>())).ReturnsAsync(
                  new List<AreaManagerDetails>
                     {
-                        new AreaManagerDetails()
+                        new AreaManagerDetails
+                        {
+                            AreaId=1,
+                            Email="test@ho.com",
+                            Name="Test Area Officer"
+                        }
                     });
 
-            _mockJsonPersistanceService.Setup(s => s.DeserializeStream<object>(It.IsAny<string>())).ReturnsAsync(
+         _mockJsonPersistanceService.Setup(s => s.DeserializeStream<List<TRAIssueServiceArea>>(It.IsAny<string>())).ReturnsAsync(
                new List<TRAIssueServiceArea>
                   {
-                        new TRAIssueServiceArea()
+                        new TRAIssueServiceArea
+                        {
+                            IssueId="12345",
+                            IssueType="",
+                            ServiceAreaManager="",
+                            ServiceAreaManagerEmail="",
+                            ServiceAreaOfficerEmail =""
+                        }
                   });
-
-
+            _mockEmailService.Setup(x => x.SendEscalationEmailAsync(It.IsAny<SendEscalationEmailInputModel>(), CancellationToken.None)).ReturnsAsync(new SendEscalationEmailOutputModel
+            {
+                 AreaHousingManager=true,
+                  SentToServiceAreaManager=true,
+                   SentToServiceAreaOfficer=true,
+                    Successful=true
+            });
             //act
             await _classUnderTest.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
             //assert
-            _mockEscalateIssueGateway.Verify(s => s.EscalateIssueAsync(It.Is<EscalateIssueInputModel>(m=> m.Issue.Id == meetingIssueOutputModel.Id),It.IsAny<CancellationToken>()), Times.Exactly(2));
+            _mockEscalateIssueGateway.Verify(s => s.EscalateIssueAsync(It.Is<EscalateIssueInputModel>(m => m.Issue.Id == meetingIssueOutputModel.Id), It.IsAny<CancellationToken>()), Times.Exactly(2));
         }
 
         [Fact]
@@ -113,7 +137,13 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
             //arrange
             var getEtraMeetingOutputModel = new EscalateMeetingIssueInputModel
             {
-                Id = Guid.NewGuid()
+                Id = Guid.NewGuid(),
+                IssueType = new IssueType
+                {
+                    IssueId = "12345"
+                },
+                AreaId = "1"
+
             };
 
             _mockEscalateIssueGateway.Setup(s =>
@@ -129,6 +159,37 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
                         getEtraMeetingOutputModel,
                         getEtraMeetingOutputModel
                     });
+
+            _mockJsonPersistanceService.Setup(s => s.DeserializeStream<List<AreaManagerDetails>>(It.IsAny<string>())).ReturnsAsync(
+               new List<AreaManagerDetails>
+                  {
+                        new AreaManagerDetails
+                        {
+                            AreaId=1,
+                            Email="test@ho.com",
+                            Name="Test Area Officer"
+                        }
+                  });
+            _mockJsonPersistanceService.Setup(s => s.DeserializeStream<List<TRAIssueServiceArea>>(It.IsAny<string>())).ReturnsAsync(
+                  new List<TRAIssueServiceArea>
+                     {
+                        new TRAIssueServiceArea
+                        {
+                            IssueId="12345",
+                            IssueType="",
+                            ServiceAreaManager="",
+                            ServiceAreaManagerEmail="",
+                            ServiceAreaOfficerEmail =""
+                        }
+                     });
+
+            _mockEmailService.Setup(x => x.SendEscalationEmailAsync(It.IsAny<SendEscalationEmailInputModel>(), CancellationToken.None)).ReturnsAsync(new SendEscalationEmailOutputModel
+            {
+                AreaHousingManager = true,
+                SentToServiceAreaManager = true,
+                SentToServiceAreaOfficer = true,
+                Successful = true
+            });
             //act
             await _classUnderTest.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
             //assert

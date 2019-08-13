@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using ManageATenancyAPI.Gateways.EscalateIssue;
 using ManageATenancyAPI.Gateways.GetTraIssuesThatNeedEscalating;
+using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting;
 using ManageATenancyAPI.Gateways.SendEscalationEmailGateway;
 using ManageATenancyAPI.UseCases.Meeting.EscalateIssues;
 using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
@@ -21,7 +22,7 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
         private Mock<IEscalateIssueGateway> _mockEscalateIssueGateway;
         private Mock<IGetWorkingDaysGateway> _mockGetWorkingDaysGateway;
         private Mock<ISendEscalationEmailGateway> _mockEmailService;
-        private Mock<IGetServiceAreaInformationGateway> _mockGetServiceAreaInformationGateway;
+        private Mock<IJsonPersistanceService> _mockJsonPersistanceService;
         private Mock<IGetAreaManagerInformationGateway> _mockGetAreaManagerDetailsGateway;
         private TRAIssue _traIssue;
 
@@ -31,7 +32,7 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
             _mockEscalateIssueGateway = new Mock<IEscalateIssueGateway>();
             _mockGetWorkingDaysGateway = new Mock<IGetWorkingDaysGateway>();
             _mockEmailService = new Mock<ISendEscalationEmailGateway>();
-            _mockGetServiceAreaInformationGateway = new Mock<IGetServiceAreaInformationGateway>();
+            _mockJsonPersistanceService = new Mock<IJsonPersistanceService>();
             
 
             _classUnderTest = new EscalateIssuesUseCase(
@@ -39,8 +40,8 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
                 _mockEscalateIssueGateway.Object,
                 _mockGetWorkingDaysGateway.Object,
                 _mockEmailService.Object,
-                _mockGetServiceAreaInformationGateway.Object,
-                _mockGetAreaManagerDetailsGateway.Object);
+                _mockJsonPersistanceService.Object
+              );
         }
 
         [Theory]
@@ -86,6 +87,20 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
                         meetingIssueOutputModel,
                         meetingIssueOutputModel,
                     });
+
+            _mockJsonPersistanceService.Setup(s => s.DeserializeStream<object>(It.IsAny<string>())).ReturnsAsync(
+                 new List<AreaManagerDetails>
+                    {
+                        new AreaManagerDetails()
+                    });
+
+            _mockJsonPersistanceService.Setup(s => s.DeserializeStream<object>(It.IsAny<string>())).ReturnsAsync(
+               new List<TRAIssueServiceArea>
+                  {
+                        new TRAIssueServiceArea()
+                  });
+
+
             //act
             await _classUnderTest.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
             //assert

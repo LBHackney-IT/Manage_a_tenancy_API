@@ -96,7 +96,7 @@ namespace ManageATenancyAPI.Extension
             services.AddScoped<ISignOffMeetingUseCase, SignOffMeetingUseCase>();
 
             services.AddScoped<IJpegPersistenceService, JpegPersistenceService>();
-
+            services.AddScoped<IJsonPersistanceService, JsonPersistanceService>();
             services.AddScoped<ISendTraConfirmationEmailGateway, SendTraConfirmationEmailGateway>();
 
             services.AddScoped<INotificationClient, GovNotificationClient>();

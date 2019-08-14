@@ -822,6 +822,10 @@ namespace ManageATenancyAPI.Services.Housing
             value["contact3_x002e_emailaddress1"] = "test@test.com";
             value["contact3_x002e_hackney_larn"] = "LARN834210";
             value["accountCreatedOn"] = null;
+            value["_hackney_parent_interactionid_value"] = "parentInteractionId01";
+            value["hackney_traid"] = "3";
+            value["hackney_issuelocation"] = "issuelocation1";
+           
             listJObject.Add(value);
             TenancyManagement.Add("value", listJObject);
 

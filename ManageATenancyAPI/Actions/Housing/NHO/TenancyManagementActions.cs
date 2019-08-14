@@ -780,7 +780,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      contactUPRN = response["contact3_x002e_hackney_uprn"],
                                      householdID = response["_hackney_household_interactionid_value"],
                                      accountCreatedOn=response["accountCreatedOn"],
-                                     parentInteractionId=response["_hackney_parent_interactionid_value"]
+                                     parentInteractionId=response["_hackney_parent_interactionid_value"],
+                                     traId = response["hackney_traid"],
+                                     issueLocation=response["hackney_issuelocation"]
                                  } into grp
                                  select new
                                  {
@@ -824,6 +826,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      grp.Key.householdID,
                                      grp.Key.accountCreatedOn,
                                      grp.Key.parentInteractionId,
+                                     grp.Key.traId,
+                                     grp.Key.issueLocation,
                                      Annotation = grp.ToList()
 
                                  });
@@ -873,6 +877,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 tenancyObj.householdID = response.householdID;
                 tenancyObj.accountCreatedOn = response.accountCreatedOn!=null? response.accountCreatedOn.ToString("yyyy-MM-dd HH:mm:ss") : null;
                 tenancyObj.parentInteractionId = response.parentInteractionId;
+                tenancyObj.traId = response.traId;
+                tenancyObj.issueLocation = response.issueLocation;
                 tenancyObj.AnnotationList = new List<ExpandoObject>();
 
                 foreach (var annotationResponse in response.Annotation)

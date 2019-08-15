@@ -1,5 +1,5 @@
 using System;
-using ManageATenancyAPI.Database.Models;
+using ManageATenancyAPI.Database.Entities;
 
 namespace ManageATenancyAPI.Database.DTO
 {

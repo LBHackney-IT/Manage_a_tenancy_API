@@ -5,7 +5,7 @@ using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary;
 using Xunit;
 using FluentAssertions;
-
+using ManageATenancyAPI.Controllers.v2.Tra;
 using ManageATenancyAPI.Services.JWT;
 using ManageATenancyAPI.Tests.v2.Helper;
 using Microsoft.AspNetCore.Http;
@@ -30,7 +30,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.SaveETRAMeeting
             _classUnderTest = new TRAController(_jwtService, _useCase,null, null);
 
             var headers = new KeyValuePair<string, StringValues>("Authorization",
-                "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IkhTMjU2IiwidHlwIjoiSldUIn0.eyJzdWIiOiJtaG9sZGVuIiwianRpIjoiIiwiQ3JlYXRlIG1lZXRpbmciOiJ7XCJlc3RhdGVPZmZpY2VyTG9naW5JZFwiOlwiMWYxYmI3MjctY2UxYi1lODExLTgxMTgtNzAxMDZmYWE2YTMxXCIsXCJvZmZpY2VySWRcIjpcIjFmMWJiNzI3LWNlMWItZTgxMS04MTE4LTcwMTA2ZmFhNmEzMVwiLFwidXNlcm5hbWVcIjpcIm1ob2xkZW5cIixcImZ1bGxOYW1lXCI6XCJNZWdhbiBIb2xkZW5cIixcImFyZWFNYW5hZ2VySWRcIjpcIjU1MTJjNDczLTk5NTMtZTgxMS04MTI2LTcwMTA2ZmFhZjhjMVwiLFwib2ZmaWNlclBhdGNoSWRcIjpcIjhlOTU4YTM3LTg2NTMtZTgxMS04MTI2LTcwMTA2ZmFhZjhjMVwiLFwiYXJlYUlkXCI6XCI2XCJ9IiwibmJmIjowLCJleHAiOjE1OTMwNzY2MjYsImlhdCI6MTU2MTQ1NDIyNiwiaXNzIjoiT3V0c3lzdGVtcyIsImF1ZCI6Ik1hbmFnZUFUZW5hbmN5In0.d7e_bDz1JnZdXjDASng67HWmC7s466lfQEDK-weyXCQ");
+                "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IkhTMjU2IiwidHlwIjoiSldUIn0.eyJzdWIiOiJtaG9sZGVuIiwianRpIjoiIiwibWVldGluZyI6IntcImVzdGF0ZU9mZmljZXJMb2dpbklkXCI6XCIyMDFiYjcyNy1jZTFiLWU4MTEtODExOC03MDEwNmZhYTZhMzFcIixcIm9mZmljZXJJZFwiOlwiMWYxYmI3MjctY2UxYi1lODExLTgxMTgtNzAxMDZmYWE2YTMxXCIsXCJmdWxsTmFtZVwiOlwiTWVnYW4gSG9sZGVuXCIsXCJhcmVhTWFuYWdlcklkXCI6XCI1NTEyYzQ3My05OTUzLWU4MTEtODEyNi03MDEwNmZhYWY4YzFcIixcIm9mZmljZXJQYXRjaElkXCI6XCI4ZTk1OGEzNy04NjUzLWU4MTEtODEyNi03MDEwNmZhYWY4YzFcIixcImFyZWFJZFwiOlwiNlwifSIsIm5iZiI6MCwiZXhwIjoxNTk0OTk3NTY4LCJpYXQiOjE1NjMzNzUxNjgsImlzcyI6Ik91dHN5c3RlbXMiLCJhdWQiOiJNYW5hZ2VBVGVuYW5jeSJ9._fymUyitpMsVbCv3-dibPuUG_TAepZuLxCqyASnZnTk");
 
             _classUnderTest.ControllerContext = new ControllerContext
             {

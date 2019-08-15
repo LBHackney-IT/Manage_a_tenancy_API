@@ -880,7 +880,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 tenancyObj.traId = response.traId;
                 tenancyObj.issueLocation = response.issueLocation;
                 tenancyObj.AnnotationList = new List<ExpandoObject>();
-
+                
                 foreach (var annotationResponse in response.Annotation)
                 {
                     dynamic annotation = new ExpandoObject();

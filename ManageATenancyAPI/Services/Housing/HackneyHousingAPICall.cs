@@ -20,6 +20,9 @@ namespace ManageATenancyAPI.Services.Housing
             try
             {
                 response = httpClient.GetAsync(query).Result;
+                
+                var content = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"getHousingAPIResponse: {content}");
                 if (!response.IsSuccessStatusCode)
                 {
                     throw new ServiceException();
@@ -46,7 +49,7 @@ namespace ManageATenancyAPI.Services.Housing
                 HttpRequestMessage request = new HttpRequestMessage(method, requestUri) { Content = new StringContent(content) };
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 response = await client.SendAsync(request).ConfigureAwait(false);
-           
+                var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
                     throw new ServiceException();
@@ -68,7 +71,7 @@ namespace ManageATenancyAPI.Services.Housing
             {
                 var content = new StringContent(jObject.ToString(), Encoding.UTF8, "application/json");
                 response = await client.PostAsync(query, content).ConfigureAwait(false) ;
-               
+                var responseContent = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
                     throw new ServiceException();

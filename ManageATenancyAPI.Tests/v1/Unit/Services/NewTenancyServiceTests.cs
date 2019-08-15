@@ -1,6 +1,5 @@
 using System;
 using ManageATenancyAPI.Database.DTO;
-using ManageATenancyAPI.Database.Models;
 using ManageATenancyAPI.Interfaces;
 using ManageATenancyAPI.Repository.Interfaces;
 using ManageATenancyAPI.Services;

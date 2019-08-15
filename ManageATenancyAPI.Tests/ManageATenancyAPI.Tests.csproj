@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="appsettings.json" />
+    <None Remove="area-manager-emails.json" />
+    <None Remove="service-area-emails.json" />
     <None Remove="v1\Scripts\Createdatabase.ps1" />
     <None Remove="v1\Scripts\manage-a-tenancy-data.sql" />
     <None Remove="v1\Scripts\manage-a-tenancy-schema.sql" />
@@ -16,6 +17,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="area-manager-emails.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="service-area-emails.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="v1\Scripts\manage-a-tenancy-schema.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -70,7 +78,14 @@
 
   <ItemGroup>
     <Folder Include="v2\AcceptanceTests\SendETraEmailConfirmation\" />
+    <Folder Include="v2\Gateways\GetIssuesThatNeedEscalating\" />
     <Folder Include="v2\Gateways\SendEtraMeetingEmailConfirmation\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

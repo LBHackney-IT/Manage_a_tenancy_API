@@ -24,7 +24,8 @@ namespace ManageATenancyAPI.Controllers.v2
                 var authString = Request.Headers[_authorization].ToString();
                 authString = authString.Replace("bearer ", "", true, CultureInfo.InvariantCulture);
 
-                Claims = _jwtService.GetManageATenancyClaims(authString, Environment.GetEnvironmentVariable("HmacSecret"));
+                var secret = Environment.GetEnvironmentVariable("HmacSecret");
+                Claims = _jwtService.GetManageATenancyClaims(authString, secret);
             }
 
             return Claims;

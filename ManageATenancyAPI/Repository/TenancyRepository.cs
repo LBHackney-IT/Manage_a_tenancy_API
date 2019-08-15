@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using ManageATenancyAPI.Database;
 using ManageATenancyAPI.Database.DTO;
-using ManageATenancyAPI.Database.Models;
+using ManageATenancyAPI.Database.Entities;
 using ManageATenancyAPI.Repository.Interfaces;
 
 namespace ManageATenancyAPI.Repository

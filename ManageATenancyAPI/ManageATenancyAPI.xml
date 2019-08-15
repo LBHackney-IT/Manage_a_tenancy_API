@@ -192,7 +192,13 @@
             </summary>
             <returns>Officers Id, FirstName, LastName, UserName</returns>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.v2.TRAController.Post(ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.SaveETRAMeetingInputModel)">
+        <member name="M:ManageATenancyAPI.Controllers.v2.Tra.TRAIssuesController.Post">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ManageATenancyAPI.Controllers.v2.Tra.TRAController.Post(ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.SaveETRAMeetingInputModel)">
             <summary>
             Creates an ETRA meeting
             If the signoff object is provided then it will complete the meeting in one go
@@ -203,13 +209,13 @@
             <returns>A JSON object for a successfully created ETRA meeting request</returns>
             <response code="200">A successfully created ETRA meeting request</response>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.v2.TRAController.Get">
+        <member name="M:ManageATenancyAPI.Controllers.v2.Tra.TRAController.Get">
             <summary>
             Gets an ETRA meeting
             </summary>
             <returns>A JSON object for a successfully created ETRA meeting request</returns>
         </member>
-        <member name="M:ManageATenancyAPI.Controllers.v2.TRAController.Patch(ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary.SignOffMeetingInputModel)">
+        <member name="M:ManageATenancyAPI.Controllers.v2.Tra.TRAController.Patch(ManageATenancyAPI.UseCases.Meeting.SignOffMeeting.Boundary.SignOffMeetingInputModel)">
             <summary>
             Gets an ETRA meeting
             </summary>

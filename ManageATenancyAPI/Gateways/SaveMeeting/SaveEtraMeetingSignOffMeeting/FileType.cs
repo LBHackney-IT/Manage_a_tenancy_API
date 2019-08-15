@@ -5,6 +5,7 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting
         None,
         Pdf,
         Email,
-        Jpeg
+        Jpeg,
+        Json
     }
 }

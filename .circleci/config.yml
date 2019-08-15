@@ -117,15 +117,15 @@ workflows:
           tag: "${CIRCLE_SHA1}"
           requires:
             - check
-          # filters:
-          #   branches:
-          #     only: develop
+          filters:
+             branches:
+              only: develop
       - deploy-to-development:
           requires:
             - build_and_push_api
-          # filters:
-          #   branches:
-          #     only: develop
+          filters:
+             branches:
+               only: develop
       - permit-staging-release:
           type: approval
           requires:

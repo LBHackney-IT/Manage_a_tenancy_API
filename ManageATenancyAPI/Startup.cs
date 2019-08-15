@@ -106,6 +106,13 @@ namespace ManageATenancyAPI
                 options.ProjectName = "etra";
             });
 
+            services.Configure<JsonPersistanceServiceConfiguration>(options =>
+            {
+                options.Extension = "json";
+                options.FileType = FileType.Json;
+                options.ProjectName = "etra-service-area";
+            });
+
             services.Configure<S3Configuration>(Configuration.GetSection("S3Configuration"));
 
             services.AddMvc();

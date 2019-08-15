@@ -1,0 +1,443 @@
+[
+  {
+    "IssueId": 100000005,
+    "IssueType": "Anti social behaviour - North",
+    "ServiceArea": "ASB/ Estate Safety (North)",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 200000001,
+    "IssueType": "Anti social behaviour - South",
+    "ServiceArea": "ASB/ Estate Safety (South)",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000220,
+    "IssueType": "Bathrooms",
+    "ServiceArea": "Asset Management Works (Kitchens/Bathrooms)",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000221,
+    "IssueType": "Bike racks / storage",
+    "ServiceArea": "Communal Works (Planned Maintenance)",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000222,
+    "IssueType": "Bushes",
+    "ServiceArea": "Grounds Maintenance",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000024,
+    "IssueType": "Cleaning",
+    "ServiceArea": "Cleaning",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": "",
+    "IssueType": "Combustibles / obstruction in communal areas",
+    "ServiceArea": "",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": "",
+    "IssueType": "",
+    "ServiceArea": "// combustibles are not automatically assigned to a service area so if officer will need to manually select a service area of this is the IssueType - add prompt in input to say \"choose service area",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000025,
+    "IssueType": "Community halls",
+    "ServiceArea": "Community Halls",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000223,
+    "IssueType": "Drains",
+    "ServiceArea": "Reactive Repairs",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000224,
+    "IssueType": "Entry doors - Gerda",
+    "ServiceArea": "Gerda Doors",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 200000002,
+    "IssueType": "Entry doors - General",
+    "ServiceArea": "Electrical Contract Manager/Door Entry",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000225,
+    "IssueType": "Fences",
+    "ServiceArea": "Grounds Maintenance",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000041,
+    "IssueType": "Fire risks",
+    "ServiceArea": "Fire Risk Assessment",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 200000003,
+    "IssueType": "Garages",
+    "ServiceArea": "Voids",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000188,
+    "IssueType": "Gates",
+    "ServiceArea": "Grounds Maintenance",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000226,
+    "IssueType": "Grass",
+    "ServiceArea": "Grounds Maintenance",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000227,
+    "IssueType": "Guttering",
+    "ServiceArea": "Reactive Repairs",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000229,
+    "IssueType": "Kitchens",
+    "ServiceArea": "Asset Management Works (Kitchens/Bathrooms)",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000121,
+    "IssueType": "Leaks",
+    "ServiceArea": "Reactive Repairs",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000228,
+    "IssueType": "Lifts",
+    "ServiceArea": "Reactive Repairs",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 200000006,
+    "IssueType": "Lifts",
+    "ServiceArea": "Electrical Contract Manager/Lifts",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": "",
+    "IssueType": "//lifts automatically mapped to reactive repairs but can be changed",
+    "ServiceArea": "",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000072,
+    "IssueType": "Lighting",
+    "ServiceArea": "Reactive Repairs",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000230,
+    "IssueType": "Noticeboards",
+    "ServiceArea": "Communal Works (Planned Responsive Maintenance)",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000231,
+    "IssueType": "Parking",
+    "ServiceArea": "Parking",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000232,
+    "IssueType": "Paving",
+    "ServiceArea": "Grounds Maintenance",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000234,
+    "IssueType": "Pest control",
+    "ServiceArea": "Environment Health Services (Pest control)",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000233,
+    "IssueType": "Pipework",
+    "ServiceArea": "Reactive Repairs",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000235,
+    "IssueType": "Planting",
+    "ServiceArea": "Grounds Maintenance",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000236,
+    "IssueType": "Playground",
+    "ServiceArea": "Playgrounds (Play areas)",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000237,
+    "IssueType": "Refuse and recycling",
+    "ServiceArea": "Waste and Recycling",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000238,
+    "IssueType": "Scaffolding",
+    "ServiceArea": "Communal Works (Planned Maintenance)",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000239,
+    "IssueType": "Signage",
+    "ServiceArea": "Signs",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+  },
+  {
+    "IssueId": 200000004,
+    "IssueType": "Tenancy management",
+    "ServiceArea": "//same as combustibles",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+  },
+  {
+    "IssueId": 200000005,
+    "IssueType": "Trees",
+    "ServiceArea": "Tree works",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+  },
+  {
+    "IssueId": 100000239,
+    "IssueType": "TV aerials / satellites",
+    "ServiceArea": "Electrical Services Manager",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+  },
+  {
+    "IssueId": 100000240,
+    "IssueType": "Walls",
+    "ServiceArea": "Reactive Repairs",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000241,
+    "IssueType": "Water supply",
+    "ServiceArea": "Reactive Repairs",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000242,
+    "IssueType": "Windows",
+    "ServiceArea": "Reactive Repairs",
+    "ServiceAreaOfficer": "Jeff Pinkham",
+    "ServiceAreaOfficerEmail": "jeff@madetech.com",
+    "ServiceAreaManager": "Jeff Pinkham",
+    "ServiceAreaManagerEmail": "jeff@madetech.com"
+
+
+  },
+  {
+    "IssueId": 100000096,
+    "IssueType": "Other",
+    "ServiceArea": "",
+    "ServiceAreaOfficer": "",
+    "ServiceAreaOfficerEmail": "",
+    "ServiceAreaManager": "",
+    "ServiceAreaManagerEmail": ""
+  }
+]

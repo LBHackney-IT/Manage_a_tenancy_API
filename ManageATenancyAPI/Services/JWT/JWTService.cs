@@ -58,10 +58,12 @@ namespace ManageATenancyAPI.Services.JWT
                 ValidateAudience = false
             };
             var claims = handler.ValidateToken(token, validations, out var tokenSecure);
+            
             var claimlist = claims.Claims.ToList();
             var meetingid = (from kvp in claimlist where kvp.Type.ToLower() == "meetingid" select kvp.Value).SingleOrDefault();
             var traid = (from kvp in claimlist where kvp.Type.ToLower() == "traid" select kvp.Value).SingleOrDefault();
             var officername = (from kvp in claimlist where kvp.Type.ToLower() == "officername" select kvp.Value).SingleOrDefault();
+            
             IMeetingClaims manageATenancyClaims = new MeetingClaims
             {
                 MeetingId = new Guid(meetingid),

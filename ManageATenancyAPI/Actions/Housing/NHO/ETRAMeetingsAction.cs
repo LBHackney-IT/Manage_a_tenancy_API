@@ -312,13 +312,13 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                         {
                             Id = s["hackney_tenancymanagementinteractionsid"].ToObject<Guid>(),
                             Location=new Location
-                            { Name = s["hackney_issuelocation"].ToString() },
+                            { Name = s["hackney_issuelocation"]!=null? s["hackney_issuelocation"].ToString():string.Empty },
                           
                             IssueType=new IssueType
-                            {  IssueId= s["hackney_enquirysubject"].ToString()
+                            {  IssueId= s["hackney_enquirysubject"]!=null? s["hackney_enquirysubject"].ToString():string.Empty
                             },
 
-                            Notes = s["annotation2_x002e_notetext"].ToString()
+                            Notes = s["annotation2_x002e_notetext"]!=null ? s["annotation2_x002e_notetext"].ToString():string.Empty
                         }).ToList();
 
                         return list;

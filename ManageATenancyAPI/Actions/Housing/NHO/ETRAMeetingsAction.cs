@@ -311,14 +311,15 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                         list = issuesRetrievedList.Select(s => new MeetingIssueOutputModel
                         {
                             Id = s["hackney_tenancymanagementinteractionsid"].ToObject<Guid>(),
-                            Location=new Location
-                            { Name = s["hackney_issuelocation"]!=null? s["hackney_issuelocation"].ToString():string.Empty },
-                          
-                            IssueType=new IssueType
-                            {  IssueId= s["hackney_enquirysubject"]!=null? s["hackney_enquirysubject"].ToString():string.Empty
+                            Location = new Location
+                            { Name = s["hackney_issuelocation"] != null ? s["hackney_issuelocation"].ToString() : string.Empty },
+
+                            IssueType = new IssueType
+                            {
+                                IssueId = s["hackney_enquirysubject"] != null ? s["hackney_enquirysubject"].ToString() : string.Empty
                             },
 
-                            Notes = s["annotation2_x002e_notetext"]!=null ? s["annotation2_x002e_notetext"].ToString():string.Empty
+                            Notes = s["annotation2_x002e_notetext"] != null ? s["annotation2_x002e_notetext"].ToString() : string.Empty
                         }).ToList();
 
                         return list;
@@ -437,17 +438,21 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             issueUpdateObject.Add("hackney_servicearea", request.ServiceAreaId);
             issueUpdateObject.Add("hackney_process_stage", (int)request.IssueStage);
 
-            if(request.ProjectedCompletionDate!=null)
+            if (request.ProjectedCompletionDate != null)
             {
-                issueUpdateObject.Add("hackney_issuedeadlinedate", request.ProjectedCompletionDate);
+                issueUpdateObject.Add("hackney_completiondate", request.ProjectedCompletionDate);
             }
-            
 
             var completionDateText = string.Empty;
-            if (request.ProjectedCompletionDate.HasValue)
-                completionDateText = $"Projected completion date: {request.ProjectedCompletionDate.Value.ToString("dddd dd MMMM yyyy")}\r\n\r\n";
 
-            var noteText = $"Response from: {request.ServiceAreaName}\r\n\r\n{request.ResponseText}\r\n\r\n{completionDateText}Responder: {request.ResponderName} on {DateTime.Now}";
+            if (request.ProjectedCompletionDate.HasValue && (int)request.IssueStage == 0)
+            {
+                completionDateText = $"Not yet completed by service area. Projected completion date: {request.ProjectedCompletionDate.Value.ToString("dddd dd MMMM yyyy")}\r\n\r\n";
+            }
+            else
+                completionDateText = $"Completed by service area \r\n\r\n";
+
+            var noteText = $"Response from: {request.ServiceAreaName}\r\n\r\n{request.ResponseText}\r\n\r\n{completionDateText} Responder: {request.ResponderName} on {DateTime.Now}";
 
             var annotationId = await CreateAnnotationAsync(noteText, request.IssueIncidentId.ToString(), request.AnnotationSubjectId.ToString());
 
@@ -592,7 +597,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     MeetingAttendance = attendees,
                     CreatedOn = createdOn,
                     SignOff = signOff,
-                    IsSignedOff = signOff != null ? true:false
+                    IsSignedOff = signOff != null ? true : false
                 };
 
                 return outputModel;
@@ -750,7 +755,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                         {
                             item = grp.Key,
                             annotations = grp.ToList().Select(si => si["annotation2_x002e_notetext"])
-                           
+
 
                         }).ToList().Select(x =>
                         new EscalateMeetingIssueInputModel

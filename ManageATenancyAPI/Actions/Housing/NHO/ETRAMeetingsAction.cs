@@ -308,19 +308,36 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                         List<JToken> issuesRetrievedList = issuesRetrieveResponse["value"].ToList();
 
                         IList<MeetingIssueOutputModel> list = null;
-                        list = issuesRetrievedList.Select(s => new MeetingIssueOutputModel
-                        {
-                            Id = s["hackney_tenancymanagementinteractionsid"].ToObject<Guid>(),
-                            Location = new Location
-                            { Name = s["hackney_issuelocation"] != null ? s["hackney_issuelocation"].ToString() : string.Empty },
+                        list = (from dataresponse in issuesRetrievedList
+                                group dataresponse by new
+                                {
+                                    Id = dataresponse["hackney_tenancymanagementinteractionsid"],
+                                    Location = dataresponse["hackney_issuelocation"],
+                                    IssueId = dataresponse["hackney_enquirysubject"],
+                                    ServiceRequestId = dataresponse["_hackney_incidentid_value"],
+                                    AreaId = dataresponse["hackney_areaname"],
+                                    DueDate = dataresponse["hackney_issuedeadlinedate"]
+                                } into grp
+                                select new
+                                {
+                                    item = grp.Key,
+                                    annotations = grp.ToList().Select(si => si["annotation2_x002e_notetext"])
 
-                            IssueType = new IssueType
-                            {
-                                IssueId = s["hackney_enquirysubject"] != null ? s["hackney_enquirysubject"].ToString() : string.Empty
-                            },
 
-                            Notes = s["annotation2_x002e_notetext"] != null ? s["annotation2_x002e_notetext"].ToString() : string.Empty
-                        }).ToList();
+                                }).ToList().Select(x =>
+                                new MeetingIssueOutputModel
+                                {
+                                    Id = x.item.Id.ToObject<Guid>(),
+                                    Location = new Location
+                                    {
+                                        Name = x.item.Location?.ToString()
+                                    },
+                                    IssueType = new IssueType
+                                    {
+                                        IssueId = x.item.IssueId?.ToString()
+                                    },
+                                    Notes = string.Join("\r\n, ", x.annotations)
+                                }).ToList();
 
                         return list;
                     }

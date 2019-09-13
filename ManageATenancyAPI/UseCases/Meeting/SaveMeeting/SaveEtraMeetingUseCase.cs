@@ -87,9 +87,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
                 var IsMeetingClosed = _closeETRAMeetingGateway.CloseMeetingInteraction(closeMeetingInputModel, cancellationToken);
                 //update the incident 
                 var IsIncidentClosed = _closeETRAMeetingGateway.CloseMeetingIncident(closeMeetingInputModel, cancellationToken);
-                //donot create annotation
 
-                //if the meeting is signed off then send the email with the confirmation template 
             }
 
             var inputModel = new SendTraConfirmationEmailInputModel

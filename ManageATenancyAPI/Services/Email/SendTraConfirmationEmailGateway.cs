@@ -33,7 +33,7 @@ namespace ManageATenancyAPI.Services.Email
             var tra = await _traAction.GetAsync(inputModel.TraId).ConfigureAwait(false);
             if(tra == null || tra.Email.IsNullOrEmpty())
                 return new SendTraConfirmationEmailOutputModel {IsSent = false,};
-            //change email subject based on sign off condition , if meeting is already signed off then sunject should be confirmation else for sign off 
+            //change email subject based on sign off condition , if meeting is already signed off then subject should be confirmation else for sign off 
             string emailSubject = inputModel?.IsMeetingSignedOff == true ? $"{ tra.Name} meeting confirmation" : $"{tra.Name} meeting for sign off";
             var personalization = new Dictionary<string, object>
             {

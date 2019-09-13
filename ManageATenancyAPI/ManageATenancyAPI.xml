@@ -438,6 +438,11 @@
             Refers to the TenancyInteractionId in Dynamics 365
             </summary>
         </member>
+        <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.SaveEtraMeetingOutputModel.IncidentId">
+            <summary>
+            Refers to ServiceRequest Id
+            </summary>
+        </member>
         <member name="P:ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary.SignOff.Signature">
             <summary>
             Base 64 encoded signature image

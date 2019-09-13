@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using ManageATenancyAPI.Gateways.CloseMeeting;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingAttendance;
 using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue;
@@ -26,6 +27,7 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
         private Mock<ISaveEtraMeetingAttendanceGateway> _mockSaveMeetingAttendanceGateway;
         private Mock<ISaveEtraMeetingSignOffMeetingGateway> _mockSaveMeetingFinaliseMeetingGateway;
         private Mock<ISendTraConfirmationEmailGateway> _mockEmailService;
+        private Mock<ICloseETRAMeetingGateway> _mockCloseMeeting;
         public SaveMeetingUseCaseTests()
         {
             _mockSaveMeetingGateway = new Mock<ISaveEtraMeetingGateway>();
@@ -33,13 +35,14 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
             _mockSaveMeetingAttendanceGateway = new Mock<ISaveEtraMeetingAttendanceGateway>();
             _mockSaveMeetingFinaliseMeetingGateway = new Mock<ISaveEtraMeetingSignOffMeetingGateway>();
             _mockEmailService = new Mock<ISendTraConfirmationEmailGateway>();
-
+            _mockCloseMeeting = new Mock<ICloseETRAMeetingGateway>();
             _classUnderTest = new SaveEtraMeetingUseCase(
-                _mockSaveMeetingGateway.Object, 
-                _mockSaveMeetingIssueGateway.Object, 
-                _mockSaveMeetingAttendanceGateway.Object, 
+                _mockSaveMeetingGateway.Object,
+                _mockSaveMeetingIssueGateway.Object,
+                _mockSaveMeetingAttendanceGateway.Object,
                 _mockSaveMeetingFinaliseMeetingGateway.Object,
-                _mockEmailService.Object);
+                _mockEmailService.Object,
+                _mockCloseMeeting.Object);
 
         }
 
@@ -54,6 +57,14 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
                 TRAId = traId,
                 MeetingName = meetingName
             };
+            var outputModel = new ETRAMeetingOutPutModel
+            {
+                IncidentId = Guid.NewGuid(),
+                InteractionId = Guid.NewGuid(),
+            };
+
+            _mockSaveMeetingGateway.Setup(s => s.CreateEtraMeeting(It.IsAny<ETRAMeeting>(),
+                It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(outputModel);
             //act
             await _classUnderTest.ExecuteAsync(inputModel, It.IsAny<IManageATenancyClaims>(), CancellationToken.None).ConfigureAwait(false);
             //assert
@@ -72,13 +83,18 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
                 MeetingName = meetingName
             };
 
-            var newGuid = Guid.NewGuid();
+            var outputModel = new ETRAMeetingOutPutModel
+            {
+                IncidentId = Guid.NewGuid(),
+                 InteractionId= Guid.NewGuid(),
+            };
+           
             _mockSaveMeetingGateway.Setup(s => s.CreateEtraMeeting(It.IsAny<ETRAMeeting>(),
-                It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(newGuid);
+                It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(outputModel);
             //act
             var response = await _classUnderTest.ExecuteAsync(inputModel, new ManageATenancyClaims(), CancellationToken.None).ConfigureAwait(false);
             //assert
-            response.Id.Should().Be(newGuid);
+            response.Id.Should().Be(outputModel.InteractionId);
         }
 
         [Theory]
@@ -126,6 +142,15 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
                     Signature = ""
                 }
             };
+
+            var outputModel = new ETRAMeetingOutPutModel
+            {
+                IncidentId = Guid.NewGuid(),
+                InteractionId = Guid.NewGuid(),
+            };
+
+            _mockSaveMeetingGateway.Setup(s => s.CreateEtraMeeting(It.IsAny<ETRAMeeting>(),
+                It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(outputModel);
 
             _mockSaveMeetingFinaliseMeetingGateway.Setup(s => s.SignOffMeetingAsync(
                 It.IsAny<Guid>(),
@@ -183,6 +208,14 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
                     Signature = ""
                 }
             };
+            var meetingOutputModel = new ETRAMeetingOutPutModel
+            {
+                IncidentId = Guid.NewGuid(),
+                InteractionId = Guid.NewGuid(),
+            };
+
+            _mockSaveMeetingGateway.Setup(s => s.CreateEtraMeeting(It.IsAny<ETRAMeeting>(),
+                It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(meetingOutputModel);
 
             _mockSaveMeetingFinaliseMeetingGateway.Setup(s => s.SignOffMeetingAsync(
                 It.IsAny<Guid>(),
@@ -248,6 +281,14 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
                     HackneyStaff = hackneyStaff
                 },
             };
+            var meetingOutputModel = new ETRAMeetingOutPutModel
+            {
+                IncidentId = Guid.NewGuid(),
+                InteractionId = Guid.NewGuid(),
+            };
+
+            _mockSaveMeetingGateway.Setup(s => s.CreateEtraMeeting(It.IsAny<ETRAMeeting>(),
+                It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(meetingOutputModel);
             //act
             await _classUnderTest.ExecuteAsync(inputModel, new ManageATenancyClaims(), CancellationToken.None).ConfigureAwait(false);
             //assert
@@ -317,6 +358,15 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.SaveMeeting
             {
                 FullName = name,
             };
+
+            var meetingOutputModel = new ETRAMeetingOutPutModel
+            {
+                IncidentId = Guid.NewGuid(),
+                InteractionId = Guid.NewGuid(),
+            };
+
+            _mockSaveMeetingGateway.Setup(s => s.CreateEtraMeeting(It.IsAny<ETRAMeeting>(),
+                It.IsAny<IManageATenancyClaims>(), It.IsAny<CancellationToken>())).ReturnsAsync(meetingOutputModel);
             //act
             await _classUnderTest.ExecuteAsync(inputModel, claims, CancellationToken.None)
                 .ConfigureAwait(false);

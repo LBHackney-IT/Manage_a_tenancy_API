@@ -13,7 +13,10 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
         /// Refers to the TenancyInteractionId in Dynamics 365
         /// </summary>
         public Guid Id { get; set; }
-
+        /// <summary>
+        /// Refers to ServiceRequest Id
+        /// </summary>
+        public Guid IncidentId { get; set; }
         public string Name { get; set; }
 
         public IList<MeetingIssueOutputModel> Issues { get; set; }

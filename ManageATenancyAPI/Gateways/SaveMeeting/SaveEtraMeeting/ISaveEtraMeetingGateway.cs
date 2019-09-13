@@ -7,6 +7,6 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting
 {
     public interface ISaveEtraMeetingGateway
     {
-        Task<Guid> CreateEtraMeeting(ETRAMeeting meeting, IManageATenancyClaims manageATenancyClaims, CancellationToken cancellationToken);
+        Task<ETRAMeetingOutPutModel> CreateEtraMeeting(ETRAMeeting meeting, IManageATenancyClaims manageATenancyClaims, CancellationToken cancellationToken);
     }
 }

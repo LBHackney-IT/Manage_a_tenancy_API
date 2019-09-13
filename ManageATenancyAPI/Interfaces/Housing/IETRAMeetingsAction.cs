@@ -27,5 +27,6 @@ namespace ManageATenancyAPI.Interfaces.Housing
         Task<IncidentClosedResponse> CloseIncident(string closingNotes, Guid incidentId);
         Task<GetAllEtraIssuesThatNeedEscalatingOutputModel> GetAllEtraIssuesThatNeedEscalatingAsync(DateTime fromDate, CancellationToken cancellationToken);
         Task<bool> EscalateIssue(EscalateMeetingIssueInputModel issue, CancellationToken cancellationToken);
+        Task<bool> CloseMeetingInteraction(CloseETRAMeetingRequest closeETRAMeetingRequest);
     }
 }

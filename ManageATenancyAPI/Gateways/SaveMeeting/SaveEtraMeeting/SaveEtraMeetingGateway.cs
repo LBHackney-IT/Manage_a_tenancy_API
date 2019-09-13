@@ -17,7 +17,7 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting
             _etraMeetingsAction = etraMeetingsAction;
         }
 
-        public async Task<Guid> CreateEtraMeeting(ETRAMeeting meeting, IManageATenancyClaims manageATenancyClaims, CancellationToken cancellationToken)
+        public async Task<ETRAMeetingOutPutModel> CreateEtraMeeting(ETRAMeeting meeting, IManageATenancyClaims manageATenancyClaims, CancellationToken cancellationToken)
         {
             var etraIssue = new ETRAIssue
             {
@@ -52,7 +52,11 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting
                 processType = "1"
             };
             var response = await _etraMeetingsAction.CreateETRAMeeting(etraIssue).ConfigureAwait(false);
-            return response.InteractionId.GetValueOrDefault();
+            return new ETRAMeetingOutPutModel
+            {
+                InteractionId = response.InteractionId.GetValueOrDefault(),
+                IncidentId = response.IncidentId.GetValueOrDefault()
+            };
         }
     }
 
@@ -61,5 +65,11 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeeting
         public Guid Id { get; set; }
         public string MeetingName { get; set; }
         public int TraId { get; set; }
+    }
+
+    public class ETRAMeetingOutPutModel
+    {
+        public Guid InteractionId { get; set; }
+        public Guid IncidentId { get; set; }
     }
 }

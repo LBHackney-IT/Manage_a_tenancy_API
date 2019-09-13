@@ -26,6 +26,7 @@ using ManageATenancyAPI.UseCases.Meeting.EscalateIssues;
 using ManageATenancyAPI.UseCases.Meeting.GetMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SaveMeeting;
 using ManageATenancyAPI.UseCases.Meeting.SignOffMeeting;
+using ManageATenancyAPI.Gateways.CloseMeeting;
 
 namespace ManageATenancyAPI.Extension
 {
@@ -90,7 +91,7 @@ namespace ManageATenancyAPI.Extension
             services.AddScoped<ISaveEtraMeetingIssueGateway, SaveEtraMeetingIssueGateway>();
             services.AddScoped<ISaveEtraMeetingAttendanceGateway, SaveEtraMeetingAttendanceGateway>();
             services.AddScoped<ISaveEtraMeetingSignOffMeetingGateway, SaveEtraMeetingSignOffMeetingGateway>();
-
+            services.AddScoped<ICloseETRAMeetingGateway, CloseETRAMeetingGateway>();
             services.AddScoped<IGetEtraMeetingUseCase, GetEtraMeetingUseCase>();
 
             services.AddScoped<ISignOffMeetingUseCase, SignOffMeetingUseCase>();

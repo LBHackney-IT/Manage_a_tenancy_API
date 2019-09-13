@@ -33,19 +33,29 @@ namespace ManageATenancyAPI.Services.Email
             var tra = await _traAction.GetAsync(inputModel.TraId).ConfigureAwait(false);
             if(tra == null || tra.Email.IsNullOrEmpty())
                 return new SendTraConfirmationEmailOutputModel {IsSent = false,};
-
+            //change email subject based on sign off condition , if meeting is already signed off then sunject should be confirmation else for sign off 
+            string emailSubject = inputModel?.IsMeetingSignedOff == true ? $"{ tra.Name} meeting confirmation" : $"{tra.Name} meeting for sign off";
             var personalization = new Dictionary<string, object>
             {
                 {EmailKeys.EmailAddress, tra.Email},
-                {EmailKeys.Subject, $"{tra.Name} meeting notes confirmation" },
+                {EmailKeys.Subject, emailSubject },
                 {EmailKeys.TraName, tra.Name },
                 {EmailKeys.MeetingUrl, $"{_config?.Value.FrontEndAppUrl}meeting/?existingMeeting=true#traToken={token}"},
                 {EmailKeys.OfficerName, $"{inputModel.OfficerName}"},
                 {EmailKeys.OfficerAddress, $"{inputModel.OfficerAddress}"}
             };
 
-            await _client.SendEmailAsync(tra.Email, _config?.Value.TemplateId, personalization)
-                .ConfigureAwait(false);
+            //if the meeting is Signed off then send email with confirmation template else the template to sign Off the meeting
+            if (inputModel.IsMeetingSignedOff)
+            {
+                await _client.SendEmailAsync(tra.Email, _config?.Value.ConfirmationTemplate, personalization)
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                await _client.SendEmailAsync(tra.Email, _config?.Value.TemplateId, personalization)
+                   .ConfigureAwait(false);
+            }
 
             return new SendTraConfirmationEmailOutputModel
             {

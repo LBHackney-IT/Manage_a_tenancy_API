@@ -6,5 +6,6 @@
         public string FrontEndAppUrl { get; set; }
         public string TemplateId { get; set; }
         public string EscalationTemplateId { get; set; }
+        public string ConfirmationTemplate { get; set; }
     }
 }

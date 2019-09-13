@@ -8,5 +8,6 @@ namespace ManageATenancyAPI.Services.Email
         public int TraId { get; set; }
         public string OfficerName { get; set; }
         public string OfficerAddress { get; set; }
+        public bool IsMeetingSignedOff { get; set; }
     }
 }

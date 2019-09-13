@@ -336,7 +336,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                     {
                                         IssueId = x.item.IssueId?.ToString()
                                     },
-                                    Notes = string.Join("\r\n, ", x.annotations)
+                                    Notes = string.Join("\r\n\r\n\r\n, ", x.annotations)
                                 }).ToList();
 
                         return list;
@@ -614,7 +614,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     MeetingAttendance = attendees,
                     CreatedOn = createdOn,
                     SignOff = signOff,
-                    IsSignedOff = signOff != null ? true : false
+                    IsSignedOff = signOff != null ? true : false,
+                   
+                    
                 };
 
                 return outputModel;
@@ -825,7 +827,35 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             return true;
         }
 
+        public async Task<bool> CloseMeetingInteraction(CloseETRAMeetingRequest closeETRAMeetingRequests)
+        {
+            string interactionQuery = HousingAPIQueryBuilder.updateInteractionQuery(closeETRAMeetingRequests.InteractionId.ToString());
 
+            HttpResponseMessage updateResponse = new HttpResponseMessage();
+            
+            _logger.LogInformation($"Update Tenancy Management Interaction");
+            _logger.LogInformation($"Update description which is the notes that is sent from the UI ,Name of the Asset officer who has updated and the current time stamp");
+            var token = _crmAccessToken.getCRM365AccessToken().Result;
+            _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
+
+         
+                JObject tenancyInteraction = new JObject();
+                _logger.LogError($"StateCodeInactive {Constants.StateCodeInactive}");
+                _logger.LogError($"StatusCodeInActive {Constants.StatusCodeInActive}");
+
+                tenancyInteraction.Add("statuscode", Constants.StatusCodeInActive);
+                tenancyInteraction.Add("statecode", Constants.StateCodeInactive);
+                tenancyInteraction.Add("hackney_process_stage", (int)closeETRAMeetingRequests.MeetingStage);
+                
+
+                tenancyInteraction["hackney_estateofficer_updatedbyid@odata.bind"] = "/hackney_estateofficers(" + closeETRAMeetingRequests.UpdatedByOfficerId + ")";
+                tenancyInteraction.Add("modifiedon", DateTime.Now);
+
+                bool returnResponse = await _ManageATenancyAPI.UpdateObject(_client, interactionQuery, tenancyInteraction);
+
+                return returnResponse;
+
+        }
         #region Private methods
 
         private async Task UpdateAnnotation(string notes, string estateOfficer, string annotationId)

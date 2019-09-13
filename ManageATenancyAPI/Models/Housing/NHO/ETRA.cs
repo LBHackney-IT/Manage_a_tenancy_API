@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ManageATenancyAPI.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -104,6 +105,14 @@ namespace ManageATenancyAPI.Models.Housing.NHO
         public string Id { get; set; }
         public bool IsFinalised { get; set; }
         public DateTime SignOffDate { get; set; }
+    }
+
+    public class CloseETRAMeetingRequest
+    {
+        public HackneyProcessStage MeetingStage { get; set; }
+        public Guid InteractionId { get; set; }
+
+        public Guid UpdatedByOfficerId { get; set; }
     }
 
 }

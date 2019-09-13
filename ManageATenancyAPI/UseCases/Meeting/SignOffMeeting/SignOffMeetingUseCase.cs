@@ -28,7 +28,9 @@ namespace ManageATenancyAPI.UseCases.Meeting.SignOffMeeting
             {
                 MeetingId = claims.MeetingId,
                 OfficerName = claims.OfficerName,
-                TraId = claims.TraId
+                TraId = claims.TraId,
+                IsMeetingSignedOff = outputModel.IsSignedOff
+                
             };
 
             var sendTraConfirmationEmailOutputModel = await _sendTraConfirmationEmailGateway.SendTraConfirmationEmailAsync(inputModel, cancellationToken).ConfigureAwait(false);

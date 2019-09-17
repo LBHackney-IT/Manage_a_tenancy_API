@@ -336,7 +336,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                     {
                                         IssueId = x.item.IssueId?.ToString()
                                     },
-                                    Notes = string.Join("\r\n\r\n\r\n, ", x.annotations)
+                                    Notes = string.Join(Environment.NewLine, x.annotations)
                                 }).ToList();
 
                         return list;
@@ -455,7 +455,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             issueUpdateObject.Add("hackney_servicearea", request.ServiceAreaId);
             issueUpdateObject.Add("hackney_process_stage", (int)request.IssueStage);
 
-            if (request.ProjectedCompletionDate != null)
+            if (request.ProjectedCompletionDate.HasValue)
             {
                 issueUpdateObject.Add("hackney_completiondate", request.ProjectedCompletionDate);
             }
@@ -464,12 +464,12 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
 
             if (request.ProjectedCompletionDate.HasValue && (int)request.IssueStage == 0)
             {
-                completionDateText = $"Not yet completed by service area. Projected completion date: {request.ProjectedCompletionDate.Value.ToString("dddd dd MMMM yyyy")}\r\n\r\n";
+                completionDateText = $"Not yet completed by service area. Projected completion date: {request.ProjectedCompletionDate.Value.ToString("dddd dd MMMM yyyy")}" + Environment.NewLine;
             }
             else
-                completionDateText = $"Completed by service area \r\n\r\n";
+                completionDateText = $"Completed by service area " + Environment.NewLine;
 
-            var noteText = $"Response from: {request.ServiceAreaName}\r\n\r\n{request.ResponseText}\r\n\r\n{completionDateText} Responder: {request.ResponderName} on {DateTime.Now}";
+            var noteText = $"Response from: {request.ServiceAreaName}" + Environment.NewLine + request.ResponseText + Environment.NewLine + completionDateText + $"Responder: {request.ResponderName} on {DateTime.Now}";
 
             var annotationId = await CreateAnnotationAsync(noteText, request.IssueIncidentId.ToString(), request.AnnotationSubjectId.ToString());
 
@@ -504,7 +504,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 { "hackney_process_stage", null }
             };
 
-            var noteText = $"Response rejected\r\n\r\n{request.ResponseText}Responder: {request.ResponderName} on {DateTime.Now}";
+            var noteText = $"Response rejected {Environment.NewLine + request.ResponseText}Responder: {request.ResponderName} on {DateTime.Now}";
 
             var annotationId = await CreateAnnotationAsync(noteText, request.IssueIncidentId.ToString(), request.AnnotationSubjectId.ToString());
 
@@ -610,13 +610,13 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 var outputModel = new GetEtraMeetingOutputModel
                 {
                     Id = id,
-                    Name = name,
+                    MeetingName = name,
                     MeetingAttendance = attendees,
                     CreatedOn = createdOn,
                     SignOff = signOff,
                     IsSignedOff = signOff != null ? true : false,
-                   
-                    
+
+
                 };
 
                 return outputModel;
@@ -832,28 +832,28 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             string interactionQuery = HousingAPIQueryBuilder.updateInteractionQuery(closeETRAMeetingRequests.InteractionId.ToString());
 
             HttpResponseMessage updateResponse = new HttpResponseMessage();
-            
+
             _logger.LogInformation($"Update Tenancy Management Interaction");
             _logger.LogInformation($"Update description which is the notes that is sent from the UI ,Name of the Asset officer who has updated and the current time stamp");
             var token = _crmAccessToken.getCRM365AccessToken().Result;
             _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
 
-         
-                JObject tenancyInteraction = new JObject();
-                _logger.LogError($"StateCodeInactive {Constants.StateCodeInactive}");
-                _logger.LogError($"StatusCodeInActive {Constants.StatusCodeInActive}");
 
-                tenancyInteraction.Add("statuscode", Constants.StatusCodeInActive);
-                tenancyInteraction.Add("statecode", Constants.StateCodeInactive);
-                tenancyInteraction.Add("hackney_process_stage", (int)closeETRAMeetingRequests.MeetingStage);
-                
+            JObject tenancyInteraction = new JObject();
+            _logger.LogError($"StateCodeInactive {Constants.StateCodeInactive}");
+            _logger.LogError($"StatusCodeInActive {Constants.StatusCodeInActive}");
 
-                tenancyInteraction["hackney_estateofficer_updatedbyid@odata.bind"] = "/hackney_estateofficers(" + closeETRAMeetingRequests.UpdatedByOfficerId + ")";
-                tenancyInteraction.Add("modifiedon", DateTime.Now);
+            tenancyInteraction.Add("statuscode", Constants.StatusCodeInActive);
+            tenancyInteraction.Add("statecode", Constants.StateCodeInactive);
+            tenancyInteraction.Add("hackney_process_stage", (int)closeETRAMeetingRequests.MeetingStage);
 
-                bool returnResponse = await _ManageATenancyAPI.UpdateObject(_client, interactionQuery, tenancyInteraction);
 
-                return returnResponse;
+            tenancyInteraction["hackney_estateofficer_updatedbyid@odata.bind"] = "/hackney_estateofficers(" + closeETRAMeetingRequests.UpdatedByOfficerId + ")";
+            tenancyInteraction.Add("modifiedon", DateTime.Now);
+
+            bool returnResponse = await _ManageATenancyAPI.UpdateObject(_client, interactionQuery, tenancyInteraction);
+
+            return returnResponse;
 
         }
         #region Private methods

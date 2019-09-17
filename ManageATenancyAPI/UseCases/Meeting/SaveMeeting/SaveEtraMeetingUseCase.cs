@@ -47,7 +47,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting
             };
 
             var outputModel = new SaveEtraMeetingOutputModel();
-            outputModel.Name = request.MeetingName;
+            outputModel.MeetingName = request.MeetingName;
 
             var response = await _saveEtraMeetingGateway.CreateEtraMeeting(etraMeeting, claims, cancellationToken).ConfigureAwait(false);
 

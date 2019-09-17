@@ -120,7 +120,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.GetEtraMeeting
             //assert
 
             getMeetingResponseOutputModel.Id.Should().Be(outputModel.Id);
-            getMeetingResponseOutputModel.Name.Should().Be(outputModel.Name);
+            getMeetingResponseOutputModel.MeetingName.Should().Be(outputModel.MeetingName);
             
             getMeetingResponseOutputModel.MeetingAttendance.Should().BeEquivalentTo(outputModel.MeetingAttendance);
             getMeetingResponseOutputModel.Issues.Should().BeEquivalentTo(outputModel.Issues);

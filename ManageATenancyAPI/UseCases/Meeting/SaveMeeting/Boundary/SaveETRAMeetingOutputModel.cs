@@ -17,7 +17,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
         /// Refers to ServiceRequest Id
         /// </summary>
         public Guid IncidentId { get; set; }
-        public string Name { get; set; }
+        public string MeetingName { get; set; }
 
         public IList<MeetingIssueOutputModel> Issues { get; set; }
         public MeetingAttendees MeetingAttendance { get; set; }

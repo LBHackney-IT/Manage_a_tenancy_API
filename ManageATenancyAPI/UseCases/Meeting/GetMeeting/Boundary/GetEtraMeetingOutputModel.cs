@@ -15,7 +15,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.GetMeeting
         /// </summary>
         public Guid Id { get; set; }
 
-        public string Name { get; set; }
+        public string MeetingName { get; set; }
 
         public IList<MeetingIssueOutputModel> Issues { get; set; }
         public MeetingAttendees MeetingAttendance { get; set; }

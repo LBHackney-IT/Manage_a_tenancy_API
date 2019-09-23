@@ -90,7 +90,7 @@ namespace ManageATenancyAPI
             services.AddDbContext<UHWWarehouseDbContext>(options =>
                 options.UseSqlServer(uhCon));
             
-            var tenancyConnection = Configuration.GetSection("ConnectionStrings").GetValue<string>("TenancyDBConnection");
+            var tenancyConnection = Configuration.GetSection("ConnectionStrings").GetValue<string>("ManageATenancyDatabase");
             services.AddDbContext<TenancyContext>(options => 
                 options.UseSqlServer(tenancyConnection));
             

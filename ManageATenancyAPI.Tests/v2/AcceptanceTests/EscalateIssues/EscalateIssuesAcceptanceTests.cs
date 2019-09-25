@@ -100,7 +100,7 @@ namespace ManageATenancyAPI.Tests.v2.AcceptanceTests.EscalateIssues
             //assert
             var outputModel = issues.GetOKResponseType<EscalateIssuesOutputModel>();
             outputModel.Should().NotBeNull();
-            outputModel.IssuesToEscalate.Should().NotBeNullOrEmpty();
+            outputModel.SuccessfullyEscalatedIssues.Should().NotBeNullOrEmpty();
         }
     }
 }

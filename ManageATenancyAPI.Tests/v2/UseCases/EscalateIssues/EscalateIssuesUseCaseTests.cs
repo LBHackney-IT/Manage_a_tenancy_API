@@ -63,7 +63,7 @@ namespace ManageATenancyAPI.Tests.v2.UseCases.EscalateIssues
             //act
             var outputModel = await _classUnderTest.ExecuteAsync(CancellationToken.None).ConfigureAwait(false);
             //assert
-            outputModel.IssuesToEscalate.Should().BeNull();
+            outputModel.SuccessfullyEscalatedIssues.Should().BeNull();
         }
 
         [Fact]

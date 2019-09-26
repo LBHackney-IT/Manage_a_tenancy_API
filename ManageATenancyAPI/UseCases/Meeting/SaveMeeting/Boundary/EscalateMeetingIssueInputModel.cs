@@ -15,5 +15,11 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
         public bool ServiceAreaManagerEmailSent { get; set; }
         public bool AreaHousingManagerEmailSent { get; set; }
         public DateTime? DueDate { get; set; }
+
+        public int TraId { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public string TicketNumber { get; set; }
+        public string HousingOfficerName { get; set; }
+        public string IssueName { get; set; }
     }
 }

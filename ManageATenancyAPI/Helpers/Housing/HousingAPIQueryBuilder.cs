@@ -1060,7 +1060,7 @@ namespace ManageATenancyAPI.Helpers.Housing
                     <attribute name='hackney_servicearea' />
                     <attribute name='hackney_parent_interactionid' />
                     <attribute name='hackney_estateofficerpatchid' />
-                    <attribute name='overriddencreatedon' />
+                    <attribute name='createdon' />
                     <attribute name='hackney_enquirysubjectname' />
                     <attribute name='hackney_natureofenquiryname' />
                     <attribute name='hackney_process_stage' />
@@ -1083,6 +1083,14 @@ namespace ManageATenancyAPI.Helpers.Housing
                     <attribute name='hackney_name' />
                     <attribute name='modifiedby' />
                     <attribute name='hackney_issuelocation' />
+                    <attribute name='hackney_traid' />
+                   <link-entity name='hackney_estateofficerpatch' from='hackney_estateofficerpatchid' to='hackney_estateofficerpatchid' link-type='outer'>
+                      <link-entity name='hackney_estateofficer' from='hackney_estateofficerid' to='hackney_patchid' link-type='outer'>
+                        <attribute name='hackney_name' alias='OfficerFullName' />
+                        <attribute name='hackney_lastname' alias='OfficerLastName' />
+                        <attribute name='hackney_firstname' alias='OfficerFirstName' />
+                      </link-entity>
+                    </link-entity>
                     <filter type='and' >
                         <condition attribute='hackney_natureofenquiry' operator='eq' value='28' />
                         <condition attribute='hackney_enquirysubject' operator='neq' value='100000219' />

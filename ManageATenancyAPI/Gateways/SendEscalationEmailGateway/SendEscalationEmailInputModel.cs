@@ -16,7 +16,6 @@ namespace ManageATenancyAPI.Gateways.SendEscalationEmailGateway
         public string ResponseLink { get; set; }
         public DateTime DateResponseWasDue { get; set; }
 
-        public string HousingOfficerName { get; set; }
         public string NHOAddress { get; set; }
     }
 }

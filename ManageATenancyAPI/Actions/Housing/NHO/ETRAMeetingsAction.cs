@@ -765,15 +765,21 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                         {
                             Id = dataresponse["hackney_tenancymanagementinteractionsid"],
                             Location = dataresponse["hackney_issuelocation"],
-                            IssueId = dataresponse["hackney_enquirysubject"],
+                            IssueId= dataresponse["hackney_enquirysubject"],
+                            IssueName = dataresponse["hackney_enquirysubject@OData.Community.Display.V1.FormattedValue"],
                             ServiceRequestId = dataresponse["_hackney_incidentid_value"],
                             AreaId = dataresponse["hackney_areaname"],
-                            DueDate = dataresponse["hackney_issuedeadlinedate"]
+                            DueDate = dataresponse["hackney_issuedeadlinedate"],
+                            CreatedOn = dataresponse["createdon"],
+                            TraId = dataresponse["hackney_traid"],
+                            HousingOfficerName = dataresponse["OfficerFirstName"] + " " + dataresponse["OfficerLastName"],
+                            TicketNumber= dataresponse["hackney_name"] 
                         } into grp
                         select new
                         {
                             item = grp.Key,
-                            annotations = grp.ToList().Select(si => si["annotation2_x002e_notetext"])
+                            annotations = grp.ToList().Select(si => si["annotation4_x002e_notetext"])
+                           
 
 
                         }).ToList().Select(x =>
@@ -788,11 +794,16 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                             {
                                 IssueId = x.item.IssueId?.ToString()
                             },
-                            Notes = string.Join(", ", x.annotations),
+                            Notes = string.Join(Environment.NewLine, x.annotations),
                             // Notes = string.Join(",", grp.ToList().ForEac = x["annotation2_x002e_notetext"]?.ToString()),
                             AreaId = x.item.AreaId?.ToString(),
                             ServiceRequestId = x.item.ServiceRequestId.ToObject<Guid>(),
-                            DueDate = x.item.DueDate?.ToObject<DateTime>()
+                            DueDate = x.item.DueDate?.ToObject<DateTime>().Date,
+                            TraId=int.Parse(x.item.TraId.ToString()),
+                            HousingOfficerName=x.item.HousingOfficerName,
+                            CreatedOn=x.item.CreatedOn?.ToObject<DateTime>().Date,
+                            TicketNumber=x.item.TicketNumber?.ToString(),
+                            IssueName = x.item.IssueName?.ToString()
                         }).ToList();
 
                 var outputModel = new GetAllEtraIssuesThatNeedEscalatingOutputModel

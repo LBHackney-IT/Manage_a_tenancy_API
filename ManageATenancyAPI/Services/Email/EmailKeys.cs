@@ -23,6 +23,7 @@
             public static string ResponseLine => "response_link";
             public static string HousingOfficerName => "housing_officer_name";
             public static string NHOAddress => "nho_address";
+             public static string Subject => "subject";
         }
     }
 }

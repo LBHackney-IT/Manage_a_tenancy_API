@@ -50,13 +50,13 @@ namespace ManageATenancyAPI.Gateways.SendEscalationEmailGateway
 
             if (!string.IsNullOrEmpty(inputModel?.ServiceArea.ServiceAreaOfficerEmail))
             {
-                await _notificationClient.SendEmailAsync(inputModel?.ServiceArea.ServiceAreaOfficerEmail, _config?.Value.EscalationTemplateId, personalization).ConfigureAwait(false);
+                await _notificationClient.SendEmailAsync(inputModel?.ServiceArea.ServiceAreaOfficerEmail, _config?.Value.AHMEscalationTemplate, personalization).ConfigureAwait(false);
                 outputModel.SentToServiceAreaManager = true;
             }
 
             if (!string.IsNullOrEmpty(inputModel?.AreaManagerDetails.Email))
             {
-                await _notificationClient.SendEmailAsync(inputModel?.AreaManagerDetails.Email, _config?.Value.EscalationTemplateId, personalization).ConfigureAwait(false);
+                await _notificationClient.SendEmailAsync(inputModel?.AreaManagerDetails.Email, _config?.Value.AHMEscalationTemplate, personalization).ConfigureAwait(false);
                 outputModel.SentToServiceAreaManager = true;
             }
 

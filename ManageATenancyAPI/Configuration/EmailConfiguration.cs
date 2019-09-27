@@ -7,5 +7,7 @@
         public string TemplateId { get; set; }
         public string EscalationTemplateId { get; set; }
         public string ConfirmationTemplate { get; set; }
+        public string AHMEscalationTemplate { get; set; }
+        
     }
 }

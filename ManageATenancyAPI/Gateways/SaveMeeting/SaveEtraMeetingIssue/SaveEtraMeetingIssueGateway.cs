@@ -23,7 +23,7 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue
             var etraIssue = new ETRAIssue
             {
                 estateOfficerId = manageATenancyClaims.OfficerId.ToString(),
-                subject = "c1f72d01-28dc-e711-8115-70106faa6a11",
+              //  subject = "c1f72d01-28dc-e711-8115-70106faa6a11",
                 estateOfficerName = manageATenancyClaims.FullName,
 
                 officerPatchId = manageATenancyClaims.OfficerPatchId.ToString(),
@@ -38,7 +38,8 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingIssue
                     //Generic Subject Id from Dynamics 365 list of subjects..............
                     //In the Subjects Custom Entities... table
                     //Which relates to Tenancy Management interactions... I don't know..
-                    Subject = "c1f72d01-28dc-e711-8115-70106faa6a11",
+                    //Subject = "c1f72d01-28dc-e711-8115-70106faa6a11",
+                 
                     CreatedBy = manageATenancyClaims.EstateOfficerLoginId.ToString()
                 },
 

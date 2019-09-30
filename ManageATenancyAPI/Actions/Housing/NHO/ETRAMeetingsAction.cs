@@ -65,9 +65,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             //create the service request / incident
             if (meetingInfo.ServiceRequest != null)
             {
-                if (!string.IsNullOrEmpty(meetingInfo.ServiceRequest.Subject))
+                if (!string.IsNullOrEmpty(_configuration.SubjectId))
                 {
-                    sr["subjectid@odata.bind"] = "/subjects(" + meetingInfo.ServiceRequest.Subject + ")";
+                    sr["subjectid@odata.bind"] = "/subjects(" + _configuration.SubjectId + ")";
                 }
                 //change this with dynamic account value 
                 sr["customerid_account@odata.bind"] = "/accounts(" + _configuration.ETRAAccount + ")";
@@ -189,9 +189,9 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             {
                 tmiJObject.Add("hackney_parent_interactionid@odata.bind", " /hackney_tenancymanagementinteractionses(" + meetingInfo.parentInteractionId + ")");
             }
-            if (Utils.NullToString(meetingInfo.subject) != "")
+            if (Utils.NullToString(_configuration.SubjectId) != "")
             {
-                tmiJObject["hackney_subjectId@odata.bind"] = "/subjects(" + meetingInfo.subject + ")";
+                tmiJObject["hackney_subjectId@odata.bind"] = "/subjects(" + _configuration.SubjectId + ")";
             }
             if (Utils.NullToString(meetingInfo.estateOfficerId) != "")
             {

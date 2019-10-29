@@ -415,14 +415,19 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                     var subjId = issueToBeUpdated.AnnotationSubjectId.HasValue
                         ? issueToBeUpdated.AnnotationSubjectId.Value.ToString()
                         : null;
-
-                    var annotationid = await CreateAnnotation(issueToBeUpdated.note, issueToBeUpdated.estateOfficerName,
-                        issueToBeUpdated.issueIncidentId.ToString(), subjId);
+                    if (!string.IsNullOrEmpty(issueToBeUpdated.note))
+                    {
+                        var annotationid = await CreateAnnotation(issueToBeUpdated.note, issueToBeUpdated.estateOfficerName,
+                            issueToBeUpdated.issueIncidentId.ToString(), subjId);
+                    }
                 }
                 else
                 {
-                    await UpdateAnnotation(issueToBeUpdated.note, issueToBeUpdated.estateOfficerName,
+                    if (!string.IsNullOrEmpty(issueToBeUpdated.note))
+                    {
+                        await UpdateAnnotation(issueToBeUpdated.note, issueToBeUpdated.estateOfficerName,
                         issueToBeUpdated.annotationId.ToString());
+                    }
                 }
 
                 //updated interaction record

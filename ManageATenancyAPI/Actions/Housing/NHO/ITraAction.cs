@@ -9,9 +9,14 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
     public interface ITraAction
     {
         Task<bool> Exists(string traName);
+        Task<bool> Exists(int traid);
+
+        Task<TRA> GetAsync(int traId);
         Task<TRA> Create(string name, string notes, string email, int areaId, Guid patchId);
 
         void UpdateNotes(int traId, string notes);
         void UpdateEmail(int traId, string email);
+        Task<TRA> Find(string traName);
+
     }
 }

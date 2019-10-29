@@ -17,6 +17,7 @@ using ManageATenancyAPI.Repository;
 using ManageATenancyAPI.Services;
 using ManageATenancyAPI.Services.Housing;
 using ManageATenancyAPI.Validators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MyPropertyAccountAPI.Configuration;
@@ -25,6 +26,8 @@ using Newtonsoft.Json.Linq;
 
 namespace ManageATenancyAPI.Controllers.Housing.NHO
 {
+    
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/[controller]")]
     public class TRAController : Controller
@@ -102,29 +105,39 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         public async Task<IActionResult> UpdateTra(int traId, [FromBody] TraRequest tra)
         {
 
-            if (await _traAction.Exists(tra.Name))
+            if (await _traAction.Exists(traId))
             {
-                if (_traEstateAction.AreUnusedEstates(tra.EsatateRefs))
+                if (tra.EstateRefs.Count > 0 && _traEstateAction.AreUnusedEstates(tra.EstateRefs))
                 {
-                    var persistedTra = await _traAction.Create(tra.Name, tra.Notes, tra.Email, tra.AreaId, tra.PatchId);
+                    var persistedTra = await _traAction.Find(tra.Name);
 
-                    var estates = await _estateAction.GetEstates(tra.EsatateRefs);
+                    var estates = await _estateAction.GetEstates(tra.EstateRefs);
                     foreach (var estate in estates)
                     {
                         _traEstateAction.AddEstateToTra(persistedTra.TRAId, estate.EstateId, estate.EstateName);
                     }
                 }
-                else
+
+                if (!string.IsNullOrEmpty(tra.Email))
                 {
-                    return BadRequest("Request contains Estate Ids that are already used.");
+                    _traAction.UpdateEmail(traId, tra.Email);
                 }
+
+                if (!string.IsNullOrEmpty(tra.Notes))
+                {
+                    _traAction.UpdateNotes(traId, tra.Notes);
+                }
+
+                var traUpdated = _traAction.GetAsync(traId);
+
+                return Ok(HackneyResult<TRA>.Create(traUpdated));
             }
             else
             {
-                return BadRequest("This Tra already exists.");
+                return NotFound();
             }
-            return Ok();
         }
+
         [HttpPost]
         [Route("")]
         public async Task<IActionResult> CreateTra([FromBody] TraRequest tra)
@@ -132,11 +145,11 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
 
             if (await _traAction.Exists(tra.Name))
             {
-                if (_traEstateAction.AreUnusedEstates(tra.EsatateRefs))
+                if (_traEstateAction.AreUnusedEstates(tra.EstateRefs))
                 {
                     var persistedTra = await _traAction.Create(tra.Name, tra.Notes, tra.Email, tra.AreaId, tra.PatchId);
 
-                    var estates = await _estateAction.GetEstates(tra.EsatateRefs);
+                    var estates = await _estateAction.GetEstates(tra.EstateRefs);
                     foreach (var estate in estates)
                     {
                         _traEstateAction.AddEstateToTra(persistedTra.TRAId, estate.EstateId, estate.EstateName);
@@ -159,7 +172,7 @@ namespace ManageATenancyAPI.Controllers.Housing.NHO
         public async Task<HackneyResult<bool>> AddRepresentative(int traId, string personName, string role)
         {
             _traRoleAssignmentAction.AddRepresentative(traId, personName, role);
-                  return HackneyResult<bool>.Create(true);
+            return HackneyResult<bool>.Create(true);
         }
 
         [HttpDelete]

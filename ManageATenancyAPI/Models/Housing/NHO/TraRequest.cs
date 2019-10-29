@@ -7,12 +7,17 @@ namespace ManageATenancyAPI.Models.Housing.NHO
 {
     public class TraRequest
     {
+        public TraRequest()
+        {
+
+            EstateRefs = new List<string>();
+        }
         public string Name { get; set; }
         public string Notes { get; set; }
         public string Email { get; set; }
         public int AreaId { get; set; }
         public Guid PatchId { get; set; }
-        public List<string> EsatateRefs { get; set; }
+        public List<string> EstateRefs { get; set; }
 
     }
 }

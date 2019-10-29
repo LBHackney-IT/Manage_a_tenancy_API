@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hackney.ServiceLocator", "H
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManageATenancyAPI.Tests", "ManageATenancyAPI.Tests\ManageATenancyAPI.Tests.csproj", "{E630BAF0-4F89-4C36-B96D-457FC505A8CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManageATenancyAPI.Database", "ManageATenancyAPI.Database\ManageATenancyAPI.Database.csproj", "{4D2816A0-0196-4599-8E19-E260A06D1BDB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{E630BAF0-4F89-4C36-B96D-457FC505A8CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E630BAF0-4F89-4C36-B96D-457FC505A8CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E630BAF0-4F89-4C36-B96D-457FC505A8CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D2816A0-0196-4599-8E19-E260A06D1BDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D2816A0-0196-4599-8E19-E260A06D1BDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D2816A0-0196-4599-8E19-E260A06D1BDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D2816A0-0196-4599-8E19-E260A06D1BDB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

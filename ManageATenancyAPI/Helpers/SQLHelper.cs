@@ -142,7 +142,7 @@ namespace LBH.Utils
         #region ExecuteNonQuery
 
         /// <summary>
-        /// Execute a SqlCommand (that returns no resultset and takes no parameters) against the database specified in 
+        /// ExecuteAsync a SqlCommand (that returns no resultset and takes no parameters) against the database specified in 
         /// the connection string. 
         /// </summary>
         /// <remarks>
@@ -160,7 +160,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns no resultset) against the database specified in the connection string 
+        /// ExecuteAsync a SqlCommand (that returns no resultset) against the database specified in the connection string 
         /// using the provided parameters.
         /// </summary>
         /// <remarks>
@@ -185,7 +185,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a stored procedure via a SqlCommand (that returns no resultset) against the database specified in 
+        /// ExecuteAsync a stored procedure via a SqlCommand (that returns no resultset) against the database specified in 
         /// the connection string using the provided parameter values.  This method will query the database to discover the parameters for the 
         /// stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
         /// </summary>
@@ -221,7 +221,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns no resultset and takes no parameters) against the provided SqlConnection. 
+        /// ExecuteAsync a SqlCommand (that returns no resultset and takes no parameters) against the provided SqlConnection. 
         /// </summary>
         /// <remarks>
         /// e.g.:  
@@ -238,7 +238,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns no resultset) against the specified SqlConnection 
+        /// ExecuteAsync a SqlCommand (that returns no resultset) against the specified SqlConnection 
         /// using the provided parameters.
         /// </summary>
         /// <remarks>
@@ -265,7 +265,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a stored procedure via a SqlCommand (that returns no resultset) against the specified SqlConnection 
+        /// ExecuteAsync a stored procedure via a SqlCommand (that returns no resultset) against the specified SqlConnection 
         /// using the provided parameter values.  This method will query the database to discover the parameters for the 
         /// stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
         /// </summary>
@@ -301,7 +301,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns no resultset and takes no parameters) against the provided SqlTransaction. 
+        /// ExecuteAsync a SqlCommand (that returns no resultset and takes no parameters) against the provided SqlTransaction. 
         /// </summary>
         /// <remarks>
         /// e.g.:  
@@ -318,7 +318,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns no resultset) against the specified SqlTransaction
+        /// ExecuteAsync a SqlCommand (that returns no resultset) against the specified SqlTransaction
         /// using the provided parameters.
         /// </summary>
         /// <remarks>
@@ -345,7 +345,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a stored procedure via a SqlCommand (that returns no resultset) against the specified 
+        /// ExecuteAsync a stored procedure via a SqlCommand (that returns no resultset) against the specified 
         /// SqlTransaction using the provided parameter values.  This method will query the database to discover the parameters for the 
         /// stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
         /// </summary>
@@ -386,7 +386,7 @@ namespace LBH.Utils
         #region ExecuteDataSet
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset and takes no parameters) against the database specified in 
+        /// ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the database specified in 
         /// the connection string. 
         /// </summary>
         /// <remarks>
@@ -404,7 +404,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset) against the database specified in the connection string 
+        /// ExecuteAsync a SqlCommand (that returns a resultset) against the database specified in the connection string 
         /// using the provided parameters.
         /// </summary>
         /// <remarks>
@@ -431,7 +431,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a stored procedure via a SqlCommand (that returns a resultset) against the database specified in 
+        /// ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the database specified in 
         /// the connection string using the provided parameter values.  This method will query the database to discover the parameters for the 
         /// stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
         /// </summary>
@@ -467,7 +467,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlConnection. 
+        /// ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlConnection. 
         /// </summary>
         /// <remarks>
         /// e.g.:  
@@ -484,7 +484,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset) against the specified SqlConnection 
+        /// ExecuteAsync a SqlCommand (that returns a resultset) against the specified SqlConnection 
         /// using the provided parameters.
         /// </summary>
         /// <remarks>
@@ -517,7 +517,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a stored procedure via a SqlCommand (that returns a resultset) against the specified SqlConnection 
+        /// ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the specified SqlConnection 
         /// using the provided parameter values.  This method will query the database to discover the parameters for the 
         /// stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
         /// </summary>
@@ -553,7 +553,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlTransaction. 
+        /// ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlTransaction. 
         /// </summary>
         /// <remarks>
         /// e.g.:  
@@ -570,7 +570,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset) against the specified SqlTransaction
+        /// ExecuteAsync a SqlCommand (that returns a resultset) against the specified SqlTransaction
         /// using the provided parameters.
         /// </summary>
         /// <remarks>
@@ -603,7 +603,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a stored procedure via a SqlCommand (that returns a resultset) against the specified 
+        /// ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the specified 
         /// SqlTransaction using the provided parameter values.  This method will query the database to discover the parameters for the 
         /// stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
         /// </summary>
@@ -695,7 +695,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset and takes no parameters) against the database specified in 
+        /// ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the database specified in 
         /// the connection string. 
         /// </summary>
         /// <remarks>
@@ -713,7 +713,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset) against the database specified in the connection string 
+        /// ExecuteAsync a SqlCommand (that returns a resultset) against the database specified in the connection string 
         /// using the provided parameters.
         /// </summary>
         /// <remarks>
@@ -745,7 +745,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a stored procedure via a SqlCommand (that returns a resultset) against the database specified in 
+        /// ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the database specified in 
         /// the connection string using the provided parameter values.  This method will query the database to discover the parameters for the 
         /// stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
         /// </summary>
@@ -781,7 +781,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlConnection. 
+        /// ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlConnection. 
         /// </summary>
         /// <remarks>
         /// e.g.:  
@@ -798,7 +798,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset) against the specified SqlConnection 
+        /// ExecuteAsync a SqlCommand (that returns a resultset) against the specified SqlConnection 
         /// using the provided parameters.
         /// </summary>
         /// <remarks>
@@ -817,7 +817,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a stored procedure via a SqlCommand (that returns a resultset) against the specified SqlConnection 
+        /// ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the specified SqlConnection 
         /// using the provided parameter values.  This method will query the database to discover the parameters for the 
         /// stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
         /// </summary>
@@ -850,7 +850,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlTransaction. 
+        /// ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlTransaction. 
         /// </summary>
         /// <remarks>
         /// e.g.:  
@@ -867,7 +867,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset) against the specified SqlTransaction
+        /// ExecuteAsync a SqlCommand (that returns a resultset) against the specified SqlTransaction
         /// using the provided parameters.
         /// </summary>
         /// <remarks>
@@ -886,7 +886,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a stored procedure via a SqlCommand (that returns a resultset) against the specified
+        /// ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the specified
         /// SqlTransaction using the provided parameter values.  This method will query the database to discover the parameters for the 
         /// stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
         /// </summary>
@@ -923,7 +923,7 @@ namespace LBH.Utils
         #region ExecuteScalar
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a 1x1 resultset and takes no parameters) against the database specified in 
+        /// ExecuteAsync a SqlCommand (that returns a 1x1 resultset and takes no parameters) against the database specified in 
         /// the connection string. 
         /// </summary>
         /// <remarks>
@@ -941,7 +941,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a 1x1 resultset) against the database specified in the connection string 
+        /// ExecuteAsync a SqlCommand (that returns a 1x1 resultset) against the database specified in the connection string 
         /// using the provided parameters.
         /// </summary>
         /// <remarks>
@@ -966,7 +966,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a stored procedure via a SqlCommand (that returns a 1x1 resultset) against the database specified in 
+        /// ExecuteAsync a stored procedure via a SqlCommand (that returns a 1x1 resultset) against the database specified in 
         /// the connection string using the provided parameter values.  This method will query the database to discover the parameters for the 
         /// stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
         /// </summary>
@@ -1002,7 +1002,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a 1x1 resultset and takes no parameters) against the provided SqlConnection. 
+        /// ExecuteAsync a SqlCommand (that returns a 1x1 resultset and takes no parameters) against the provided SqlConnection. 
         /// </summary>
         /// <remarks>
         /// e.g.:  
@@ -1019,7 +1019,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a 1x1 resultset) against the specified SqlConnection 
+        /// ExecuteAsync a SqlCommand (that returns a 1x1 resultset) against the specified SqlConnection 
         /// using the provided parameters.
         /// </summary>
         /// <remarks>
@@ -1047,7 +1047,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a stored procedure via a SqlCommand (that returns a 1x1 resultset) against the specified SqlConnection 
+        /// ExecuteAsync a stored procedure via a SqlCommand (that returns a 1x1 resultset) against the specified SqlConnection 
         /// using the provided parameter values.  This method will query the database to discover the parameters for the 
         /// stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
         /// </summary>
@@ -1083,7 +1083,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a 1x1 resultset and takes no parameters) against the provided SqlTransaction. 
+        /// ExecuteAsync a SqlCommand (that returns a 1x1 resultset and takes no parameters) against the provided SqlTransaction. 
         /// </summary>
         /// <remarks>
         /// e.g.:  
@@ -1100,7 +1100,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a 1x1 resultset) against the specified SqlTransaction
+        /// ExecuteAsync a SqlCommand (that returns a 1x1 resultset) against the specified SqlTransaction
         /// using the provided parameters.
         /// </summary>
         /// <remarks>
@@ -1127,7 +1127,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a stored procedure via a SqlCommand (that returns a 1x1 resultset) against the specified
+        /// ExecuteAsync a stored procedure via a SqlCommand (that returns a 1x1 resultset) against the specified
         /// SqlTransaction using the provided parameter values.  This method will query the database to discover the parameters for the 
         /// stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
         /// </summary>
@@ -1167,7 +1167,7 @@ namespace LBH.Utils
         #region ExecuteXmlReader
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlConnection. 
+        /// ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlConnection. 
         /// </summary>
         /// <remarks>
         /// e.g.:  
@@ -1184,7 +1184,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset) against the specified SqlConnection 
+        /// ExecuteAsync a SqlCommand (that returns a resultset) against the specified SqlConnection 
         /// using the provided parameters.
         /// </summary>
         /// <remarks>
@@ -1212,7 +1212,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a stored procedure via a SqlCommand (that returns a resultset) against the specified SqlConnection 
+        /// ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the specified SqlConnection 
         /// using the provided parameter values.  This method will query the database to discover the parameters for the 
         /// stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
         /// </summary>
@@ -1248,7 +1248,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlTransaction. 
+        /// ExecuteAsync a SqlCommand (that returns a resultset and takes no parameters) against the provided SqlTransaction. 
         /// </summary>
         /// <remarks>
         /// e.g.:  
@@ -1265,7 +1265,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a SqlCommand (that returns a resultset) against the specified SqlTransaction
+        /// ExecuteAsync a SqlCommand (that returns a resultset) against the specified SqlTransaction
         /// using the provided parameters.
         /// </summary>
         /// <remarks>
@@ -1292,7 +1292,7 @@ namespace LBH.Utils
         }
 
         /// <summary>
-        /// Execute a stored procedure via a SqlCommand (that returns a resultset) against the specified 
+        /// ExecuteAsync a stored procedure via a SqlCommand (that returns a resultset) against the specified 
         /// SqlTransaction using the provided parameter values.  This method will query the database to discover the parameters for the 
         /// stored procedure (the first time each stored procedure is called), and assign the values based on parameter order.
         /// </summary>

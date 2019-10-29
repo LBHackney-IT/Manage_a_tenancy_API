@@ -701,14 +701,22 @@ namespace ManageATenancyAPI.Tests.Integration
             json.Append("\"123\",");
             json.Append("\"contactEmailAddress\":");
             json.Append("\"test@test.com\",");
+            json.Append("\"contactCautionaryAlert\":");
+            json.Append("false,");
+            json.Append("\"contactPropertyCautionaryAlert\":");
+            json.Append("false,");
             json.Append("\"contactLarn\":");
             json.Append("\"LARN834210\",");
             json.Append("\"contactUPRN\":");
             json.Append("null,");
             json.Append("\"householdID\":");
             json.Append("null,");
+            json.Append("\"accountCreatedOn\":");
+            json.Append("null,");
+            json.Append("\"parentInteractionId\":");
+            json.Append("parentInteractionId01,");
             json.Append("\"AnnotationList\":");
-            json.Append("["); json.Append("{");
+            json.Append("["); json.Append("{"); 
 
             json.Append("\"noteText\":"); json.Append("\"Testing closure  at 21/12/2017 13:37:18 by  Test dev\",");
             json.Append("\"annotationId\":"); json.Append("\"b6521622-54e6-e711-8111-7010bbbbbbbb\",");
@@ -1419,7 +1427,7 @@ namespace ManageATenancyAPI.Tests.Integration
         }
         #endregion
 
-        #region Get Contact Cautionary Alerts
+        #region GetAsync Contact Cautionary Alerts
 
         [Fact]
         public async Task return_a_200_get_cautionary_alerts_result()
@@ -1733,7 +1741,7 @@ namespace ManageATenancyAPI.Tests.Integration
         }
         #endregion 
 
-        #region Get all unassigned officers
+        #region GetAsync all unassigned officers
         [Fact]
         public async Task return_a_200_get_all_unassigned_officers_result()
         {

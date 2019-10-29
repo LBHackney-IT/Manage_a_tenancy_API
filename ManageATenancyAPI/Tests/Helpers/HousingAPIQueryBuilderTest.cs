@@ -403,7 +403,7 @@ namespace ManageATenancyAPI.Tests.Helpers
         {
             var searchquery = "89-90 TEST HOUSE MARE STREET HACKNEY LONDON HACKNEY E8 2LN".Split(' ').Select(searchpattern => searchpattern.Trim()).ToArray();            
             string queryTest = HousingAPIQueryBuilder.getCRMCitizenSearch(string.Empty, string.Empty, searchquery , null);
-            StringBuilder query = new StringBuilder();            
+            StringBuilder query = new StringBuilder();
             query.Append("api/data/v8.2/contacts?$select=contactid,firstname,lastname,fullname,jobtitle,birthdate,emailaddress1,telephone1,telephone2,telephone3,hackney_larn,hackney_uprn,address1_name,address1_line1,address1_line2,address1_line3, address1_city,address1_postalcode,hackney_cautionaryalert,hackney_propertycautionaryalert,hackney_responsible,hackney_hackneyhomesid&$filter=contains(address1_name, '" + searchquery[0] + "') and contains(address1_name, '" + searchquery[1] + "') and contains(address1_name, '" + searchquery[2] + "') and contains(address1_name, '" + searchquery[3] + "') and contains(address1_name, '" + searchquery[4] + "') and contains(address1_name, '" + searchquery[5] + "') and contains(address1_name, '" + searchquery[6] + "') and contains(address1_name, '" + searchquery[7] + "') and contains(address1_name, '" + searchquery[8] + "') and contains(address1_name, '" + searchquery[9] + "')");
             query.Append(
                 "&$expand=parentcustomerid_account($select=accountid,housing_present,housing_accounttype),hackney_household_contactId($select=hackney_householdid),&$orderby=address1_name asc,fullname desc");

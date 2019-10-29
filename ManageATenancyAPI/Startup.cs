@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,16 +8,26 @@ using NLog.Extensions.Logging;
 using NLog.Web;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using Hackney.InterfaceStubs;
-using Hackney.ServiceLocator;
 using ManageATenancyAPI.Configuration;
+using ManageATenancyAPI.Database;
 using ManageATenancyAPI.DbContext;
 using ManageATenancyAPI.Extension;
 using ManageATenancyAPI.Filters;
+using ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingSignOffMeeting;
 using ManageATenancyAPI.Tests;
-using Microsoft.IdentityModel.Protocols;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using MyPropertyAccountAPI.Configuration;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 
 namespace ManageATenancyAPI
@@ -34,29 +43,79 @@ namespace ManageATenancyAPI
 
         public IConfiguration Configuration { get; }
 
+        private static List<ApiVersionDescription> _apiVersions { get; set; }
+        //TODO update the below to the name of your API
+        private const string ApiName = "Manage A Tenancy";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
 
-         
-         //   var connString = Configuration.GetSection("ConnectionStrings");
+            services.AddSingleton<IApiVersionDescriptionProvider, DefaultApiVersionDescriptionProvider>();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.AddSecurityDefinition("Token",
+                    new ApiKeyScheme
+                    {
+                        In = "header",
+                        Description = "Your Hackney API Key",
+                        Name = "x-api-key",
+                        Type = "apiKey"
+                    });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Token", Enumerable.Empty<string>()}
+                });
+
+                c.SwaggerDoc("v1", new Info
+                {
+                    Title = $"{ApiName}-api 1.0",
+                    Version = "1.0",
+                    Description = $"{ApiName} version 1.0. Please check older versions for depreceted endpoints."
+                });
+
+                c.CustomSchemaIds(x => x.FullName);
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                if (File.Exists(xmlPath))
+                    c.IncludeXmlComments(xmlPath);
+            });
+
+
+            //   var connString = Configuration.GetSection("ConnectionStrings");
             var uhCon = Configuration.GetSection("ConnectionStrings").GetValue<string>("UHWReportingWarehouse");
             services.AddDbContext<UHWWarehouseDbContext>(options =>
                 options.UseSqlServer(uhCon));
+            
+            var tenancyConnection = Configuration.GetSection("ConnectionStrings").GetValue<string>("ManageATenancyDatabase");
+            services.AddDbContext<TenancyContext>(options => 
+                options.UseSqlServer(tenancyConnection));
+            
             services.Configure<URLConfiguration>(Configuration.GetSection("URLs"));
             services.Configure<ConnStringConfiguration>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<AppConfiguration>(Configuration.GetSection("appConfigurations"));
-            
-            services.AddMvc();
-            services.AddSwaggerGen(c =>
+            services.Configure<EmailConfiguration>(Configuration.GetSection("emailConfiguration"));
+            //S3 related
+            services.Configure<JpegPersistenceServiceConfiguration>(options =>
             {
-                c.SwaggerDoc("v1", new Info { Version = "v1", Title = "ManageATenancyAPI" });
-                // Set the comments path for the Swagger JSON and UI.
-                var basePath = AppContext.BaseDirectory;
-                string xmlPath = Path.Combine(basePath, "ManageATenancyAPI.xml");
-                c.IncludeXmlComments(xmlPath);
+                options.Extension = "jpg";
+                options.FileType = FileType.Jpeg;
+                options.ProjectName = "etra";
             });
+
+            services.Configure<JsonPersistanceServiceConfiguration>(options =>
+            {
+                options.Extension = "json";
+                options.FileType = FileType.Json;
+                options.ProjectName = "etra-service-area";
+            });
+
+            services.Configure<S3Configuration>(Configuration.GetSection("S3Configuration"));
+
+            services.AddMvc();
             services.AddCors(option =>
             {
                 option.AddPolicy("AllowAny", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
@@ -65,63 +124,71 @@ namespace ManageATenancyAPI
             services.AddMvc(options => options.Filters.Add(typeof(JsonExceptionFilter)));
 
 
-            LoadPlugins(services);
-        }
-        private void LoadPlugins(IServiceCollection services)
-        {
-            ICryptoMethods cryptoService = ServiceRegister<ICryptoMethods>.InstantiateService(
-                "Hackney.Plugin.Crypto.CryptoMethods",
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Plugins"),
-                InstancingType.Singleton);
-            cryptoService.EncryptionKey = Configuration.GetSection("appConfigurations").GetValue<string>("EncryptionKey");
+            services.AddScoped<ICryptoMethods, Hackney.Plugin.Crypto.CryptoMethods>();
+            services.AddScoped<AdminEnabledFilter>();
 
-            services.AddSingleton(typeof(ICryptoMethods), cryptoService);
-        }
+            services.AddAuthentication(x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    var secret = Configuration["HmacSecret"];
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = key,
+                        RequireExpirationTime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = false,
+                        ValidateLifetime = true,
+                        ValidateAudience = false
+                    };
+            });
 
+            services.AddAuthorization();
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            //add db connection string to logger
+            NLog.GlobalDiagnosticsContext.Set("ManageATenancyDatabase", Configuration.GetConnectionString("ManageATenancyDatabase"));
 
             loggerFactory.AddNLog();
             app.AddNLogWeb();
             env.ConfigureNLog("NLog.config");
-            app.UseCors("AllowAny");
-            app.UseMvc();
-            app.UseDeveloperExceptionPage();
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            app.UseCors(builder => { builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials(); });
+
+
+            if (env.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    string basePath = "/";
-                    c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {"Development"}");
-                });
+                app.UseDeveloperExceptionPage();
             }
             else
             {
-                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Test")
-                {
-                    app.UseSwagger(
-                        c => c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                            swaggerDoc.Host = "sandboxapi.hackney.gov.uk/manageatenancy")
-                    );
-                }
-                else
-                {
-                    app.UseSwagger(
-                        c => c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-                            swaggerDoc.Host = "api.hackney.gov.uk/manageatenancy")
-                    );
-                }
-
-                app.UseSwaggerUI(c =>
-                {
-                    string basePath = "/manageatenancy/";
-                    c.SwaggerEndpoint($"{basePath}swagger/v1/swagger.json", $"ManageATenancyAPI - {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
-
-                });
+                app.UseHsts();
             }
+
+            //GetAsync All ApiVersions,
+            var api = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
+            //GetAsync All ApiVersions,
+            _apiVersions = api.ApiVersionDescriptions.Select(s => s).ToList();
+            //Swagger ui to view the swagger.json file
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint($"v1/swagger.json", $"{ApiName}-api v1");
+            });
+
+            app.UseSwagger();
+
+
+            app.UseAuthentication();
+            app.UseMvc();
+
         }
     }
 }

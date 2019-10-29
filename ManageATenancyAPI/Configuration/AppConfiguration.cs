@@ -9,5 +9,10 @@ namespace ManageATenancyAPI.Configuration
     {
         public string CompletedClosureType { get; set; }
         public string MaxCISearchResults { get; set; }
+
+        public string EncryptionKey { get; set; }
+        public string ETRAAccount { get; set; }
+        public bool EnableAdmin { get; set; }
+        public string SubjectId { get; set; }
     }
 }

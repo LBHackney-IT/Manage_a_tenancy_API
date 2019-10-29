@@ -13,11 +13,13 @@ using ManageATenancyAPI.Services.Housing;
 using ManageATenancyAPI.Services;
 using ManageATenancyAPI.Factories;
 using ManageATenancyAPI.Validators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using MyPropertyAccountAPI.Configuration;
 
 namespace ManageATenancyAPI.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/[controller]")]
     public class AccountsController : Controller
@@ -127,7 +129,7 @@ namespace ManageATenancyAPI.Controllers
         }
 
         /// <summary>
-        /// Get account details by tag reference or paris ref
+        /// GetAsync account details by tag reference or paris ref
         /// </summary>
         /// <param name="referencenumber">Payment reference or tag reference number for Account</param>
         /// <returns>Returns account details in Json Object</returns>

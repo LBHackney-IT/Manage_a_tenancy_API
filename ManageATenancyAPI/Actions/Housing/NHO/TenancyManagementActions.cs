@@ -444,8 +444,8 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
                 _client.DefaultRequestHeaders.Add("Prefer", "odata.include-annotations=\"OData.Community.Display.V1.FormattedValue\"");
 
-                var query = HousingAPIQueryBuilder.getTenancyInteractionDeatils(contactId, personType);
-
+                  var query = HousingAPIQueryBuilder.getTenancyInteractionDeatils(contactId, personType);
+            
                 result = _ManageATenancyAPI.getHousingAPIResponse(_client, query, contactId).Result;
                 if (result != null)
                 {
@@ -481,7 +481,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Get Tenancy Management Interaction Error " + ex.Message);
+                _logger.LogError($"GetAsync Tenancy Management Interaction Error " + ex.Message);
                 throw ex;
 
             }
@@ -494,7 +494,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             {
 
                 HttpResponseMessage updateResponse = new HttpResponseMessage();
-                _logger.LogInformation($"Get Tenancy Management Group Tray Interaction");
+                _logger.LogInformation($"GetAsync Tenancy Management Group Tray Interaction");
                 var token = _crmAccessToken.getCRM365AccessToken().Result;
                 _client = _hackneyAccountApiBuilder.CreateRequest(token).Result;
                 _client.DefaultRequestHeaders.Add("Prefer", "odata.include-annotations=\"OData.Community.Display.V1.FormattedValue\"");
@@ -536,7 +536,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Get Tenancy Management Group Tray Interaction Error " + ex.Message);
+                _logger.LogError($"GetAsync Tenancy Management Group Tray Interaction Error " + ex.Message);
                 throw ex;
 
             }
@@ -765,6 +765,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      requestCallBack = response["incident1_x002e_housing_requestcallback"],
                                      contactId = response["_hackney_contactid_value"],
                                      contactName = response["_hackney_contactid_value@OData.Community.Display.V1.FormattedValue"],
+                                     contactTitle = response["contact3_x002e_hackney_title"],
                                      contactPostcode = response["contact3_x002e_address1_postalcode"],
                                      contactAddressLine1 = response["contact3_x002e_address1_line1"],
                                      contactAddressLine2 = response["contact3_x002e_address1_line2"],
@@ -773,10 +774,15 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      contactBirthDate = response["contact3_x002e_birthdate"],
                                      contactTelephone = response["contact3_x002e_telephone1"],
                                      contactEmailAddress = response["contact3_x002e_emailaddress1"],
+                                     contactCautionaryAlert = response["contact3_x002e_hackney_cautionaryalert"],
+                                     contactPropertyCautionaryAlert = response["contact3_x002e_hackney_propertycautionaryalert"],
                                      contactLarn = response["contact3_x002e_hackney_larn"],
                                      contactUPRN = response["contact3_x002e_hackney_uprn"],
-                                     householdID = response["_hackney_household_interactionid_value"]
-
+                                     householdID = response["_hackney_household_interactionid_value"],
+                                     accountCreatedOn=response["accountCreatedOn"],
+                                     parentInteractionId=response["_hackney_parent_interactionid_value"],
+                                     traId = response["hackney_traid"],
+                                     issueLocation=response["hackney_issuelocation"]
                                  } into grp
                                  select new
                                  {
@@ -804,6 +810,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      grp.Key.requestCallBack,
                                      grp.Key.contactId,
                                      grp.Key.contactName,
+                                     grp.Key.contactTitle,
                                      grp.Key.contactPostcode,
                                      grp.Key.contactAddressLine1,
                                      grp.Key.contactAddressLine2,
@@ -812,9 +819,15 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                                      grp.Key.contactBirthDate,
                                      grp.Key.contactTelephone,
                                      grp.Key.contactEmailAddress,
+                                     grp.Key.contactCautionaryAlert,
+                                     grp.Key.contactPropertyCautionaryAlert,
                                      grp.Key.contactLarn,
                                      grp.Key.contactUPRN,
                                      grp.Key.householdID,
+                                     grp.Key.accountCreatedOn,
+                                     grp.Key.parentInteractionId,
+                                     grp.Key.traId,
+                                     grp.Key.issueLocation,
                                      Annotation = grp.ToList()
 
                                  });
@@ -848,6 +861,7 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 tenancyObj.requestCallBack = response.requestCallBack;
                 tenancyObj.contactId = response.contactId;
                 tenancyObj.contactName = response.contactName;
+                tenancyObj.contactTitle = response.contactTitle;
                 tenancyObj.contactPostcode = response.contactPostcode;
                 tenancyObj.contactAddressLine1 = response.contactAddressLine1;
                 tenancyObj.contactAddressLine2 = response.contactAddressLine2;
@@ -856,11 +870,17 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 tenancyObj.contactBirthDate = response.contactBirthDate;
                 tenancyObj.contactTelephone = response.contactTelephone;
                 tenancyObj.contactEmailAddress = response.contactEmailAddress;
+                tenancyObj.contactCautionaryAlert = response.contactCautionaryAlert;
+                tenancyObj.contactPropertyCautionaryAlert = response.contactPropertyCautionaryAlert;
                 tenancyObj.contactLarn = response.contactLarn;
                 tenancyObj.contactUPRN = response.contactUPRN;
                 tenancyObj.householdID = response.householdID;
+                tenancyObj.accountCreatedOn = response.accountCreatedOn!=null? response.accountCreatedOn.ToString("yyyy-MM-dd HH:mm:ss") : null;
+                tenancyObj.parentInteractionId = response.parentInteractionId;
+                tenancyObj.traId = response.traId;
+                tenancyObj.issueLocation = response.issueLocation;
                 tenancyObj.AnnotationList = new List<ExpandoObject>();
-
+                
                 foreach (var annotationResponse in response.Annotation)
                 {
                     dynamic annotation = new ExpandoObject();

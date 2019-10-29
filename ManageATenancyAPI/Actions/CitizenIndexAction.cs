@@ -172,7 +172,8 @@ namespace ManageATenancyAPI.Actions
                         Accounttype = response.parentcustomerid_account != null ? response.parentcustomerid_account.housing_accounttype : null,
                         HouseholdId = response.hackney_household_contactId != null ? response.hackney_household_contactId.hackney_householdid : null,
                         MainTenant = response.hackney_responsible
-                    };
+
+                        };
                     return tenant;
                 }).Where(tenant => tenant.IsActiveTenant).ToList();
          }

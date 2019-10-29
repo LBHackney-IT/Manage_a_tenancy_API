@@ -839,6 +839,7 @@ namespace ManageATenancyAPI.Tests.Actions.Housing.NHO
             value["incident1_x002e_housing_requestcallback"] = false;
             value["_hackney_contactid_value"] = "ContactId9486954o93";
             value["_hackney_contactid_value@OData.Community.Display.V1.FormattedValue"] = "Contact name";
+            value["contact3_x002e_hackney_title"] = "Contact Title";
             value["contact3_x002e_address1_postalcode"] = "E8 2HH";
             value["contact3_x002e_address1_line1"] = "Maurice Bishop House";
             value["contact3_x002e_address1_line2"] = "Hackney";
@@ -846,8 +847,13 @@ namespace ManageATenancyAPI.Tests.Actions.Housing.NHO
             value["contact3_x002e_address1_city"] = "London";
             value["contact3_x002e_birthdate"] = "01/01/1950";
             value["contact3_x002e_emailaddress1"] = "test@test.com";
+            value["contact3_x002e_hackney_cautionaryalert"] = false;
+            value["contact3_x002e_hackney_propertycautionaryalert"] = false;
             value["contact3_x002e_hackney_larn"] = "LARN834210";
-
+            value["accountCreatedOn"] = null;
+            value["_hackney_parent_interactionid_value"] = "parentInteractionId01";
+            value["hackney_traid"] = "3";
+            value["hackney_issuelocation"] = "location1";
             listJObject.Add(value);
             TenancyManagement.Add("value", listJObject);
             string jsonString = JsonConvert.SerializeObject(TenancyManagement);
@@ -884,6 +890,7 @@ namespace ManageATenancyAPI.Tests.Actions.Housing.NHO
             tenancyObj.requestCallBack = false;
             tenancyObj.contactId = "ContactId9486954o93";
             tenancyObj.contactName = "Contact name";
+            tenancyObj.contactTitle = "Contact Title";
             tenancyObj.contactPostcode = "E8 2HH";
             tenancyObj.contactAddressLine1 = "Maurice Bishop House";
             tenancyObj.contactAddressLine2 = "Hackney";
@@ -892,14 +899,22 @@ namespace ManageATenancyAPI.Tests.Actions.Housing.NHO
             tenancyObj.contactBirthDate = "01/01/1950";
             tenancyObj.contactTelephone = "123";
             tenancyObj.contactEmailAddress = "test@test.com";
+            tenancyObj.contactCautionaryAlert = false;
+            tenancyObj.contactPropertyCautionaryAlert = false;
+           
             tenancyObj.contactLarn = "LARN834210";
             tenancyObj.contactUPRN = null;
             tenancyObj.householdID = null;
+            tenancyObj.accountCreatedOn = null;
+            tenancyObj.parentInteractionId = "parentInteractionId01";
+            tenancyObj.traId = "3";
+            tenancyObj.issueLocation = "location1";
             tenancyObj.AnnotationList = new List<ExpandoObject>();
             dynamic annotation = new ExpandoObject();
             annotation.noteText = "Testing closure  at 21/12/2017 13:37:18 by  Test dev";
             annotation.annotationId = "b6521622-54e6-e711-8111-7010bbbbbbbb";
             annotation.noteCreatedOn = "2017-12-21 13:37:49";
+           
             tenancyObj.AnnotationList.Add(annotation);
             tenancyList.Add(tenancyObj);
             return new
@@ -912,7 +927,7 @@ namespace ManageATenancyAPI.Tests.Actions.Housing.NHO
         #endregion
 
 
-        #region Get Group Tray
+        #region GetAsync Group Tray
         [Fact]
         public async Task get_group_tray_details_return_valid_object()
         {
@@ -1032,15 +1047,27 @@ namespace ManageATenancyAPI.Tests.Actions.Housing.NHO
             value["incident1_x002e_housing_requestcallback"] = false;
             value["_hackney_contactid_value"] = "ContactId9486954o93";
             value["_hackney_contactid_value@OData.Community.Display.V1.FormattedValue"] = "Contact name";
+            value["contact3_x002e_hackney_title"] = null;
+          //  value["contact3_x002e_hackney_title"] = "Contact names";
             value["contact3_x002e_address1_postalcode"] = "E8 2HH";
             value["contact3_x002e_address1_line1"] = "Maurice Bishop House";
             value["contact3_x002e_address1_line2"] = "Hackney";
             value["contact3_x002e_address1_line3"] = null;
             value["contact3_x002e_address1_city"] = "London";
             value["contact3_x002e_birthdate"] = "01/01/1950";
+            
             value["contact3_x002e_emailaddress1"] = "test@test.com";
+            value["contact3_x002e_hackney_cautionaryalert"] = null;
+            value["contact3_x002e_hackney_propertycautionaryalert"] = null;
+          
             value["contact3_x002e_hackney_larn"] = "LARN834210";
-
+            value["_hackney_household_interactionid_value"] = "householdID";
+            value["accountCreatedOn"] = null;
+           
+            value["_hackney_parent_interactionid_value"] = "parentInteractionId01";
+            value["hackney_traid"] = "3";
+            value["hackney_issuelocation"] = "issuelocation1";
+         
             listJObject.Add(value);
             TenancyManagement.Add("value", listJObject);
             string jsonString = JsonConvert.SerializeObject(TenancyManagement);
@@ -1077,6 +1104,7 @@ namespace ManageATenancyAPI.Tests.Actions.Housing.NHO
             tenancyObj.requestCallBack = false;
             tenancyObj.contactId = "ContactId9486954o93";
             tenancyObj.contactName = "Contact name";
+            tenancyObj.contactTitle = null;
             tenancyObj.contactPostcode = "E8 2HH";
             tenancyObj.contactAddressLine1 = "Maurice Bishop House";
             tenancyObj.contactAddressLine2 = "Hackney";
@@ -1085,9 +1113,15 @@ namespace ManageATenancyAPI.Tests.Actions.Housing.NHO
             tenancyObj.contactBirthDate = "01/01/1950";
             tenancyObj.contactTelephone = "123";
             tenancyObj.contactEmailAddress = "test@test.com";
+            tenancyObj.contactCautionaryAlert = null;
+            tenancyObj.contactPropertyCautionaryAlert = null;
             tenancyObj.contactLarn = "LARN834210";
             tenancyObj.contactUPRN = null;
-            tenancyObj.householdID = null;
+            tenancyObj.householdID = "householdID";
+            tenancyObj.accountCreatedOn = null;
+            tenancyObj.parentInteractionId = "parentInteractionId01";
+            tenancyObj.traId = "3";
+            tenancyObj.issueLocation = "issuelocation1";
             tenancyObj.AnnotationList = new List<ExpandoObject>();
             dynamic annotation = new ExpandoObject();
             annotation.noteText = "Testing closure  at 21/12/2017 13:37:18 by  Test dev";

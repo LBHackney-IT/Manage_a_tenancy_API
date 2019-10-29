@@ -42,6 +42,6 @@ namespace ManageATenancyAPI.Models
         public string HouseholdId { get; set; }
         public string Accounttype { get; set; }
         public bool MainTenant { get; set; }
-    }
+        }
 
 }

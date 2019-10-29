@@ -16,12 +16,12 @@ namespace ManageATenancyAPI.Filters
                 ApiErrorMessage()
             {
                 userMessage = "A server error occurred.",
-                developerMessage = context.Exception.Message
+                developerMessage = context.Exception.Message,
+                source = context.Exception.Source,
+                stackTrace = context.Exception.StackTrace
             }));
             result.StatusCode = 500;
             context.Result = result;
-
-
         }
     }
 }

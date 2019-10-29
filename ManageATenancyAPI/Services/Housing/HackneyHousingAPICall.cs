@@ -6,8 +6,6 @@ using ManageATenancyAPI.Interfaces.Housing;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Encodings.Web;
-using System.Web;
 using Newtonsoft.Json.Linq;
 
 namespace ManageATenancyAPI.Services.Housing
@@ -22,6 +20,9 @@ namespace ManageATenancyAPI.Services.Housing
             try
             {
                 response = httpClient.GetAsync(query).Result;
+                
+                var content = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"getHousingAPIResponse: {content}");
                 if (!response.IsSuccessStatusCode)
                 {
                     throw new ServiceException();
@@ -47,7 +48,8 @@ namespace ManageATenancyAPI.Services.Housing
 
                 HttpRequestMessage request = new HttpRequestMessage(method, requestUri) { Content = new StringContent(content) };
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                response = client.SendAsync(request).Result;
+                response = await client.SendAsync(request).ConfigureAwait(false);
+                var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (!response.IsSuccessStatusCode)
                 {
                     throw new ServiceException();
@@ -67,10 +69,9 @@ namespace ManageATenancyAPI.Services.Housing
             var response = new HttpResponseMessage();
             try
             {
-                
                 var content = new StringContent(jObject.ToString(), Encoding.UTF8, "application/json");
-                response = client.PostAsync(query, content).Result;
-               
+                response = await client.PostAsync(query, content).ConfigureAwait(false) ;
+                var responseContent = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
                     throw new ServiceException();

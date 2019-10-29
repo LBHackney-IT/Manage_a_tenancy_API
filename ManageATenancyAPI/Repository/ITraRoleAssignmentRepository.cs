@@ -9,7 +9,7 @@ namespace ManageATenancyAPI.Repository
     public interface ITraRoleAssignmentRepository
     {
         Task AddRoleAssignment(int traId, string role, string personName);
-        Task RemoveRoleAssignment(int traId, string name);
+        Task RemoveRoleAssignment(int traId, string role);
         Task<List<RoleAssignment>> GetRoleAssignmentForTra(int tra);
     }
 }

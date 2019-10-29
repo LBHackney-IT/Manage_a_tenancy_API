@@ -163,11 +163,16 @@ namespace ManageATenancyAPI.Helpers.Housing
             return
                 "/api/data/v8.2/hackney_tenancymanagementinteractionses?$select=_hackney_contactid_value,hackney_enquirysubject,_hackney_estateofficer_createdbyid_value,hackney_handleby,_hackney_incidentid_value,hackney_name,hackney_natureofenquiry,_hackney_subjectid_value,hackney_tenancymanagementinteractionsid";
         }
+        public static string PostETRAMeetingQuery()
+        {
+            return
+                "/api/data/v8.2/hackney_tenancymanagementinteractionses?$select=hackney_tenancymanagementinteractionsid";
+        }
 
         public static string PostIncidentQuery()
         {
             return
-                "/api/data/v8.2/incidents()?$select=_customerid_value,description,_subjectid_value,ticketnumber,title";
+                "/api/data/v8.2/incidents()?$select=_customerid_value,description,_subjectid_value,ticketnumber,title,incidentid";
 
 
         }
@@ -187,7 +192,7 @@ namespace ManageATenancyAPI.Helpers.Housing
         {
             return "/api/data/v8.2/hackney_tenancymanagementinteractionses(" + new Guid(interactionId.Trim()) + ")";
         }
-
+       
         public static string getTenancyInteractionDeatils(string contactId, string personType)
         {
             StringBuilder query = new StringBuilder();
@@ -212,6 +217,9 @@ namespace ManageATenancyAPI.Helpers.Housing
                 <attribute name='hackney_transferred' />
                 <attribute name='hackney_process_stage' />
                 <attribute name='hackney_household_interactionid' />
+                <attribute name='hackney_parent_interactionid' />
+                <attribute name='hackney_traid' />
+                <attribute name='hackney_issuelocation' />
                 <filter>";
             if (personType == "contact")
             {
@@ -241,7 +249,7 @@ namespace ManageATenancyAPI.Helpers.Housing
                             <attribute name='annotationid' />
                         </link-entity>
                     </link-entity>
-                    <link-entity name='contact' from='contactid' to='hackney_contactid' >
+                    <link-entity name='contact' from='contactid' to='hackney_contactid' link-type='outer' >
                         <attribute name='birthdate' />
                         <attribute name='address1_line3' />
                         <attribute name='address1_postalcode' />
@@ -252,7 +260,16 @@ namespace ManageATenancyAPI.Helpers.Housing
                         <attribute name='hackney_larn' />
                         <attribute name='hackney_uprn' />
                         <attribute name='address1_line2' />
-                    </link-entity>
+
+                        <attribute name='hackney_title' />
+                        <attribute name='hackney_cautionaryalert' />
+                        <attribute name='hackney_propertycautionaryalert' />
+                   
+                    <link-entity name='account' from='accountid' to='accountid' link-type='outer'>
+                        <attribute name='createdon' alias='accountCreatedOn' />
+                         </link-entity>
+                       </link-entity>
+
                     <link-entity name='hackney_estateofficerpatch' from='hackney_estateofficerpatchid' to='hackney_estateofficerpatchid' link-type='outer'>
                       <link-entity name='hackney_estateofficer' from='hackney_estateofficerid' to='hackney_patchid' link-type='outer'>
                         <attribute name='hackney_name' alias='OfficerFullName' />
@@ -858,6 +875,284 @@ namespace ManageATenancyAPI.Helpers.Housing
             return "/api/data/v8.2/contacts(" + contactID + ")?$select=hackney_nextofkinname, hackney_nextofkinaddress,hackney_nextofkinrelationship,hackney_nextofkinotherphone,hackney_nextofkinemail,hackney_nextofkinmobile";
         }
 
+        public static string ToCrmQueryFormat(this DateTime dateTime)
+        {
+            return dateTime.ToString("yyyy-MM-ddTHH:mm:ssZ");
+        }
+        
+        public static string GetNewTenanciesSinceDate(DateTime date)
+        {
+            var urlString = "/api/data/v8.2/accounts?fetchXml=";
+            var fetchXml = $@"<fetch>
+	                            <entity name='account'>
+                                    <filter>
+                                        <condition attribute='createdon' operator='gt' value='{date.ToCrmQueryFormat()}'/>
+                                    </filter>
+		                            <attribute name='accountid' />
+		                            <attribute name='createdon' />
+		                            <attribute name='housing_tenure' />
+		                            <attribute name='housing_tag_ref' />
+		                            <attribute name='housing_house_ref' />
+		                            <attribute name='hackney_household_accountid' />
+		                            <link-entity name='contact' from='parentcustomerid' to='accountid' link-type='inner' >
+			                            <attribute name='fullname' />
+			                            <attribute name='contactid' />
+			                            <attribute name='address1_composite' />
+			                            <attribute name='hackney_responsible' />
+			                            <attribute name='hackney_personno' />
+			                            <attribute name='hackney_title' />
+			                            <attribute name='firstname' />
+			                            <attribute name='lastname' />
+			                            <attribute name='address1_postalcode' />
+			                            <attribute name='address1_line3' />
+			                            <attribute name='address1_line1' />
+			                            <attribute name='address1_line2' />
+			                            <link-entity name='hackney_propertyareapatch' from='hackney_postcode' to='address1_postalcode' type='inner'>
+				                            <attribute name='hackney_estateaddress' />
+                                            <attribute name='hackney_neighbourhoodofficedesc' />
+                                            <attribute name='hackney_areaname' />
+                                            <attribute name='hackney_managerpropertypatchid' />
+                                            <link-entity name='hackney_estateofficerpatch' from='hackney_estateofficerpatchid' to='hackney_estateofficerpropertypatchid' link-type='inner' >
+                                                <attribute name='hackney_estateofficerpatchid' />
+                                                <link-entity name='hackney_estateofficer' from='hackney_estateofficerid' to='hackney_patchid' link-type='inner' >
+                                                    <attribute name='hackney_estateofficerid' alias='estateOfficerId' />
+                                                    <attribute name='hackney_name' alias='OfficerFullName' />
+                                                    <attribute name='hackney_lastname' alias='OfficerLastName' />
+                                                    <attribute name='hackney_firstname' alias='OfficerFirstName' />
+                                                    <attribute name='hackney_emailaddress' alias='OfficerEmailAddress' />
+                                                </link-entity>
+                                            </link-entity>
+			                            </link-entity>
+		                            </link-entity>
+	                            </entity>
+                            </fetch>";
+
+            return urlString + fetchXml;
+        }        
+
+        public static string getETRAIssues(string id, bool issuesPerMeeting)
+        {
+            StringBuilder query = new StringBuilder();
+
+            var fetchXml = $@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true' ><entity name='hackney_tenancymanagementinteractions' >              
+                <attribute name='hackney_areaname' />
+                <attribute name='hackney_name' />
+                <attribute name='statecode' />
+                <attribute name='hackney_estateofficerpatchid' />
+                <attribute name='hackney_natureofenquiry' />
+                <attribute name='createdon' />
+                <attribute name='hackney_parent_interactionid' />
+                <attribute name='hackney_issuedeadlinedate' />
+                <attribute name='hackney_estateofficer_createdbyid' />
+                <attribute name='hackney_estateofficer_updatedbyid' />
+                <attribute name='hackney_tenancymanagementinteractionsid' />
+                <attribute name='hackney_enquirysubject' />
+                <attribute name='hackney_managerpropertypatchid' />
+                <attribute name='hackney_incidentid' />
+                <attribute name='hackney_transferred' />
+                <attribute name='hackney_processtype' />
+                <attribute name='hackney_process_stage' />
+                <attribute name='hackney_issuelocation' />
+                <attribute name='hackney_traid' />
+                <attribute name='hackney_servicearea' />
+                <filter>";
+            if (issuesPerMeeting)
+            {
+                fetchXml = fetchXml + "<condition attribute='hackney_parent_interactionid' operator='eq' value='" + id +
+                           "' />";
+            }
+            else 
+            {
+                fetchXml = fetchXml + "<condition attribute='hackney_traid' operator='eq' value='" + id +
+                             "' />";
+            }
+           fetchXml = fetchXml + $@"
+                        </filter>
+                    <link-entity name='incident' from='incidentid' to='hackney_incidentid' link-type='inner' >
+                        <attribute name='housing_requestcallback' />
+                        <attribute name='incidentid' />
+                        <link-entity name='annotation' from='objectid' to='incidentid' link-type='outer' >
+                            <attribute name='subject' />
+                            <attribute name='createdby' />
+                            <attribute name='notetext' />
+                            <attribute name='createdon' />
+                            <attribute name='annotationid' />
+                        </link-entity>
+                    </link-entity>                 
+                    <link-entity name='hackney_estateofficerpatch' from='hackney_estateofficerpatchid' to='hackney_estateofficerpatchid' link-type='outer'>
+                      <link-entity name='hackney_estateofficer' from='hackney_estateofficerid' to='hackney_patchid' link-type='outer'>
+                        <attribute name='hackney_name' alias='OfficerFullName' />
+                        <attribute name='hackney_lastname' alias='OfficerLastName' />
+                        <attribute name='hackney_firstname' alias='OfficerFirstName' />
+                      </link-entity>
+                    </link-entity>
+                    <link-entity name='hackney_estatemanagerarea' from='hackney_estatemanagerareaid' to='hackney_managerpropertypatchid' link-type='outer'>
+                      <link-entity name='hackney_estateofficer' from='hackney_estateofficerid' to='hackney_managerareaid' link-type='outer'>
+                        <attribute name='hackney_name' alias='ManagerFullName' />
+                        <attribute name='hackney_lastname' alias='ManagerLastName' />
+                        <attribute name='hackney_firstname' alias='ManagerFirstName' />
+                      </link-entity>
+                    </link-entity></entity></fetch>";
+            query.Append("/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=" + HttpUtility.UrlEncode(fetchXml.Trim()));
+            return query.ToString();
+        }
+
+        public static string getETRAIssuesV2(Guid meetingId)
+        {
+            StringBuilder query = new StringBuilder();
+
+            var fetchXml = $@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true' ><entity name='hackney_tenancymanagementinteractions' >              
+                <attribute name='hackney_tenancymanagementinteractionsid' />
+                <attribute name='hackney_issuelocation' />
+                <attribute name='hackney_enquirysubject' />
+                <attribute name='hackney_incidentid' />
+                <filter>";
+            fetchXml = fetchXml + "<condition attribute='hackney_parent_interactionid' operator='eq' value='" + meetingId +
+                           "' />";
+                fetchXml = fetchXml + $@"
+                        </filter>
+                    <link-entity name='incident' from='incidentid' to='hackney_incidentid' link-type='inner' >
+                        <attribute name='description' />
+                    </link-entity>    
+            </entity></fetch>";
+            query.Append("/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=" + HttpUtility.UrlEncode(fetchXml.Trim()));
+            return query.ToString();
+        }
+
+        public static string getEtraMeetingV2(Guid meetingId)
+        {
+            StringBuilder query = new StringBuilder();
+
+            var fetchXml = $@"
+            <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true' >
+                <entity name='hackney_tenancymanagementinteractions' >    
+                    
+                    <attribute name='hackney_incidentid' />
+                    <attribute name='hackney_tenancymanagementinteractionsid' />
+
+                    <attribute name='hackney_councillorsattendingmeeting' />
+                    <attribute name='hackney_othercouncilstaffattendingmeeting' />
+                    <attribute name='hackney_totalmeetingattendees' />
+
+                    <attribute name='hackney_confirmationdate' />
+                    <attribute name='hackney_signaturereference' />
+                    <attribute name='hackney_signatoryrole' />
+                    <attribute name='hackney_signatoryname' />
+
+                    <attribute name='createdon' />
+                    <filter>
+                        <condition attribute='hackney_tenancymanagementinteractionsid' operator='eq' value='{meetingId.ToString()}' />
+                    </filter>
+                    <link-entity name='incident' from='incidentid' to='hackney_incidentid' link-type='inner' >
+                        <attribute name='description' />
+                    </link-entity>
+                </entity>
+            </fetch>";
+            query.Append("/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=" + HttpUtility.UrlEncode(fetchXml.Trim()));
+            return query.ToString();
+        }
+
+        public static string getIssuesThatNeedEscalating(DateTime fromDate)
+        {
+            StringBuilder query = new StringBuilder();
+
+            var fetchXml = $@"
+            <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true'>
+                <entity name='hackney_tenancymanagementinteractions' >
+                    <attribute name='hackney_servicearea' />
+                    <attribute name='hackney_parent_interactionid' />
+                    <attribute name='hackney_estateofficerpatchid' />
+                    <attribute name='createdon' />
+                    <attribute name='hackney_enquirysubjectname' />
+                    <attribute name='hackney_natureofenquiryname' />
+                    <attribute name='hackney_process_stage' />
+                    <attribute name='hackney_tenancymanagementinteractionsid' />
+                    <attribute name='hackney_serviceareaname' />
+                    <attribute name='hackney_incidentid' />
+                    <attribute name='hackney_areaname' />
+                    <attribute name='hackney_estateofficer_updatedbyidname' />
+                    <attribute name='hackney_estateofficerpatchidname' />
+                    <attribute name='hackney_incidentidname' />
+                    <attribute name='hackney_managerpropertypatchidname' />
+                    <attribute name='hackney_process_stagename' />
+                    <attribute name='modifiedon' />
+                    <attribute name='hackney_transferredname' />
+                    <attribute name='hackney_issuedeadlinedate' />
+                    <attribute name='hackney_managerpropertypatchid' />
+                    <attribute name='hackney_subjectidname' />
+                    <attribute name='hackney_natureofenquiry' />
+                    <attribute name='hackney_enquirysubject' />
+                    <attribute name='hackney_name' />
+                    <attribute name='modifiedby' />
+                    <attribute name='hackney_issuelocation' />
+                    <attribute name='hackney_traid' />
+                   <link-entity name='hackney_estateofficerpatch' from='hackney_estateofficerpatchid' to='hackney_estateofficerpatchid' link-type='outer'>
+                      <link-entity name='hackney_estateofficer' from='hackney_estateofficerid' to='hackney_patchid' link-type='outer'>
+                        <attribute name='hackney_name' alias='OfficerFullName' />
+                        <attribute name='hackney_lastname' alias='OfficerLastName' />
+                        <attribute name='hackney_firstname' alias='OfficerFirstName' />
+                      </link-entity>
+                    </link-entity>
+                    <filter type='and' >
+                        <condition attribute='hackney_natureofenquiry' operator='eq' value='28' />
+                        <condition attribute='hackney_enquirysubject' operator='neq' value='100000219' />
+                        <condition attribute='hackney_issuedeadlinedate' operator='on' value='{fromDate.ToString("yyyy-MM-dd")}' />
+                        <condition attribute='hackney_process_stage' operator='eq' value='0' />
+                    </filter>
+                    <link-entity name='incident' from='incidentid' to='hackney_incidentid' link-type='inner' >
+                        <attribute name='housing_requestcallback' />
+                        <attribute name='incidentid' />
+                        <link-entity name='annotation' from='objectid' to='incidentid' link-type='outer' >
+                            <attribute name='subject' />
+                            <attribute name='createdby' />
+                            <attribute name='notetext' />
+                            <attribute name='createdon' />
+                            <attribute name='annotationid' />
+                        </link-entity>
+                    </link-entity>   
+                </entity>
+            </fetch>";
+            query.Append("/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=" + HttpUtility.UrlEncode(fetchXml.Trim()));
+            return query.ToString();
+        }
+
+        public static string updateIssueQuery(string id)
+        {
+            return $"{GetActionById(id)}?$select=hackney_tenancymanagementinteractionsid";
+        }
+        public static string GetAnnotationsByIssueId(string id)
+        {
+            return $"/api/data/v8.2/annotations?$filter=_objectid_value eq {id}";
+        }
+        public static string GetActionById(string id)
+        {
+            return $"/api/data/v8.2/hackney_tenancymanagementinteractionses({id})";
+        }
+        public static string GetHousingOfficerDetails(string emailAddress)
+        {
+            return $"/api/data/v8.2/hackney_estateofficers?$filter=hackney_emailaddress eq '{emailAddress}'";
+        }
+        public static string UpdateHousingOfficerDetails(string id)
+        {
+            return $"/api/data/v8.2/hackney_estateofficers({id})?$select=hackney_estateofficerid";
+        }
+        public static string GetETRAMeetingsByTRAId(string id)
+        {
+            var urlString = "/api/data/v8.2/hackney_tenancymanagementinteractionses?fetchXml=";
+            //process type 1 is for ETRA Meetings
+            //Meetings do not have a parent id
+            var fetchXml = $@"<fetch>
+	                            <entity name='hackney_tenancymanagementinteractions'>
+                                    <filter>
+                                        <condition attribute='hackney_traid' operator='eq' value='{id}'/>
+                                        <condition attribute='hackney_processtype' operator='eq' value='1'/>
+                                        <condition attribute='hackney_parent_interactionid' operator='null'/>
+                                    </filter>
+	                            </entity>
+                            </fetch>";
+
+            return urlString + fetchXml;
+        }
     }
 }
 

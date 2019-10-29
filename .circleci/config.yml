@@ -1,0 +1,157 @@
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@3.0.0
+  aws-cli: circleci/aws-cli@0.1.9
+
+commands:
+  deploy-env:
+    description: "Sets ecs-deploy to update a service with a target docker image"
+    parameters:
+      cluster-name:
+        type: string
+      service-name:
+        type: string
+      task-name:
+        type: string
+      image-tag:
+        type: string
+    steps:
+      - run:
+          name: Install ecs deploy
+          command: |
+            sudo pip install ecs-deploy
+      - run:
+          name: Premote target image
+          command: |
+            ecs deploy \
+            --no-deregister \
+            --access-key-id $AWS_ID_KEY \
+            --secret-access-key $AWS_SECRET_KEY \
+            --timeout 1800 \
+            --region $AWS_REGION \
+            --task << parameters.task-name >> \
+            << parameters.cluster-name >> \
+            << parameters.service-name >> \
+            -t << parameters.image-tag >>
+          no_output_timeout: 30m
+
+jobs:
+  check:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - aws-cli/install
+      - aws-cli/configure:
+          aws-access-key-id: AWS_ID_KEY
+          aws-secret-access-key: AWS_SECRET_KEY
+          aws-region: AWS_REGION
+      - aws-ecr/ecr-login
+      - setup_remote_docker
+      - run:
+          name: build api
+          command: docker build ./
+  test:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - aws-cli/install
+      - aws-cli/configure:
+          aws-access-key-id: AWS_ID_KEY
+          aws-secret-access-key: AWS_SECRET_KEY
+          aws-region: AWS_REGION
+      - aws-ecr/ecr-login
+      - setup_remote_docker
+      - run:
+          name: build tests
+          command: docker-compose build manage-a-tenancy-api-test
+      - run:
+          name: Run tests
+          command: docker-compose up manage-a-tenancy-api-test
+  deploy-to-development:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - deploy-env:
+          cluster-name: 'hackney-apps-development'
+          service-name: 'man-a-tenancy-development'
+          task-name: 'task-manage-a-tenancy-api-development'
+          image-tag: "$CIRCLE_SHA1"
+
+  deploy-to-staging:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - deploy-env:
+          cluster-name: 'hackney-apps-staging'
+          service-name:  'man-a-tenancy-staging'
+          task-name: 'task-manage-a-tenancy-api-staging'
+          image-tag: "$CIRCLE_SHA1"
+
+  deploy-to-production:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - deploy-env:
+          cluster-name: 'ecs-hackney-apps'
+          service-name:  'man-a-tenancy-production'
+          task-name: 'task-manage-a-tenancy-api-production'
+          image-tag: "$CIRCLE_SHA1"
+
+workflows:
+  version: 2
+  build-and-deploy:
+      jobs:
+      - check
+      - aws-ecr/build_and_push_image:
+          name: build_and_push_api
+          dockerfile: ./Dockerfile
+          path: ./
+          account-url: AWS_ECR_API_HOST
+          repo: $AWS_ECR_API_PATH
+          aws-access-key-id: AWS_ID_KEY
+          aws-secret-access-key: AWS_SECRET_KEY
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+          requires:
+            - check
+          filters:
+             branches:
+              only: develop
+      - deploy-to-development:
+          requires:
+            - build_and_push_api
+          filters:
+             branches:
+               only: develop
+      - permit-staging-release:
+          type: approval
+          requires:
+            - deploy-to-development
+          filters:
+            branches:
+              only: develop
+
+      - deploy-to-staging:
+          requires:
+            - permit-staging-release
+          filters:
+            branches:
+              only: develop
+
+      - permit-production-release:
+          type: approval
+          requires:
+            - deploy-to-staging
+          filters:
+            branches:
+              only: develop
+
+      - deploy-to-production:
+          requires:
+            - permit-production-release
+          filters:
+            branches:
+              only: develop

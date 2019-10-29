@@ -1,27 +1,16 @@
 ﻿using ManageATenancyAPI.Actions.Housing.NHO;
-using ManageATenancyAPI.Helpers.Housing;
 using ManageATenancyAPI.Interfaces;
 using ManageATenancyAPI.Interfaces.Housing;
 using ManageATenancyAPI.Tests.Helpers;
 using Moq;
 using Moq.Protected;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Dynamic;
 using System.Net;
 using System.Net.Http;
 using Xunit;
 using ManageATenancyAPI.Models.Housing.NHO;
-using System.Text;
 using System.Threading.Tasks;
-using ManageATenancyAPI.Actions.Housing.NHO;
-using ManageATenancyAPI.Models;
-using Hackney.InterfaceStubs;
-using Hackney.ServiceLocator;
-using System.Configuration;
-using System.IO;
 using Hackney.InterfaceStubs;
 
 namespace ManageATenancyAPI.Tests.Actions.Housing.NHO

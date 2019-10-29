@@ -12,7 +12,7 @@ namespace ManageATenancyAPI.Helpers.Housing
 
         public static ExpandoObject convertToExpando(object obj)
         {
-            //Get Properties Using Reflections
+            //GetAsync Properties Using Reflections
             BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
             PropertyInfo[] properties = obj.GetType().GetProperties(flags);
 

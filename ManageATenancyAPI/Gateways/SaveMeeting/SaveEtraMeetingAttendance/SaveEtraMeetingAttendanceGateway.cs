@@ -22,7 +22,7 @@ namespace ManageATenancyAPI.Gateways.SaveMeeting.SaveEtraMeetingAttendance
             {
                 Councillors = attendees?.Councillors,
                 OtherCouncilStaff = attendees?.HackneyStaff,
-                TotalAttendees = attendees.Attendees
+                TotalAttendees = attendees.Attendees 
             };
 
             var response = await _etraMeetingsAction.RecordETRAMeetingAttendance(meeting.Id.ToString(), recordEtraMeetingAttendanceRequest).ConfigureAwait(false);

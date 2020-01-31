@@ -4,6 +4,6 @@
     {
         public string Councillors { get; set; }
         public string OtherCouncilStaff { get; set; }
-        public int TotalAttendees { get; set; }
+        public int? TotalAttendees { get; set; }
     }
 }

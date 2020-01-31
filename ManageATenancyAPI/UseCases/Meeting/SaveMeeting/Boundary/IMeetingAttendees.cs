@@ -22,7 +22,7 @@ namespace ManageATenancyAPI.UseCases.Meeting.SaveMeeting.Boundary
         /// </summary>
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Please enter a value bigger than {1}")]
-        public int Attendees { get; set; }
+        public int? Attendees { get; set; }
 
     }
 }

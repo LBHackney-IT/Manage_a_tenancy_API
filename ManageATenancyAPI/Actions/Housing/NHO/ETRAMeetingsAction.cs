@@ -586,12 +586,12 @@ namespace ManageATenancyAPI.Actions.Housing.NHO
                 var Councillors = (string)crmMeeting["hackney_councillorsattendingmeeting"];
                 var HackneyStaff = (string)crmMeeting["hackney_othercouncilstaffattendingmeeting"];
                 int Attendees = 1;
-                if (!string.IsNullOrEmpty((string) crmMeeting["hackney_totalmeetingattendees"]))
+                if (!string.IsNullOrEmpty((string)crmMeeting["hackney_totalmeetingattendees"]))
                 {
                     Attendees = (int)crmMeeting["hackney_totalmeetingattendees"];
                 }
 
-           
+
                 //var Attendees = (int)crmMeeting["hackney_totalmeetingattendees"];
 
                 var attendees = new MeetingAttendees

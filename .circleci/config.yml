@@ -105,6 +105,7 @@ workflows:
   build-and-deploy:
       jobs:
       - check
+      - test
       - aws-ecr/build_and_push_image:
           name: build_and_push_api
           dockerfile: ./Dockerfile
@@ -120,12 +121,14 @@ workflows:
           filters:
              branches:
               only: development
+              
       - deploy-to-development:
           requires:
             - build_and_push_api
           filters:
              branches:
                only: development
+               
       - permit-staging-release:
           type: approval
           requires:

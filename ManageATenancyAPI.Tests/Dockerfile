@@ -12,7 +12,7 @@ COPY ./Hackney.ServiceLocator/Hackney.ServiceLocator.csproj Hackney.ServiceLocat
 COPY ./ManageATenancyAPI.Database/ManageATenancyAPI.Database.csproj ManageATenancyAPI.Database/
 COPY ./ManageATenancyAPI.Tests/ManageATenancyAPI.Tests.csproj ManageATenancyAPI.Tests/
 
-RUN dotnet restore ./ManageATenancyAPI/ManageATenancyAPI.csproj
+RUN dotnet restore ./ManageATenancyAPI/ManageATenancyAPI.csproj --source https://api.nuget.org/v3/index.json --source https://api.bintray.com/nuget/gov-uk-notify/nuget
 RUN dotnet restore ./Hackney.InterfaceStubs/Hackney.InterfaceStubs.csproj
 RUN dotnet restore ./Hackney.ServiceLocator/Hackney.ServiceLocator.csproj
 RUN dotnet restore ./ManageATenancyAPI.Database/ManageATenancyAPI.Database.csproj

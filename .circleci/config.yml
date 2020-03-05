@@ -106,6 +106,8 @@ workflows:
       jobs:
       - check
       - test
+          requires:
+            - check
       - aws-ecr/build_and_push_image:
           name: build_and_push_api
           dockerfile: ./Dockerfile
@@ -117,7 +119,7 @@ workflows:
           region: AWS_REGION
           tag: "${CIRCLE_SHA1}"
           requires:
-            - check
+            - test
           filters:
              branches:
               only: development

@@ -65,7 +65,7 @@ jobs:
       - aws-ecr/ecr-login
       - setup_remote_docker
       - run:
-          name: build tests
+          name: build tests 
           command: docker-compose build manage-a-tenancy-api-test
       - run:
           name: Run tests

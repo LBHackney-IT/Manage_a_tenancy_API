@@ -12,7 +12,7 @@ WORKDIR /src
 COPY ["ManageATenancyAPI/ManageATenancyAPI.csproj", "ManageATenancyAPI/"]
 COPY ["Hackney.InterfaceStubs/Hackney.InterfaceStubs.csproj", "Hackney.InterfaceStubs/"]
 COPY ["Hackney.ServiceLocator/Hackney.ServiceLocator.csproj", "Hackney.ServiceLocator/"]
-RUN dotnet restore "ManageATenancyAPI/ManageATenancyAPI.csproj"
+RUN dotnet restore "ManageATenancyAPI/ManageATenancyAPI.csproj" --source https://api.nuget.org/v3/index.json --source https://api.bintray.com/nuget/gov-uk-notify/nuget
 COPY . .
 WORKDIR "/src/ManageATenancyAPI"
 RUN dotnet build "ManageATenancyAPI.csproj" -c Release -o /app

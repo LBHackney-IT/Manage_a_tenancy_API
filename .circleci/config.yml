@@ -119,13 +119,13 @@ workflows:
             - check
           filters:
              branches:
-              only: development
+              only: master
       - deploy-to-development:
           requires:
             - build_and_push_api
           filters:
              branches:
-               only: development
+               only: master
       - permit-staging-release:
           type: approval
           requires:

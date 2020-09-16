@@ -26,13 +26,16 @@ namespace ManageATenancyAPI.Services
             var response = new HttpResponseMessage();
             try
             {
-                response = await httpClient.GetAsync($"{configuration.HackneyAPIUrl}/GetCRM365AccessToken");
+                httpClient.DefaultRequestHeaders.Add("x-api-key", $"{configuration.HackneyAPIkey}");
+
+                response = await httpClient.PostAsync($"{configuration.HackneyAPIUrl}/crm365tokens", null);
+
                 if (!response.IsSuccessStatusCode)
                     throw new GetCRM365TokenServiceException();
 
                 var tokenJsonResponse = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
-                var token = tokenJsonResponse["result"].ToString();
-                  return token;
+                var token = tokenJsonResponse["accessToken"].ToString();
+                return token;
             }
             catch (Exception ex)
             {

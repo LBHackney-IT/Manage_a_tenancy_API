@@ -11,5 +11,6 @@ namespace MyPropertyAccountAPI.Configuration
         public string ManageATenancyAPIURL { get; set; }
         public string BankHolidaysUrl { get; set; }
         public string HackneyAPIUrl { get; set; }
+        public string HackneyAPIkey { get; set; }
     }
 }

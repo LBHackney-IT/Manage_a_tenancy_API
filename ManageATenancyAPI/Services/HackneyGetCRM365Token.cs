@@ -33,7 +33,7 @@ namespace ManageATenancyAPI.Services
                 if (!response.IsSuccessStatusCode)
                     throw new GetCRM365TokenServiceException();
 
-                var tokenJsonResponse = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
+                var tokenJsonResponse = JsonConvert.DeserializeObject<JObject>(response.Content.ReadAsStringAsync().Result);
                 var token = tokenJsonResponse["accessToken"].ToString();
                 return token;
             }

@@ -30,8 +30,8 @@ namespace ManageATenancyAPI.Services
 
                 response = httpClient.PostAsync($"{configuration.HackneyAPIUrl}/crm365tokens", null).Result;
 
-                if (!response.IsSuccessStatusCode)
-                    throw new GetCRM365TokenServiceException(response.StatusCode.ToString());
+                //if (!response.IsSuccessStatusCode)
+                //    throw new GetCRM365TokenServiceException();
 
                 var tokenJsonResponse = JsonConvert.DeserializeObject<JObject>(response.Content.ReadAsStringAsync().Result);
                 var token = tokenJsonResponse["accessToken"].ToString();
@@ -40,7 +40,7 @@ namespace ManageATenancyAPI.Services
             catch (Exception ex)
             {
                 response.StatusCode = HttpStatusCode.BadRequest;
-                throw new GetCRM365TokenServiceException(ex.StackTrace);
+                throw new GetCRM365TokenServiceException(ex.StackTrace + ex.Message);
             }
         }
 

@@ -28,9 +28,13 @@ namespace ManageATenancyAPI.Services
             {   
                 Console.WriteLine($"httClient: {httpClient}");
                 Console.WriteLine($"configuration: {configuration}");
-                Console.WriteLine($"configuration: {configuration.HackneyAPIUrl}");
+                Console.WriteLine($"configuration.HackneyAPIUrl: {configuration.HackneyAPIUrl}");
+                Console.WriteLine(String.IsNullOrEmpty(configuration.HackneyAPIkey) ? "api key null" : "api key found");
 
-                httpClient.DefaultRequestHeaders.Add("x-api-key", $"{configuration.HackneyAPIkey}");        
+                if (!httpClient.DefaultRequestHeaders.Contains("x-api-key"))
+                {
+                    httpClient.DefaultRequestHeaders.Add("x-api-key", $"{configuration.HackneyAPIkey}");
+                }
 
                 response = await httpClient.PostAsync($"{configuration.HackneyAPIUrl}/crm365tokens", null);
 

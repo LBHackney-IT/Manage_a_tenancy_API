@@ -28,7 +28,7 @@ namespace ManageATenancyAPI.Services
             {
                 httpClient.DefaultRequestHeaders.Add("x-api-key", $"{configuration.HackneyAPIkey}");
 
-                response = await httpClient.PostAsync($"{configuration.HackneyAPIUrl}/crm365tokens", null);
+                response = httpClient.PostAsync($"{configuration.HackneyAPIUrl}/crm365tokens", null).Result;
 
                 if (!response.IsSuccessStatusCode)
                     throw new GetCRM365TokenServiceException();

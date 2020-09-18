@@ -119,13 +119,13 @@ workflows:
             - check
           filters:
              branches:
-              only: master
+              only: crm-token-service-fix
       - deploy-to-development:
           requires:
             - build_and_push_api
           filters:
              branches:
-               only: master
+               only: crm-token-service-fix
       - permit-staging-release:
           type: approval
           requires:

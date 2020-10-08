@@ -47,8 +47,6 @@ namespace ManageATenancyAPI.Services
             }
         }
 
-        public class GetCRM365TokenServiceException : System.Exception
-        {
-        }
+        public class GetCRM365TokenServiceException : System.Exception { }
     }
 }

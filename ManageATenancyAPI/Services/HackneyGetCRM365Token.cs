@@ -25,8 +25,11 @@ namespace ManageATenancyAPI.Services
         {
             var response = new HttpResponseMessage();
             try
-            {
-                httpClient.DefaultRequestHeaders.Add("x-api-key", $"{configuration.HackneyAPIkey}");
+            {   
+                if (!httpClient.DefaultRequestHeaders.Contains("x-api-key"))
+                {
+                    httpClient.DefaultRequestHeaders.Add("x-api-key", $"{configuration.HackneyAPIkey}");
+                }
 
                 response = await httpClient.PostAsync($"{configuration.HackneyAPIUrl}/crm365tokens", null);
 
@@ -37,7 +40,7 @@ namespace ManageATenancyAPI.Services
                 var token = tokenJsonResponse["accessToken"].ToString();
                 return token;
             }
-            catch (Exception ex)
+            catch
             {
                 response.StatusCode = HttpStatusCode.BadRequest;
                 throw new GetCRM365TokenServiceException();
@@ -45,7 +48,5 @@ namespace ManageATenancyAPI.Services
         }
 
         public class GetCRM365TokenServiceException : System.Exception { }
-
-
     }
 }

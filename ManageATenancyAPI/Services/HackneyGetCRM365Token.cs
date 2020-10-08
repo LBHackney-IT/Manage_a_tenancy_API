@@ -40,15 +40,12 @@ namespace ManageATenancyAPI.Services
             catch (Exception ex)
             {
                 response.StatusCode = HttpStatusCode.BadRequest;
-                throw new GetCRM365TokenServiceException(ex.StackTrace + ex.Message);
+                throw new GetCRM365TokenServiceException();
             }
         }
 
         public class GetCRM365TokenServiceException : System.Exception
         {
-            public GetCRM365TokenServiceException(string message) : base(message)
-            {
-            }
         }
     }
 }

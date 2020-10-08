@@ -26,11 +26,6 @@ namespace ManageATenancyAPI.Services
             var response = new HttpResponseMessage();
             try
             {   
-                Console.WriteLine($"httClient: {httpClient}");
-                Console.WriteLine($"configuration: {configuration}");
-                Console.WriteLine($"configuration.HackneyAPIUrl: {configuration.HackneyAPIUrl}");
-                Console.WriteLine(String.IsNullOrEmpty(configuration.HackneyAPIkey) ? "api key null" : "api key found");
-
                 if (!httpClient.DefaultRequestHeaders.Contains("x-api-key"))
                 {
                     httpClient.DefaultRequestHeaders.Add("x-api-key", $"{configuration.HackneyAPIkey}");
@@ -38,13 +33,7 @@ namespace ManageATenancyAPI.Services
 
                 response = await httpClient.PostAsync($"{configuration.HackneyAPIUrl}/crm365tokens", null);
 
-                Console.WriteLine($"response: {response}");
-
-                //if (!response.IsSuccessStatusCode)
-                //    throw new GetCRM365TokenServiceException();
-
                 var tokenJsonResponse = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
-                Console.WriteLine($"tokenJsonResponse: {tokenJsonResponse}");
                 var token = tokenJsonResponse["accessToken"].ToString();
                 return token;
             }
@@ -61,7 +50,5 @@ namespace ManageATenancyAPI.Services
             {
             }
         }
-
-
     }
 }

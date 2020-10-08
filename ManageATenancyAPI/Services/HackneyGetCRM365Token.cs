@@ -33,11 +33,14 @@ namespace ManageATenancyAPI.Services
 
                 response = await httpClient.PostAsync($"{configuration.HackneyAPIUrl}/crm365tokens", null);
 
+                if (!response.IsSuccessStatusCode)
+                    throw new GetCRM365TokenServiceException();
+
                 var tokenJsonResponse = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
                 var token = tokenJsonResponse["accessToken"].ToString();
                 return token;
             }
-            catch (Exception ex)
+            catch
             {
                 response.StatusCode = HttpStatusCode.BadRequest;
                 throw new GetCRM365TokenServiceException();
